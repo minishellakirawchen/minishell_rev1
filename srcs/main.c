@@ -6,11 +6,19 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 17:52:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/17 18:44:31 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	print_key_value(void *content)
+{
+	t_env_elem	*elem;
+
+	elem = content;
+	ft_printf("%s=%s\n", elem->key, elem->value);
+}
 
 static t_info	*init_info(void)
 {
@@ -20,7 +28,14 @@ static t_info	*init_info(void)
 	if (!info)
 		return (NULL);
 	info->exit_status = EXIT_SUCCESS;
-	info->envlist = NULL;
+	info->envlist = get_envlist();
+	if (!info->envlist)
+	{
+		info->envlist = free_1d_alloc(info->envlist);
+		return (NULL);
+	}
+	ft_dprintf(STDERR_FILENO, "## envlist ##\n");
+	ft_lstiter(info->envlist, print_key_value);
 	return (info);
 }
 
@@ -42,9 +57,16 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 
 	// prompt loop
-	exit_status = prompt_loop(info);
+//	exit_status = prompt_loop(info);
+	exit_status = 0;
 
 	// free param
 	info = free_info(info);
 	return (exit_status);
+}
+
+__attribute__((destructor))
+static void	destructor(void)
+{
+	system("leaks -q minishell");
 }
