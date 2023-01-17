@@ -8,9 +8,8 @@
 !includes
 !playground
 !libs
-
-!srcs/*.c
-!includes/*.h
+!*.c
+!*.h
 !playground/*.md
 
 /objs/

@@ -80,7 +80,12 @@ bonus	:
 
 norm	:
 	norminette -v
-	norminette $(SRC_DIR) $(LIBFT_DIR) $(INC_DIR)
+	norminette $(SRC_DIR) $(INC_DIR)
+
+norm_lib	:
+	norminette -v
+	norminette $(LIBFT_DIR)
+
 
 .PHONY	: all clean fclean re bonus norm
 

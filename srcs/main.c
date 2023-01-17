@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 18:44:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/17 18:55:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 
 	// prompt loop
-//	exit_status = prompt_loop(info);
-	exit_status = 0;
+	exit_status = prompt_loop(info);
 
 	// free param
 	info = free_info(info);
