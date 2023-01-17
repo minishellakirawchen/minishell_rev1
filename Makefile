@@ -17,6 +17,7 @@ SRC		= main.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \
 		  helper/alloc_free.c \
+		  ft_builtin/ft_echo.c
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))
 

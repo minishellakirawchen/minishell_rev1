@@ -1,6 +1,20 @@
 *
 
+#!**/
 !.gitignore
 !Makefile
-!*.c
-!*.h
+
+!srcs
+!includes
+!playground
+!libs
+
+!srcs/*.c
+!includes/*.h
+!playground/*.md
+
+/.idea/
+#cmake-build-*
+#cmake-build-debug/*
+#cmake-build-debug/**
+/cmake-build-debug/

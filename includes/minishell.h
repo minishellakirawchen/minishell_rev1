@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 17:45:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/17 17:51:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ struct s_info
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);
 void	*free_info(t_info *info);
+=======
+>>>>>>> main
 
 
 #endif //MINISHELL_H

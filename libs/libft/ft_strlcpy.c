@@ -1,11 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_execution.c                                :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 17:51:54 by takira           ###   ########.fr       */
+/*   Created: 2022/10/17 10:38:45 by takira            #+#    #+#             */
+/*   Updated: 2022/10/17 10:38:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../include/libft.h"
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	if (dstsize)
+	{
+		while (src[i] && i + 1 < dstsize)
+			dst[i++] = src[j++];
+		dst[i] = '\0';
+	}
+	return (ft_strlen(src));
+}
