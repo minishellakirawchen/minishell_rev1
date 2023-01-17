@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 17:52:02 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/17 17:59:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	prompt_loop(t_info *info)
 		if (is_same_str(input_line, NL))
 		{
 			free(input_line);
-			ft_dprintf(STDERR_FILENO, "NL only");
+			ft_dprintf(STDERR_FILENO, "NL only, Not add to history");
 			continue ;
 		}
 		ft_dprintf(STDERR_FILENO, "input:%s\n", input_line);

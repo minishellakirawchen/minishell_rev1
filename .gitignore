@@ -1,6 +1,6 @@
 *
 
-#!**/
+!**/
 !.gitignore
 !Makefile
 
@@ -13,6 +13,7 @@
 !includes/*.h
 !playground/*.md
 
+/objs/
 /.idea/
 #cmake-build-*
 #cmake-build-debug/*

@@ -1,10 +1,12 @@
 NAME	= minishell
 
+
 # COMPILE FLAGS
 CC		= cc
 CFLAGS	= -Wall -Wextra -Werror -MMD -MP
 
 VPATH = $(SRC_DIR)
+
 
 # SRCS
 SRC_DIR	= ./srcs
@@ -21,18 +23,22 @@ SRC		= main.c \
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))
 
+
 # OBJS
 OBJ_DIR	= ./objs
 OBJ		= $(SRC:%.c=%.o)
 OBJS	= $(addprefix $(OBJ_DIR)/, $(OBJ))
 
+
 # DEPS
 DEPS	= $(OBJS:%.o=%.d)
+
 
 # LIBFT
 LIBFT_DIR	= ./libs
 LIBFT_NAME	= libft.a
 LIBS		= $(addprefix $(LIBFT_DIR)/, $(LIBFT_NAME))
+
 
 # LFLAGS
 RL_DIR		= $(shell brew --prefix readline)/lib
