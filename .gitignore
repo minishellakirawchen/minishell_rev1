@@ -1,13 +1,14 @@
 *
-cmake-build-*
-cmake-build-
-.idea/
 
 !**/
 !.gitignore
 !Makefile
-!*.c
-!*.h
-!*.md
+!srcs/*.c
+!includes/*.h
+!playground/*.md
 
-/cmake-build-debug/*.c
+/.idea/
+#cmake-build-*
+#cmake-build-debug/*
+#cmake-build-debug/**
+/cmake-build-debug/
