@@ -5,12 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/17 17:50:55 by takira            #+#    #+#             */
+/*   Updated: 2023/01/17 17:54:09 by takira           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:39:29 by takira            #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2023/01/17 17:11:00 by takira           ###   ########.fr       */
-=======
-/*   Updated: 2022/11/07 14:00:00 by takira           ###   ########.fr       */
->>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +61,6 @@ int	ft_strncmp_ns(const char *s1, const char *s2, size_t n)
 	}
 	return ((int)(str1[i] - str2[i]));
 }
-<<<<<<< HEAD
 
 bool	is_same_str(const char *str1, const char *str2)
 {
@@ -66,5 +73,3 @@ bool	is_same_str(const char *str1, const char *str2)
 		return (true);
 	return (false);
 }
-=======
->>>>>>> main
