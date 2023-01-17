@@ -6,7 +6,15 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 13:31:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/17 16:37:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+#include "minishell.h"
+
+int	main(void)
+{
+	printf("hello, world\n");
+	return (0);
+}

@@ -14,7 +14,7 @@ NAME		= libft.a
 
 # CC CFLAGS
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -MMD -MP
 
 # DIRS
 LIBFT_DIR	= ./libft

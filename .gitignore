@@ -1,8 +1,14 @@
 *
 
-!**/
+#!**/
 !.gitignore
 !Makefile
+
+!srcs
+!includes
+!playground
+!libs
+
 !srcs/*.c
 !includes/*.h
 !playground/*.md
