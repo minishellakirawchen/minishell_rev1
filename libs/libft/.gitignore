@@ -1,0 +1,7 @@
+!Makefile
+!*.c
+!../include/libft.h
+main.c
+a.out
+libft.a
+*.o
