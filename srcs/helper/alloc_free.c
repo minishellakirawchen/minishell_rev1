@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 18:54:40 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 12:17:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	*free_info(t_info *info)
 {
 	if (!info)
 		return (NULL);
-	ft_lstclear(&info->envlist, free_env_elem);
-	free(info);
+	ft_lstclear(&info->envlist_head, free_env_elem);
+	ft_lstclear(&info->tokenlist_head, free_token_elem);
 	return (NULL);
 }
 
@@ -42,5 +42,16 @@ void	free_env_elem(void *content)
 	elem = content;
 	elem->key = free_1d_alloc(elem->key);
 	elem->value = free_1d_alloc(elem->value);
+	free_1d_alloc(elem);
+}
+
+void	free_token_elem(void *content)
+{
+	t_token_elem	*elem;
+
+	if (!content)
+		return ;
+	elem = content;
+	elem->word = free_1d_alloc(elem->word);
 	free_1d_alloc(elem);
 }

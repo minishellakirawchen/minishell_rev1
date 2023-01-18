@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer.h                                        :+:      :+:    :+:   */
+/*   is_chr_in_str.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/17 15:14:01 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 11:05:40 by takira           ###   ########.fr       */
+/*   Created: 2023/01/18 13:15:10 by takira            #+#    #+#             */
+/*   Updated: 2023/01/18 14:11:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOKENIZER_H
-# define TOKENIZER_H
+#include "../include/libft.h"
 
-# include "minishell.h"
-
-/*          typedef           */
-typedef struct s_info	t_info;
-
-
-/* ************************** */
-/*         tokenize           */
-/* ************************** */
-
-int	tokenize_input_line(t_info *info, const char *readline_input);
-
-#endif //TOKENIZER_H
+bool is_chr_in_str(const char chr, const char *str)
+{
+	if (str && ft_strchr(str, chr) != NULL)
+		return (true);
+	return (false);
+}

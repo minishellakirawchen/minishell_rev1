@@ -21,6 +21,7 @@ SRC		= main.c \
 		  helper/alloc_free.c \
 		  helper/debug_print.c \
 		  helper/get_envlist.c \
+		  debug/debug_print.c \
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))
 
@@ -52,7 +53,6 @@ INC_DIR		= ./includes
 RL_INC_DIR	= $(shell brew --prefix readline)/include
 INCLUDES	= $(INC_DIR) $(RL_INC_DIR)
 IFLAGS		= $(addprefix -I, $(INCLUDES))
-
 
 
 # RULES

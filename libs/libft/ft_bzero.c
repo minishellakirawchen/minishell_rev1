@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:32:05 by takira            #+#    #+#             */
-/*   Updated: 2022/10/17 10:32:07 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 09:54:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	ft_memset(s, 0, n);
+	ft_memset_ns(s, 0, n);
 }
