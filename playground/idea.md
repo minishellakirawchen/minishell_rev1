@@ -33,3 +33,34 @@ struct t_tree
 }
 
 ```
+
+
+# Tokenize
+```c
+
+minishell
+$ echo hello world"hoge" "hello'''""world"'huga''piyo'
+input:  [echo hello world"hoge" "hello'''""world"'huga''piyo']
+# [echo],[hello],[world"hoge"],["hello'''""world"'huga''piyo']
+
+bash
+$ echo hello world"hoge" "hello'''""world"'huga''piyo'
+hello worldhoge hello'''worldhugapiyo
+
+
+この段階で""split, 結合情報保持しておいた方が楽か?
+次に任せる?
+この段階で分けることにした
+
+minishell $> echo hello"hoge"'huga' "test'piyo'" "" "   test   "
+input:  [echo hello"hoge"'huga' "test'piyo'" "" "   test   "]
+token list
+# [echo],[hello]=["hoge"]=['huga'],["test'piyo'"],[""],["   test   "]
+
+minishell $> echo hello world"hoge" "hello'''""world"'huga''piyo'
+input:  [echo hello world"hoge" "hello'''""world"'huga''piyo']
+token list
+# [echo],[hello],[world]=["hoge"],["hello'''"]=["world"]=['huga']=['piyo']
+
+
+```

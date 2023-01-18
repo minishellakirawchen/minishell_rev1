@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 14:47:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 15:16:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ void	debug_print_token_word(t_list *head, char *str)
 	{
 		elem = ptr->content;
 		ft_dprintf(STDERR_FILENO, "[%s]", elem->word);
-		ptr = ptr->next;
-		if (ptr)
+		if (elem->is_connect_to_next_word && ptr->next)
+			ft_dprintf(STDERR_FILENO, "=");
+		if (!elem->is_connect_to_next_word && ptr->next)
 			ft_dprintf(STDERR_FILENO, ",");
+		ptr = ptr->next;
 	}
 	ft_dprintf(STDERR_FILENO, "\n\n");
 }
@@ -67,13 +69,14 @@ bool	is_str1chrs_in_str2(const char *str1, const char *str2)
 // [out]					type:word
 
 // topがdelimでないsrcから、次のdelimまでを切り取る
-char *get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len)
+char *get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len, bool *is_connect2next)
 {
 	char	*word;
 	char	setchr;
 
 	if (!src || !delim || !setchars)
 		return (NULL);
+	*is_connect2next = false;
 	*len = 0;
 	while (src[*len])
 	{
@@ -94,11 +97,16 @@ char *get_trimmed_word(const char *src, const char *delim, const char *setchars,
 			// "'を抜ける, ここで!src[*len]だとunquoted error
 			if (src[*len])
 				*len += 1;
-			//  close側"'の次が\0 or ' 'だったら、そこまでを切り取る
-			if (!src[*len] || is_chr_in_str(src[*len], delim))
-				break ;
-			if (is_chr_in_str(src[*len], setchars))
-				continue ;
+			//  close側"'の次が\0 or delimだったら、そこまでを切り取る
+//			if (!src[*len] || is_chr_in_str(src[*len], delim))
+//				break ;
+//
+//			//  close側"'の次が"'だったら、connect2next=trueにして、そこまでを切り取る
+//			if (is_chr_in_str(src[*len], setchars))
+//			{
+//				*is_connect2next = true;
+//				break ;
+//			}
 //			printf(" 2-2 setchr:%c, str:%s\n", setchr, &src[*len]);
 		}
 //		printf("3 str:%s\n", &src[*len]);
@@ -109,8 +117,16 @@ char *get_trimmed_word(const char *src, const char *delim, const char *setchars,
 		// !delim, !strchars を抜けた後にdelimであれば、そこまでを切り取る
 		// そうでなければ先頭に戻る src[len]="'であれば、(2)から始まる
 //		printf("4 str:%s\n", &src[*len]);
+
 		if (!src[*len] || is_chr_in_str(src[*len], delim))
 			break ;
+
+		//  close側"'の次が"'だったら、connect2next=trueにして、そこまでを切り取る
+		if (is_chr_in_str(src[*len], setchars))
+		{
+			*is_connect2next = true;
+			break ;
+		}
 	}
 	if (*len == 0)
 		return (NULL);
@@ -121,26 +137,43 @@ char *get_trimmed_word(const char *src, const char *delim, const char *setchars,
 	return (word);
 }
 
+t_split_info	init_split_info(const char *src, const char *delim, const char *setchars)
+{
+	t_split_info	s_info;
+
+	s_info.src = src;
+	s_info.delims = delim;
+	if (!delim)
+		s_info.delims = "";
+	s_info.sets = setchars;
+	if (!setchars)
+		s_info.sets = "";
+	s_info.is_connect_to_next_word = false;
+	s_info.head_idx = 0;
+	s_info.word_len = 0;
+	return (s_info);
+}
+
 // !delim  -> return (src)
 // !setchars -> just split by delim
 // 切り取るwordのhead, sizeをget, listにappendする
-t_list	*get_splitted_tokenlist(const char *src, char *delim, char *setchars)
+t_list	*get_splitted_tokenlist(const char *src, const char *delim, const char *setchars)
 {
 	t_list			*tokenlist_head;
 	t_list			*new_list;
 	t_token_elem	*new_token;
 	char 			*word;
-	size_t			head_idx;
+//	t_split_info	s_info;
 	size_t			word_len;
+	size_t			head_idx;
+	bool			is_connect_to_next;
 
-	if (!delim)
-		delim = "";
-	if (!setchars)
-		setchars = "";
+//	init_split_info(src, delim, setchars);
+	tokenlist_head = NULL;
+
 	if (!src || is_str1chrs_in_str2(delim, setchars))
 		return (NULL);
 	head_idx = 0;
-	tokenlist_head = NULL;
 	while (src[head_idx])
 	{
 		// まずdelimを抜ける
@@ -149,7 +182,7 @@ t_list	*get_splitted_tokenlist(const char *src, char *delim, char *setchars)
 		if (!src[head_idx])
 			break ;
 		// src[head]から切り取る文字列を探してsubstrする
-		word = get_trimmed_word(&src[head_idx], delim, setchars, &word_len);
+		word = get_trimmed_word(&src[head_idx], delim, setchars, &word_len, &is_connect_to_next);
 
 		new_token = (t_token_elem *)malloc(sizeof(t_token_elem));
 		if (!word || !new_token)
@@ -161,6 +194,7 @@ t_list	*get_splitted_tokenlist(const char *src, char *delim, char *setchars)
 		}
 		new_token->word = word;
 		new_token->type = e_init;
+		new_token->is_connect_to_next_word = is_connect_to_next;
 		new_list = ft_lstnew((void *)new_token);
 		if (!new_list)
 		{
