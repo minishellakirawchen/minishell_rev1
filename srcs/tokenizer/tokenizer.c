@@ -15,27 +15,6 @@
 // ft_split_set(char **split, char delim, char *setchr)
 // もしくは, char *input_lineを前からチェックして切り取り文字が出てきたらsubstrして構造体に入れていく？
 // 一旦後者で実装してみる
-void	debug_print_token_word(t_list *head, char *str)
-{
-	t_list			*ptr;
-	t_token_elem	*elem;
-
-	if (str)
-		ft_dprintf(STDERR_FILENO, "%s\n", str);
-	ft_dprintf(STDERR_FILENO, " # ", str);
-	ptr = head;
-	while (ptr)
-	{
-		elem = ptr->content;
-		ft_dprintf(STDERR_FILENO, "[%s]", elem->word);
-		if (elem->is_connect_to_next_word && ptr->next)
-			ft_dprintf(STDERR_FILENO, "=");
-		if (!elem->is_connect_to_next_word && ptr->next)
-			ft_dprintf(STDERR_FILENO, ",");
-		ptr = ptr->next;
-	}
-	ft_dprintf(STDERR_FILENO, "\n\n");
-}
 
 /* if str1[i] in str2, return true */
 

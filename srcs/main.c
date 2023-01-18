@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 14:01:08 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 17:00:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int argc, char **argv)
 
 	// free param
 	free_info(&info);
-//	system("leaks -q minishell");
+	system("leaks -q minishell");
 	return (exit_status);
 }
 

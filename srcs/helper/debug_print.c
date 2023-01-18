@@ -31,6 +31,30 @@ void debug_print_2d_arr(char **arr, char *str)
 	ft_dprintf(STDERR_FILENO, "}\n");
 }
 
+void	debug_print_token_word(t_list *head, char *str)
+{
+	t_list			*ptr;
+	t_token_elem	*elem;
+
+	if (str)
+		ft_dprintf(STDERR_FILENO, "%s\n", str);
+	ft_dprintf(STDERR_FILENO, " # ", str);
+	ptr = head;
+	while (ptr)
+	{
+		elem = ptr->content;
+		ft_dprintf(STDERR_FILENO, "[%s]", elem->word);
+		if (elem->is_connect_to_next_word && ptr->next)
+			ft_dprintf(STDERR_FILENO, "=");
+		if (!elem->is_connect_to_next_word && ptr->next)
+			ft_dprintf(STDERR_FILENO, ",");
+		ptr = ptr->next;
+	}
+	ft_dprintf(STDERR_FILENO, "\n\n");
+}
+
+
+
 /*
 void	debug_print_stack(t_tree *root, char *str)
 {
