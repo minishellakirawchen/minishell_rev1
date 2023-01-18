@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 18:30:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 20:44:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ void	debug_print_token_word(t_list *head, char *str)
 	t_token_elem	*elem;
 
 	if (str)
-		ft_dprintf(STDERR_FILENO, "%s\n", str);
-	ft_dprintf(STDERR_FILENO, " # ", str);
+		ft_dprintf(STDERR_FILENO, "# %s", str);
+	ft_dprintf(STDERR_FILENO, ":", str);
 	ptr = head;
 	while (ptr)
 	{

@@ -14,13 +14,13 @@ SRC		= main.c \
 		  input/input.c \
 		  tokenizer/tokenizer.c \
 		  tokenizer/space_split.c \
+		  tokenizer/operator_split.c \
 		  parser/parser.c \
 		  expansion/expansion.c \
 		  command_execution/command_execution.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \
 		  helper/alloc_free.c \
-		  helper/debug_print.c \
 		  helper/get_envlist.c \
 		  debug/debug_print.c \
 

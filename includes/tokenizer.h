@@ -24,6 +24,7 @@ typedef struct s_info	t_info;
 /* ************************** */
 
 int		tokenize_input_line(t_info *info, const char *readline_input);
-t_list	*get_space_splitted_tokenlist(const char *src, const char *delim, const char *setchars);
+t_list	*get_delim_splitted_tokenlist(const char *src, const char *delim, const char *setchars);
+int		split_by_operators(t_list **token_head);
 
 #endif //TOKENIZER_H

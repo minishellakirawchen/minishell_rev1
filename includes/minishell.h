@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 17:03:12 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 20:27:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,12 @@
 # define PROMPT	"minishell $> "
 # define NL		"\n"
 
-# define STR_SPACE	"\t\n\v\f\r "
-# define STR_QUOTE	"'\""
+# define STR_SPACE		"\t\n\v\f\r "
+# define STR_QUOTE		"'\""
+# define STR_OPERATOR	";&|<>()"
+
+# define CHR_SINGLE_QUOTE	'\''
+# define CHR_DOUBLE_QUOTE	'\"'
 
 # define FAILURE	0
 # define SUCCESS	1
@@ -62,7 +66,7 @@ enum e_token_type
 // minishell info
 struct s_info
 {
-	int		exit_status;
+
 	t_list	*envlist_head;
 	t_list	*tokenlist_head;
 };
@@ -80,6 +84,8 @@ struct s_token_elem
 	char			*word;
 	t_token_type	type;
 	bool			is_connect_to_next_word;
+	char			quote_chr;
+	bool			is_quoted;
 };
 
 // split
@@ -91,7 +97,6 @@ struct s_split_info
 	bool			is_connect_to_next_word;  // hello"world"
 	size_t			head_idx;
 	size_t			word_len;
-	char 			setchr;
 };
 
 

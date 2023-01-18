@@ -6,13 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 16:42:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 20:46:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
 
-// ft_split_set(char **split, char delim, char *setchr)
+// ft_split_set(char **split, char delim, char *quote_chr)
 // もしくは, char *input_lineを前からチェックして切り取り文字が出てきたらsubstrして構造体に入れていく？
 // 一旦後者で実装してみる
 
@@ -39,11 +39,17 @@ int	tokenize_input_line(t_info *info, const char *readline_input)
 		return (FAILURE);
 	// split by space
 	//   char **input -> list
-	info->tokenlist_head = get_space_splitted_tokenlist(readline_input,
+	info->tokenlist_head = get_delim_splitted_tokenlist(readline_input,
 														STR_SPACE, STR_QUOTE);
-	debug_print_token_word(info->tokenlist_head, "token list");
 	if (!info->tokenlist_head)
 		return (FAILURE);
+
+	debug_print_token_word(info->tokenlist_head, "token space");
+
+	if (split_by_operators(&info->tokenlist_head) == FAILURE)
+		return (FAILURE);
+
+	debug_print_token_word(info->tokenlist_head, "token opes ");
 	// split by control operation and redirection
 	//   prev->before_list->next  ->  prev->split1->split2...->next
 

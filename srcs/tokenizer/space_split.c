@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:36:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 17:04:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 22:58:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 static t_split_info	init_split_info(const char *src, const char *delim, const char *setchars);
 static t_token_elem	*create_word_token_from_src(t_split_info *s_info);
-static char			*get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len, bool *is_connect2next);
+static char			*get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len, bool *is_connect2next, bool *is_quoted);
 
 // !delim  -> return (src)
 // !setchars -> just split by delim
 // 切り取るwordのhead, sizeをget, listにappendする
-t_list	*get_space_splitted_tokenlist(const char *src, const char *delim, const char *setchars)
+t_list	*get_delim_splitted_tokenlist(const char *src, const char *delim, const char *setchars)
 {
 	t_list			*tokenlist_head;
 	t_list			*new_list;
@@ -48,14 +48,16 @@ static t_token_elem	*create_word_token_from_src(t_split_info *split)
 {
 	t_token_elem	*new_token;
 	char			*word;
+	bool			is_quoted;
 
+	is_quoted = false;
 	while (split->src[split->head_idx] && is_chr_in_str(split->src[split->head_idx], split->delim))
 		split->head_idx += 1;
 	if (!split->src[split->head_idx])
 		word = ft_strdup("");
 	else
 	{
-		word = get_trimmed_word(&split->src[split->head_idx], split->delim, split->setchars, &split->word_len, &split->is_connect_to_next_word);
+		word = get_trimmed_word(&split->src[split->head_idx], split->delim, split->setchars, &split->word_len, &split->is_connect_to_next_word, &is_quoted);
 		split->head_idx += split->word_len;
 	}
 	new_token = (t_token_elem *)malloc(sizeof(t_token_elem));
@@ -68,11 +70,12 @@ static t_token_elem	*create_word_token_from_src(t_split_info *split)
 	new_token->word = (char *)word;
 	new_token->type = e_init;
 	new_token->is_connect_to_next_word = split->is_connect_to_next_word;
+	new_token->is_quoted = is_quoted;
 	return (new_token);
 }
 
 // topがdelimでないsrcから、次のdelimまでを切り取る
-static char *get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len, bool *is_connect2next)
+static char *get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len, bool *is_connect2next, bool *is_quoted)
 {
 	char	*word;
 	char	setchr;
@@ -83,6 +86,7 @@ static char *get_trimmed_word(const char *src, const char *delim, const char *se
 	*len = 0;
 	if (src[*len] && is_chr_in_str(src[*len], setchars))
 	{
+		*is_quoted = true;
 		setchr = ft_strchr(setchars, src[*len])[0];
 		*len += 1;
 		while (src[*len] && src[*len] != setchr)
@@ -116,6 +120,5 @@ static t_split_info	init_split_info(const char *src, const char *delim, const ch
 	split.is_connect_to_next_word = false;
 	split.head_idx = 0;
 	split.word_len = 0;
-	split.setchr = 0;
 	return (split);
 }

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 17:00:57 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 20:45:43 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	print_key_value(void *content)
 
 static int	init_info(t_info *info)
 {
-	info->exit_status = EXIT_SUCCESS;
 	info->envlist_head = get_envlist();
 	if (!info->envlist_head)
 	{
@@ -57,7 +56,7 @@ int	main(int argc, char **argv)
 
 	// free param
 	free_info(&info);
-	system("leaks -q minishell");
+//	system("leaks -q minishell");
 	return (exit_status);
 }
 
