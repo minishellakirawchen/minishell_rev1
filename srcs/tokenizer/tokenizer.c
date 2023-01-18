@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 15:16:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 15:32:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,16 +98,13 @@ char *get_trimmed_word(const char *src, const char *delim, const char *setchars,
 			if (src[*len])
 				*len += 1;
 			//  close側"'の次が\0 or delimだったら、そこまでを切り取る
-//			if (!src[*len] || is_chr_in_str(src[*len], delim))
-//				break ;
-//
-//			//  close側"'の次が"'だったら、connect2next=trueにして、そこまでを切り取る
-//			if (is_chr_in_str(src[*len], setchars))
-//			{
-//				*is_connect2next = true;
-//				break ;
-//			}
-//			printf(" 2-2 setchr:%c, str:%s\n", setchr, &src[*len]);
+			if (!src[*len] || is_chr_in_str(src[*len], delim))
+				break ;
+
+			//  close側"'の次が"'だったら、connect2next=trueにして、そこまでを切り取る
+			*is_connect2next = true;
+			break ;
+//		printf(" 2-2 setchr:%c, str:%s\n", setchr, &src[*len]);
 		}
 //		printf("3 str:%s\n", &src[*len]);
 
