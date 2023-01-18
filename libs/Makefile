@@ -72,7 +72,7 @@ LIBFT_SRC	= ft_strlen.c \
 			  ft_lstmap.c \
 			  ft_math.c \
 			  ft_strtoll.c \
-			  is_chr_in_str.c \
+			  is_in_str.c \
 
 GNL_SRC		= get_next_line.c \
               get_next_line_utils.c

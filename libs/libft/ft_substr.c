@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:40:01 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:39:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 16:25:13 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (s == NULL)
 		return (NULL);
 	start_idx = (size_t)start;
-	if (ft_strlen(s) < start_idx + 1)
+	if (ft_strlen_ns(s) < start_idx + 1)
 		cpy_len = 0;
 	else
-		cpy_len = minsize(ft_strlen(s) - start_idx, len);
+		cpy_len = minsize(ft_strlen_ns(s) - start_idx, len);
 	ret_str = (char *)ft_calloc(sizeof(char), cpy_len + 1);
 	if (ret_str == NULL)
 		return (NULL);

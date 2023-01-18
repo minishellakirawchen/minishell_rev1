@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 15:12:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/18 16:47:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,12 @@ struct s_token_elem
 struct s_split_info
 {
 	const char		*src;
-	const char 		*delims;
-	const char 		*sets;
+	const char 		*delim;
+	const char 		*setchars;
 	bool			is_connect_to_next_word;  // hello"world"
 	size_t			head_idx;
 	size_t			word_len;
+	char 			setchr;
 };
 
 
