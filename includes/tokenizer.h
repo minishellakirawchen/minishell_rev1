@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:01 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 15:14:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 16:46:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_list	*get_delim_splitted_tokenlist(const char *src, const char *delim, const c
 int		split_by_operators(t_list **token_head);
 
 int		validate_tokens_for_mandatory(t_info *info);
-int		arrange_and_validate_token_list(t_list *tokenlist_head);
+int		arrange_and_validate_token_list(t_list **tokenlist_head);
 
 
 #endif //TOKENIZER_H

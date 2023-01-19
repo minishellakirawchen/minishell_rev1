@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 15:51:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 16:50:59 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 // [>]						type:redirection
 // [out]					type:word
 
+
+
 int is_tokentype_semicolon(t_token_type type)
 {
 	return (type == e_ope_semicolon);
@@ -53,6 +55,43 @@ int is_tokentype_subshell(t_token_type type)
 	return (type == e_subshell_start || type == e_subshell_end);
 }
 
+void	delete_empty_elem(t_list **tokenlist_head)
+{
+	t_list			*node;
+	t_list			*prev;
+	t_token_elem	*token;
+	bool			del_this_node;
+
+	if (!tokenlist_head || !*tokenlist_head)
+		return ;
+	node = *tokenlist_head;
+	prev = NULL;
+	while (node)
+	{
+		del_this_node = false;
+		token = node->content;
+		if (token->is_quoted && ft_strlen_ns(token->word) == 2)
+			del_this_node = true;
+		if (ft_strlen_ns(token->word) == 0)
+			del_this_node = true;
+		if (!del_this_node)
+		{
+			prev = node;
+			node = node->next;
+			continue ;
+		}
+		if (prev)
+			prev->next = node->next;
+		else
+			*tokenlist_head = node->next;
+		ft_lstdelone(node, free_token_elem);
+		if (prev)
+			node = prev->next;
+		else
+			node = *tokenlist_head;
+
+	}
+}
 
 
 // add tokentype
@@ -133,7 +172,7 @@ void	set_elem_type_if_operator(t_token_elem **now_token)
 		if (is_same_str(operators[idx], (*now_token)->word))
 		{
 			(*now_token)->type = idx;
-			printf("token:%s, type:%zu\n", operators[idx], idx);
+//			printf("token:%s, type:%zu\n", operators[idx], idx);
 			return ;
 		}
 		idx++;
@@ -214,17 +253,17 @@ int	validate_quote(t_token_elem *now_token)
 
 // syntax error
 // <> filename
-int	arrange_and_validate_token_list(t_list *tokenlist_head)
+int	arrange_and_validate_token_list(t_list **tokenlist_head)
 {
 	t_list			*node;
 	t_token_elem	*token;
 	t_token_elem	*next_token;
 	bool			is_head;
 
-	if (!tokenlist_head)
+	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
 
-	node = tokenlist_head;
+	node = *tokenlist_head;
 	// validate control sign
 	while (node)
 	{
@@ -236,9 +275,12 @@ int	arrange_and_validate_token_list(t_list *tokenlist_head)
 			return (FAILURE);
 		node = node->next;
 	}
+	debug_print_token_word(*tokenlist_head, "set opes");
+
+	delete_empty_elem(tokenlist_head);
 
 	// validate syntax
-	node = tokenlist_head;
+	node = *tokenlist_head;
 	next_token = NULL;
 	is_head = true;
 	while (node)
@@ -257,10 +299,10 @@ int	arrange_and_validate_token_list(t_list *tokenlist_head)
 			is_head = false;
 	}
 
-	set_elem_type_if_word(&tokenlist_head);
+	set_elem_type_if_word(tokenlist_head);
 
-	// arrange
-
+	if (ft_lstsize(*tokenlist_head) == 0)
+		return (FAILURE);
 	return (SUCCESS);
 }
 

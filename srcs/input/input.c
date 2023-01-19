@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 15:28:17 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 16:52:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	prompt_loop(t_info *info)
 {
 	int		exit_status;
 	char	*input_line;
-	bool	is_continue;
+	bool	is_return_input;
 
 
 	if (!info)
@@ -34,7 +34,7 @@ int	prompt_loop(t_info *info)
 	exit_status = EXIT_SUCCESS;
 	while (true)
 	{
-		is_continue = true;
+		is_return_input = false;
 		input_line = readline(PROMPT);
 		if (!input_line)
 		{
@@ -54,13 +54,13 @@ int	prompt_loop(t_info *info)
 			return (FAILURE);//free
 
 		// input validation (Mandatory/Bonus)
-		if (arrange_and_validate_token_list(info->tokenlist_head) == FAILURE)
-			is_continue = false;//add_history & free(line)
+		if (arrange_and_validate_token_list(&info->tokenlist_head) == FAILURE)
+			is_return_input = true;//add_history & free(line)
 
 		debug_print_token_word(info->tokenlist_head, "arranged");
 
-		if (!is_continue)
-			ft_dprintf(STDERR_FILENO, "continue\n");
+		if (is_return_input)
+			ft_dprintf(STDERR_FILENO, "return input\n");
 		// parsing (Mandatory/Bonus)
 		// expansion
 		// command_execution

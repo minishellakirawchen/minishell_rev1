@@ -259,11 +259,21 @@ minishell $> echo hello | echo "hello "'world|<>' &&(cat<in<<heredoc>>out | grep
 #split opes     :[echo(init)],[hello(init)],[|(init)],[echo(init)],["hello "(init)]=['world|<>'(init)],[&&(init)],[((init)],[cat(init)],[<(init)],[in(init)],[<<(init)],[heredoc(init)],[>>(init)],[out(init)],[|(init)],[grep(init)],[a(init)],[)(init)],[||(init)],[test(init)],[>(init)],[out(init)],[|(init)],[cat(init)],[-e(init)],[hoge(init)]
 #arranged       :[echo(word)],[hello(word)],[|(|)],[echo(word)],["hello "(word)]=['world|<>'(word)],[&&(&&)],[((()],[cat(word)],[<(<)],[in(file)],[<<(>>)],[heredoc(eof)],[>>(>)],[out(file)],[|(|)],[grep(word)],[a(word)],[)())],[||(||)],[test(word)],[>(<<)],[out(file)],[|(|)],[cat(word)],[-e(word)],[hoge(word)]
 
+
+minishell $> echo "foo 'bar' test| &&<"|(cat <in && ls)&&out
+#input          :[echo "foo 'bar' test| &&<"|(cat <in && ls)&&out]
+#split space    :[echo(init)],["foo 'bar' test| &&<"(init)]=[|(cat(init)],[<in(init)],[&&(init)],[ls)&&out(init)]
+#split opes     :[echo(init)],["foo 'bar' test| &&<"(init)]=[|(init)],[((init)],[cat(init)],[<(init)],[in(init)],[&&(init)],[ls(init)],[)(init)],[&&(init)],[out(init)]
+#arranged       :[echo(word)],["foo 'bar' test| &&<"(word)],[|(|)],[((()],[cat(word)],[<(<)],[in(file)],[&&(&&)],[ls(word)],[)())],[&&(&&)],[out(word)]
+
 ```
 
 export key1=$key2$key3　空白なしで結合される
 
-
+input [hogehog   ]
+              ^^^
+これが""として残り、validate errorになる
+"", ''も不要であれば削除する？
 
 
 
