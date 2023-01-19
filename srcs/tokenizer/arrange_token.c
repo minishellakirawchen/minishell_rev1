@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 21:34:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:35:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	delete_empty_elem(t_list **tokenlist_head);
 static int	valid_and_set_control_operator(t_list **tokenlist_head);
 static int	validate_syntax(t_list *tokenlist_head);
-static int	validate_subshell(t_list *tokenlist_head);
+static int	validate_subshell_parenthesis_pairs(t_list *tokenlist_head);
 static void	set_elem_type_if_operator(t_list **tokenlist_head);
 static int	set_elem_type_if_word(t_list **tokenlist_head);
 
@@ -30,7 +30,7 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 	set_elem_type_if_operator(tokenlist_head);
 	if (validate_quote(*tokenlist_head) == FAILURE)
 		return (FAILURE);
-	if (validate_subshell(*tokenlist_head) == FAILURE)
+	if (validate_subshell_parenthesis_pairs(*tokenlist_head) == FAILURE)
 		return (FAILURE);
 	debug_print_token_word(*tokenlist_head, "set opes");
 	delete_empty_elem(tokenlist_head);
@@ -43,7 +43,7 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 	return (SUCCESS);
 }
 
-static int validate_subshell(t_list *tokenlist_head)
+static int validate_subshell_parenthesis_pairs(t_list *tokenlist_head)
 {
 	t_list			*node;
 	t_token_elem	*token;
