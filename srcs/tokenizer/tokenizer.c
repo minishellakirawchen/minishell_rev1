@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 14:05:09 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 15:51:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,43 +33,62 @@
 // [>]						type:redirection
 // [out]					type:word
 
+int is_tokentype_semicolon(t_token_type type)
+{
+	return (type == e_ope_semicolon);
+}
+
+int is_tokentype_pipe_or_and(t_token_type type)
+{
+	return (type == e_ope_pipe || type == e_ope_or || type == e_ope_and);
+}
+
+int is_tokentype_redirection(t_token_type type)
+{
+	return (type == e_redirect_in || type == e_redirect_out || type == e_redirect_append || type == e_heredoc);
+}
+
+int is_tokentype_subshell(t_token_type type)
+{
+	return (type == e_subshell_start || type == e_subshell_end);
+}
+
+
+
 // add tokentype
 // disconnect to control opes ["hoge"]=[|] -> ["hoge"],[|]
-
-int	arrange_token_list(t_info *info)
+int	set_elem_type_if_word(t_list **tokenlist_head)
 {
-//	t_list			*now_node;
-//	t_token_elem	*now_token;
-//	t_token_elem	*next_token;
+	t_list			*node;
+	t_token_elem	*token;
+	t_token_elem	*next_token;
 
-	if (!info || !info->tokenlist_head)
+	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
 
-	/*
-	now_node = info->tokenlist_head;
-	next_token = NULL;
-	while (now_node)
+	node = *tokenlist_head;
+	while (node)
 	{
-		now_token = now_node->content;
-		if (now_node->next)
-			next_token = now_node->next->content;
+		token = node->content;
+		if (node->next)
+			next_token = node->next->content;
 
-
-		if (is_str1chrs_in_str2(STR_OPERATOR, now_token->word))
+		// disconnect to control operator
+		if (token->is_connect_to_next_word && next_token && next_token->type != e_init)
+			token->is_connect_to_next_word = false;
+		if (next_token && is_tokentype_redirection(token->type))
 		{
-			if (is_str1chrs_in_str2(STR_OPERATOR, now_token->word))
-			now_token->type = e_control_operator;
+			if (next_token->type != e_init)
+				return (FAILURE);
+			if (token->type == e_redirect_in || token->type == e_redirect_out || token->type == e_redirect_append)
+				next_token->type = e_file;
+			if (token->type == e_heredoc)
+				next_token->type = e_heredoc_eof;
 		}
-		else
-		{
-			if (now_token->is_connect_to_next_word && next_token
-			&& is_str1chrs_in_str2(STR_OPERATOR, next_token->word))
-				now_token->is_connect_to_next_word = false;
-		}
-
-		now_node = now_node->next;
+		if (token->type == e_init)
+			token->type = e_word;
+		node = node->next;
 	}
-	 */
 	return (SUCCESS);
 }
 
@@ -96,7 +115,7 @@ int	validate_operator_sign(t_token_elem *now_token)
 	return (FAILURE);
 }
 
-void	append_operator_type(t_token_elem **now_token)
+void	set_elem_type_if_operator(t_token_elem **now_token)
 {
 	const char	*operators[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", NULL};
 	size_t		idx;
@@ -108,32 +127,17 @@ void	append_operator_type(t_token_elem **now_token)
 	if (!is_str1chrs_in_str2(STR_OPERATOR, (*now_token)->word))
 		return ;
 	idx = 0;
+//	printf("token:%s ->", (*now_token)->word);
 	while (operators[idx])
-		if (is_same_str(operators[idx++], (*now_token)->word))
+	{
+		if (is_same_str(operators[idx], (*now_token)->word))
 		{
 			(*now_token)->type = idx;
+			printf("token:%s, type:%zu\n", operators[idx], idx);
 			return ;
 		}
-}
-
-int is_semicolon(t_token_type type)
-{
-	return (type == e_ope_semicolon);
-}
-
-int is_pipe_or_and(t_token_type type)
-{
-	return (type == e_ope_pipe || type == e_ope_or || type == e_ope_and);
-}
-
-int is_redirection(t_token_type type)
-{
-	return (type == e_redirect_in || type == e_redirect_out || type == e_redirect_append || type == e_heredoc);
-}
-
-int is_subshell(t_token_type type)
-{
-	return (type == e_subshell_start || type == e_subshell_end);
+		idx++;
+	}
 }
 
 
@@ -142,6 +146,7 @@ int is_subshell(t_token_type type)
 // validate relationship now and next
 
 // [|,||,&&] + [<,<<,>,>>,(,init,]
+// TODO: bash-3.2$ <>out
 int	validate_syntax(t_token_elem *now_token, t_token_elem *next_token, bool is_head)
 {
 	t_token_type	type;
@@ -155,25 +160,28 @@ int	validate_syntax(t_token_elem *now_token, t_token_elem *next_token, bool is_h
 	if (next_token)
 		next_type = next_token->type;
 	is_err = false;
-
-	printf("word:%s\n", now_token->word);
-	if (is_semicolon(type))
-		if (is_head || is_pipe_or_and(next_type) || next_type == e_subshell_end)
+//	printf("word:%s\n", now_token->word);
+	if (is_tokentype_semicolon(type))
+		if (is_head || is_tokentype_pipe_or_and(next_type) || next_type == e_subshell_end)
 			is_err = true;
-	if (!is_err && is_pipe_or_and(type))
-		if (is_head || is_semicolon(next_type) || is_pipe_or_and(next_type) || next_type == e_subshell_end || next_type == e_nothing)
+	if (!is_err && is_tokentype_pipe_or_and(type))
+		if (is_head || is_tokentype_semicolon(next_type) ||
+				is_tokentype_pipe_or_and(next_type) || next_type == e_subshell_end || next_type == e_nothing)
 			is_err = true;
 	if (!is_err && type == e_subshell_start)
-		if (is_semicolon(next_type) || is_pipe_or_and(next_type) || next_type == e_subshell_end || next_type == e_nothing)
+		if (is_tokentype_semicolon(next_type) ||
+				is_tokentype_pipe_or_and(next_type) || next_type == e_subshell_end || next_type == e_nothing)
 			is_err = true;
 	if (!is_err && type == e_subshell_end)
-		if (is_head || is_subshell(next_type) || next_type == e_init)
+		if (is_head || is_tokentype_subshell(next_type) || next_type == e_init)
 			is_err = true;
-	if (!is_err && is_redirection(type))
-		if (is_semicolon(next_type) || is_pipe_or_and(next_type) || is_subshell(next_type) || next_type == e_nothing)
+	if (!is_err && is_tokentype_redirection(type))
+		if (is_tokentype_semicolon(next_type) ||
+			is_tokentype_pipe_or_and(next_type) ||
+				is_tokentype_redirection(next_type) || is_tokentype_subshell(next_type) || next_type == e_nothing)
 			is_err = true;
 	if (!is_err && type == e_init)
-		if (is_subshell(next_type))
+		if (next_type == e_subshell_start)
 			is_err = true;
 
 	if (!is_err)
@@ -204,44 +212,55 @@ int	validate_quote(t_token_elem *now_token)
 	return (FAILURE);
 }
 
-int	validate_token_list(t_list *tokenlist_head)
+// syntax error
+// <> filename
+int	arrange_and_validate_token_list(t_list *tokenlist_head)
 {
-	t_list			*now_node;
-	t_token_elem	*now_token;
+	t_list			*node;
+	t_token_elem	*token;
 	t_token_elem	*next_token;
 	bool			is_head;
 
 	if (!tokenlist_head)
 		return (FAILURE);
 
-	now_node = tokenlist_head;
-	while (now_node)
+	node = tokenlist_head;
+	// validate control sign
+	while (node)
 	{
-		now_token = now_node->content;
-		if (validate_operator_sign(now_token) == FAILURE)
+		token = node->content;
+		if (validate_operator_sign(token) == FAILURE)
 			return (FAILURE);
-		append_operator_type(&now_token);
-		if (validate_quote(now_token) == FAILURE)
+		set_elem_type_if_operator(&token);
+		if (validate_quote(token) == FAILURE)
 			return (FAILURE);
-		now_node = now_node->next;
+		node = node->next;
 	}
 
-	now_node = tokenlist_head;
+	// validate syntax
+	node = tokenlist_head;
 	next_token = NULL;
 	is_head = true;
-	while (now_node)
+	while (node)
 	{
-		now_token = now_node->content;
-		if (now_node->next)
-			next_token = now_node->next->content;
+		token = node->content;
+		if (node->next)
+			next_token = node->next->content;
+		else
+			next_token = NULL;
 
-		if (validate_syntax(now_token, next_token, is_head) == FAILURE)
+		if (validate_syntax(token, next_token, is_head) == FAILURE)
 			return (FAILURE);
 
-		now_node = now_node->next;
+		node = node->next;
 		if (is_head)
 			is_head = false;
 	}
+
+	set_elem_type_if_word(&tokenlist_head);
+
+	// arrange
+
 	return (SUCCESS);
 }
 

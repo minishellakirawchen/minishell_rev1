@@ -252,9 +252,37 @@ minishell $> echo "hello world"'<connect hoga' |cat -e Makefile>out>out>out>>app
 #split space    :[echo],["hello world"]=['<connect hoga'],[|cat],[-e],[Makefile>out>out>out>>append]=['hoge']=["huga"]=[;echo;;echo||]
 #split opes     :[echo],["hello world"]=['<connect hoga'],[|],[cat],[-e],[Makefile]=[>],[out],[>],[out],[>],[out],[>>],[append],['hoge']=["huga"]=[;],[echo],[;;],[echo],[||]
 
+
+minishell $> echo hello | echo "hello "'world|<>' &&(cat<in<<heredoc>>out | grep a) ||test>out|cat -e hoge
+#input          :[echo hello | echo "hello "'world|<>' &&(cat<in<<heredoc>>out | grep a) ||test>out|cat -e hoge]
+#split space    :[echo(init)],[hello(init)],[|(init)],[echo(init)],["hello "(init)]=['world|<>'(init)],[&&(cat<in<<heredoc>>out(init)],[|(init)],[grep(init)],[a)(init)],[||test>out|cat(init)],[-e(init)],[hoge(init)]
+#split opes     :[echo(init)],[hello(init)],[|(init)],[echo(init)],["hello "(init)]=['world|<>'(init)],[&&(init)],[((init)],[cat(init)],[<(init)],[in(init)],[<<(init)],[heredoc(init)],[>>(init)],[out(init)],[|(init)],[grep(init)],[a(init)],[)(init)],[||(init)],[test(init)],[>(init)],[out(init)],[|(init)],[cat(init)],[-e(init)],[hoge(init)]
+#arranged       :[echo(word)],[hello(word)],[|(|)],[echo(word)],["hello "(word)]=['world|<>'(word)],[&&(&&)],[((()],[cat(word)],[<(<)],[in(file)],[<<(>>)],[heredoc(eof)],[>>(>)],[out(file)],[|(|)],[grep(word)],[a(word)],[)())],[||(||)],[test(word)],[>(<<)],[out(file)],[|(|)],[cat(word)],[-e(word)],[hoge(word)]
+
 ```
 
 export key1=$key2$key3　空白なしで結合される
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

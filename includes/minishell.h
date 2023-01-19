@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 12:33:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 15:48:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ enum e_token_type
 	e_heredoc_eof = 11,			//
 	e_word = 12,				//
 	e_init = 13,				// init
-	e_nothing = -1
+	e_nothing = 20
 };
 
 enum e_syntax_err

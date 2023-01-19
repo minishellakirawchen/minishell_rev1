@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 13:18:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 15:56:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	debug_print_token_word(t_list *head, char *str)
 {
 	t_list			*node;
 	t_token_elem	*token;
+	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
 
 	if (str)
 		ft_dprintf(STDERR_FILENO, "#%-15s", str);
@@ -43,7 +44,7 @@ void	debug_print_token_word(t_list *head, char *str)
 	while (node)
 	{
 		token = node->content;
-		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
+		ft_dprintf(STDERR_FILENO, "[%s(%s)]", token->word, type[token->type]);
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
 		if (!token->is_connect_to_next_word && node->next)

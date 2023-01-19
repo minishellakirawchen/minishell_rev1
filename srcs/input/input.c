@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 13:55:34 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 15:28:17 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	clear_input(t_info *info)
 	info->tokenlist_head = NULL;
 }
 
+// FAILURE: 致命的なエラー(malloc)のためexit
+// is_continue=false: syntax error等, minishellはexitしない
 int	prompt_loop(t_info *info)
 {
 	int		exit_status;
@@ -52,12 +54,13 @@ int	prompt_loop(t_info *info)
 			return (FAILURE);//free
 
 		// input validation (Mandatory/Bonus)
-		if (validate_token_list(info->tokenlist_head) == FAILURE)
+		if (arrange_and_validate_token_list(info->tokenlist_head) == FAILURE)
 			is_continue = false;//add_history & free(line)
 
-		if (is_continue && arrange_token_list(info) == FAILURE)
-			return (FAILURE);
+		debug_print_token_word(info->tokenlist_head, "arranged");
 
+		if (!is_continue)
+			ft_dprintf(STDERR_FILENO, "continue\n");
 		// parsing (Mandatory/Bonus)
 		// expansion
 		// command_execution
