@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validate_syntax.c                                  :+:      :+:    :+:   */
+/*   validate_syntax_operators.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,13 +11,69 @@
 /* ************************************************************************** */
 
 #include "tokenizer.h"
+
+static int	validate_context(t_token_elem *now_token, t_token_elem *next_token, bool is_head);
+
+int validate_syntax_parenthesis_pairs(t_list *tokenlist_head)
+{
+	t_list			*node;
+	t_token_elem	*token;
+	int				cnt;
+
+	if (!tokenlist_head)
+		return (FAILURE);
+	node = tokenlist_head;
+	cnt = 0;
+	while (node)
+	{
+		token = node->content;
+		if (token->type == e_subshell_start)
+			cnt++;
+		if (token->type == e_subshell_end)
+			cnt--;
+		node = node->next;
+	}
+	if (cnt == 0)
+		return (SUCCESS);
+	if (cnt > 0)
+		ft_dprintf(STDERR_FILENO, "minishell: unclosed parenthesis `('\n");
+	else
+		ft_dprintf(STDERR_FILENO, "minishell: unclosed parenthesis `)'\n");
+	return (FAILURE);
+}
+
 // OK echo hello; < infile
 // OK echo hello; > outfile
 // validate relationship now and next
+int validate_syntax_operators(t_list *tokenlist_head)
+{
+	t_list			*node;
+	t_token_elem	*token;
+	t_token_elem	*next_token;
+	bool			is_head;
+
+	node = tokenlist_head;
+	next_token = NULL;
+	is_head = true;
+	while (node)
+	{
+		token = node->content;
+		if (node->next)
+			next_token = node->next->content;
+		else
+			next_token = NULL;
+		if (validate_context(token, next_token, is_head) == FAILURE)
+			return (FAILURE);
+		node = node->next;
+		if (is_head)
+			is_head = false;
+	}
+	return (SUCCESS);
+}
 
 // [|,||,&&] + [<,<<,>,>>,(,init,]
 // TODO: bash-3.2$ <>out
-int	validate_context(t_token_elem *now_token, t_token_elem *next_token, bool is_head)
+static int	validate_context(t_token_elem *now_token, t_token_elem *next_token, bool is_head)
 {
 	t_token_type	type;
 	t_token_type	next_type;
