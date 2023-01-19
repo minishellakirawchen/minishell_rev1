@@ -153,5 +153,10 @@ void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
 void	debug_print_token_word(t_list *head, char *str);
 
+int is_tokentype_semicolon(t_token_type type);
+int is_tokentype_pipe_or_and(t_token_type type);
+int is_tokentype_redirection(t_token_type type);
+int	is_tokentype_subshell(t_token_type type);
+
 
 #endif //MINISHELL_H

@@ -15,7 +15,11 @@ SRC		= main.c \
 		  tokenizer/tokenizer.c \
 		  tokenizer/space_split.c \
 		  tokenizer/operator_split.c \
-		  tokenizer/validate_token.c \
+		  tokenizer/is_token_type.c \
+		  tokenizer/validate_quote.c \
+		  tokenizer/validate_syntax.c \
+		  tokenizer/validate_operator.c \
+		  tokenizer/arrange_token.c \
 		  parser/parser.c \
 		  expansion/expansion.c \
 		  command_execution/command_execution.c \
