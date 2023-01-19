@@ -244,6 +244,14 @@ e2=test   a  echo helloworldhuga'hogehoge'
 
 
 
+Jan/19th update
+
+bash-3.2$ ./minishell 
+minishell $> echo "hello world"'<connect hoga' |cat -e Makefile>out>out>out>>append'hoge'"huga";echo;;echo||
+#input          :[echo "hello world"'<connect hoga' |cat -e Makefile>out>out>out>>append'hoge'"huga";echo;;echo||]
+#split space    :[echo],["hello world"]=['<connect hoga'],[|cat],[-e],[Makefile>out>out>out>>append]=['hoge']=["huga"]=[;echo;;echo||]
+#split opes     :[echo],["hello world"]=['<connect hoga'],[|],[cat],[-e],[Makefile]=[>],[out],[>],[out],[>],[out],[>>],[append],['hoge']=["huga"]=[;],[echo],[;;],[echo],[||]
+
 ```
 
 export key1=$key2$key3　空白なしで結合される

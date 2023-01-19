@@ -27,4 +27,9 @@ int		tokenize_input_line(t_info *info, const char *readline_input);
 t_list	*get_delim_splitted_tokenlist(const char *src, const char *delim, const char *setchars);
 int		split_by_operators(t_list **token_head);
 
+int		validate_tokens_for_mandatory(t_info *info);
+int		validate_token_list(t_list *tokenlist_head);
+int		arrange_token_list(t_info *info);
+
+
 #endif //TOKENIZER_H

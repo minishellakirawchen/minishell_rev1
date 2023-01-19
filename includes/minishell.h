@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 20:27:04 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 12:33:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ typedef struct s_info		t_info;
 typedef struct s_env_elem	t_env_elem;
 typedef struct s_token_elem	t_token_elem;
 typedef struct s_split_info	t_split_info;
+
 typedef enum e_token_type	t_token_type;
+typedef enum e_syntax_err	t_syntax_err;
 
 /* ************************** */
 /*           enum             */
@@ -54,10 +56,27 @@ typedef enum e_token_type	t_token_type;
 
 enum e_token_type
 {
-	e_init,
-	e_operator,
-	e_word,
-	e_redirection,
+	e_ope_semicolon = 0,		// ;
+	e_ope_pipe = 1,				// |
+	e_ope_or = 2,				// ||
+	e_ope_and = 3,				// &&
+	e_subshell_start = 4,		// (
+	e_subshell_end = 5,			// )
+	e_redirect_in = 6,			// <
+	e_redirect_out = 7,			// >
+	e_redirect_append = 8,		// >>
+	e_heredoc = 9,				// <<
+	e_file = 10,				//
+	e_heredoc_eof = 11,			//
+	e_word = 12,				//
+	e_init = 13,				// init
+	e_nothing = -1
+};
+
+enum e_syntax_err
+{
+	e_unexpected_token,
+	e_newline,
 };
 
 /* ************************** */

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 20:44:34 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 13:18:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void debug_print_2d_arr(char **arr, char *str)
 		return ;
 	i = 0;
 	if (str)
-		ft_dprintf(STDERR_FILENO, "%s:", str);
+		ft_dprintf(STDERR_FILENO, "#%-15s:", str);
 	ft_dprintf(STDERR_FILENO, "{");
 	while (arr[i])
 	{
@@ -33,24 +33,24 @@ void debug_print_2d_arr(char **arr, char *str)
 
 void	debug_print_token_word(t_list *head, char *str)
 {
-	t_list			*ptr;
-	t_token_elem	*elem;
+	t_list			*node;
+	t_token_elem	*token;
 
 	if (str)
-		ft_dprintf(STDERR_FILENO, "# %s", str);
+		ft_dprintf(STDERR_FILENO, "#%-15s", str);
 	ft_dprintf(STDERR_FILENO, ":", str);
-	ptr = head;
-	while (ptr)
+	node = head;
+	while (node)
 	{
-		elem = ptr->content;
-		ft_dprintf(STDERR_FILENO, "[%s]", elem->word);
-		if (elem->is_connect_to_next_word && ptr->next)
+		token = node->content;
+		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
+		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
-		if (!elem->is_connect_to_next_word && ptr->next)
+		if (!token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, ",");
-		ptr = ptr->next;
+		node= node->next;
 	}
-	ft_dprintf(STDERR_FILENO, "\n\n");
+	ft_dprintf(STDERR_FILENO, "\n");
 }
 
 /*

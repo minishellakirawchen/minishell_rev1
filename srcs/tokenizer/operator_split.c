@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 23:28:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 13:45:00 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 				word_len++;
 			if (src[head_idx + word_len])
 				word_len++;
-			if (src[head_idx + word_len])
-				is_connect_to_next = true;
+			if (src[head_idx + word_len] && !is_chr_in_str(src[head_idx + word_len], STR_OPERATOR)) // echo "hoge";
+				is_connect_to_next = true; //																			 ^^ connect false
 		}
 		// operation -> go to next to operation
 		else if (is_chr_in_str(src[head_idx + word_len], opes))
@@ -127,13 +127,10 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 
 		head_idx += word_len;
 	}
-//	debug_print_token_word(splitted_list_head, "splitted ");
 	return (splitted_list_head);
 }
 
-
 // quote
-
 
 // while(now)
 // {
@@ -145,47 +142,47 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 //  v           ^
 // new1 ->..-> new2
 //
-// どうやって間に入れれば良いんだ...?
+// どうやって間に入れれば良いんだ...?->dekita
 int	split_by_operators(t_list **token_head)
 {
 	t_list			*now_node;
-//	t_list			*prev_node;
-//	t_list			*next_node;
-//	t_list			*last_node;
-	t_token_elem	*elem;
-//	t_token_elem	*last_elem;
-	t_list			*splitted_list;
+	t_list			*prev;
+	t_list			*last_node;
+	t_token_elem	*token_elem;
+	t_list			*splitted_list_head;
 
 	if (!token_head || !*token_head)
 		return (FAILURE);
 	now_node = *token_head;
+	prev = NULL;
 	while (now_node)
 	{
-		elem = now_node->content;
-		splitted_list = get_split_before_after_opes(elem->word, STR_OPERATOR, STR_QUOTE);
-		debug_print_token_word(splitted_list, "split opes");
-		/*
-		if (!elem->is_quoted)
+		token_elem = now_node->content;
+
+		if (!token_elem->is_quoted && is_str1chrs_in_str2(STR_OPERATOR, token_elem->word))
 		{
-			splitted_list = get_split_before_after_opes(elem->word, STR_OPERATOR, STR_SPACE);
-			if (!splitted_list)
+			splitted_list_head = get_split_before_after_opes(token_elem->word, STR_OPERATOR, STR_SPACE);
+			if (!splitted_list_head)
 			{
 				ft_lstclear(token_head, free_token_elem);
 				return (FAILURE);
 			}
-			last_node = ft_lstlast(splitted_list);
-			last_elem = last_node->content;
-			if (elem->is_connect_to_next_word)
-				last_elem->is_connect_to_next_word = true;
+//			debug_print_token_word(splitted_list_head, "split head");
+			if (prev)
+				prev->next = splitted_list_head;
+			else
+				*token_head = splitted_list_head;
 
-			next_node = now_node->next;
-			last_node->next = next_node;
+			last_node = ft_lstlast(splitted_list_head);
+			last_node->next = now_node->next;
+
 			ft_lstdelone(now_node, free_token_elem);
-			now_node = splitted_list;
+			now_node = last_node;
 		}
-		*/
+		prev = now_node;
 		now_node = now_node->next;
 	}
+
 	return (SUCCESS);
 }
 
