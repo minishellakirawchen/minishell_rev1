@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 20:37:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:46:10 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@
 // [Makefile]				type:word
 // [>]						type:redirection
 // [out]					type:word
-
 
 // add tokentype
 // disconnect to control opes ["hoge"]=[|] -> ["hoge"],[|]
