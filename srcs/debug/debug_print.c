@@ -6,12 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 19:04:49 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:15:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 void debug_print_2d_arr(char **arr, char *str)
 {
 	size_t	i;
@@ -44,7 +43,7 @@ void	debug_print_token_word(t_list *head, char *str)
 	{
 		token = node->content;
 
-		ft_dprintf(STDERR_FILENO, "[%s(%s%s)]", token->word, type[token->type], token->is_quoted ? "'" : "");
+		ft_dprintf(STDERR_FILENO, "[%s]type:%s%s", token->word, type[token->type], token->is_quoted ? " quoted" : "");
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
 		if (!token->is_connect_to_next_word && node->next)

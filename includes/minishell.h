@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 15:48:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 20:59:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define STR_SPACE		"\t\n\v\f\r "
 # define STR_QUOTE		"'\""
 # define STR_OPERATOR	";&|<>()"
+# define STR_SUBSHELL	"()"
 
 # define CHR_SINGLE_QUOTE	'\''
 # define CHR_DOUBLE_QUOTE	'\"'
@@ -153,10 +154,10 @@ void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
 void	debug_print_token_word(t_list *head, char *str);
 
-int is_tokentype_semicolon(t_token_type type);
-int is_tokentype_pipe_or_and(t_token_type type);
-int is_tokentype_redirection(t_token_type type);
-int	is_tokentype_subshell(t_token_type type);
+int		is_tokentype_semicolon(t_token_type type);
+int		is_tokentype_pipe_or_and(t_token_type type);
+int		is_tokentype_redirection(t_token_type type);
+int		is_tokentype_subshell(t_token_type type);
 
 
 #endif //MINISHELL_H

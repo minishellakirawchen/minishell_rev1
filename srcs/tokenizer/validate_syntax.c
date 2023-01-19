@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:03:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 17:10:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:08:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	validate_context(t_token_elem *now_token, t_token_elem *next_token, bool is_
 			is_tokentype_pipe_or_and(next_type) || next_type == e_subshell_end || next_type == e_nothing)
 			is_err = true;
 	if (!is_err && type == e_subshell_end)
-		if (is_head || is_tokentype_subshell(next_type) || next_type == e_init)
+		if (is_head || next_type == e_subshell_start || next_type == e_init)
 			is_err = true;
 	if (!is_err && is_tokentype_redirection(type))
 		if (is_tokentype_semicolon(next_type) ||

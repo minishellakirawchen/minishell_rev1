@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 19:07:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 20:37:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ int	tokenize_input_line(t_info *info, const char *readline_input)
 		return (FAILURE);
 	// split by space
 	//   char **input -> list
-	info->tokenlist_head = get_delim_splitted_tokenlist(readline_input,
-														STR_SPACE, STR_QUOTE);
+	info->tokenlist_head = get_delim_splitted_tokenlist(readline_input, STR_SPACE, STR_QUOTE);
 	if (!info->tokenlist_head)
 		return (FAILURE);
 

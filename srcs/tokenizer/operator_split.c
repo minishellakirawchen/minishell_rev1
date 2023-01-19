@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 13:45:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:00:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,11 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 			if (src[head_idx + word_len])
 				word_len++;
 			if (src[head_idx + word_len] && !is_chr_in_str(src[head_idx + word_len], STR_OPERATOR)) // echo "hoge";
-				is_connect_to_next = true; //																			 ^^ connect false
+				is_connect_to_next = true; //																		 ^^ connect false
 		}
 		// operation -> go to next to operation
+		else if (is_chr_in_str(src[head_idx + word_len], STR_SUBSHELL))
+				word_len++;
 		else if (is_chr_in_str(src[head_idx + word_len], opes))
 		{
 			watching_chr = ft_strchr(opes, src[head_idx + word_len])[0];
@@ -103,7 +105,6 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 			while (src[head_idx + word_len] && !is_chr_in_str(src[head_idx + word_len], opes) && !is_chr_in_str(src[head_idx + word_len], quote))
 				word_len++;
 		}
-
 		splittd_word = ft_substr(src, head_idx, word_len);
 		token_elem = (t_token_elem *)malloc(sizeof(t_token_elem));
 		if (!splittd_word || !token_elem)
