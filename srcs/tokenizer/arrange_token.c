@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 18:51:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/19 19:14:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	delete_empty_elem(t_list **tokenlist_head);
 static int	valid_and_set_control_operator(t_list **tokenlist_head);
-static int	valid_syntax(t_list *tokenlist_head);
+static int	validate_syntax(t_list *tokenlist_head);
 static void	set_elem_type_if_operator(t_list **tokenlist_head);
 static int	set_elem_type_if_word(t_list **tokenlist_head);
 
@@ -24,26 +24,23 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 {
 	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
-
 	if (valid_and_set_control_operator(tokenlist_head) == FAILURE)
 		return (FAILURE);
-
 	set_elem_type_if_operator(tokenlist_head);
-
 	if (validate_quote(*tokenlist_head) == FAILURE)
 		return (FAILURE);
-
 	debug_print_token_word(*tokenlist_head, "set opes");
 	delete_empty_elem(tokenlist_head);
-	if (valid_syntax(*tokenlist_head) == FAILURE)
+	if (validate_syntax(*tokenlist_head) == FAILURE)
 		return (FAILURE);
 	set_elem_type_if_word(tokenlist_head);
+
 	if (ft_lstsize(*tokenlist_head) == 0)
 		return (FAILURE);
 	return (SUCCESS);
 }
 
-static int valid_syntax(t_list *tokenlist_head)
+static int validate_syntax(t_list *tokenlist_head)
 {
 	t_list			*node;
 	t_token_elem	*token;
@@ -61,7 +58,7 @@ static int valid_syntax(t_list *tokenlist_head)
 		else
 			next_token = NULL;
 
-		if (validate_syntax(token, next_token, is_head) == FAILURE)
+		if (validate_context(token, next_token, is_head) == FAILURE)
 			return (FAILURE);
 
 		node = node->next;
@@ -89,31 +86,6 @@ static int	valid_and_set_control_operator(t_list **tokenlist_head)
 	}
 	return (SUCCESS);
 }
-
-//static void	set_elem_type_if_operator(t_token_elem **now_token)
-//{
-//	const char	*operators[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", NULL};
-//	size_t		idx;
-//
-//	if (!now_token || !*now_token)
-//		return ;
-//	if ((*now_token)->is_quoted)
-//		return ;
-//	if (!is_str1chrs_in_str2(STR_OPERATOR, (*now_token)->word))
-//		return ;
-//	idx = 0;
-////	printf("token:%s ->", (*now_token)->word);
-//	while (operators[idx])
-//	{
-//		if (is_same_str(operators[idx], (*now_token)->word))
-//		{
-//			(*now_token)->type = idx;
-////			printf("token:%s, type:%zu\n", operators[idx], idx);
-//			return ;
-//		}
-//		idx++;
-//	}
-//}
 
 static void	set_elem_type_if_operator(t_list **tokenlist_head)
 {

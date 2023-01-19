@@ -17,7 +17,7 @@
 
 // [|,||,&&] + [<,<<,>,>>,(,init,]
 // TODO: bash-3.2$ <>out
-int	validate_syntax(t_token_elem *now_token, t_token_elem *next_token, bool is_head)
+int	validate_context(t_token_elem *now_token, t_token_elem *next_token, bool is_head)
 {
 	t_token_type	type;
 	t_token_type	next_type;
