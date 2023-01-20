@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/20 21:15:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 21:23:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ t_tree	*create_tree(t_list *tokenlist_head)
 	t_token_elem	*token_elem;
 	t_tree			*new_tree;
 
-
 	tree_root = create_tree_node(e_root, NULL);
 	if (!tree_root)
 		return (NULL);
@@ -98,7 +97,7 @@ t_tree	*create_tree(t_list *tokenlist_head)
 		{
 			// section_list_head->...->list_node->NULL
 			new_tree = create_tree_node(set_tree_type(token_elem->type), section_list_head);
-
+			
 			// add new_tree to root
 			//init setction_list_head
 		}

@@ -338,7 +338,9 @@ Y2 = c || d | Y3
 Y3 = e || f
 
 #before
-             [&&]
+             [root]
+               ┃
+              [&&]
  ┏━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┓
 [a]                         [sub-shell]
                   ┏━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┓
@@ -353,6 +355,8 @@ Y3 = e || f
                        [d]   [sub-shell]
                              ┏━━━┻━━━━┓              
                             [f]       [f]
+
+
 
 #after
 1)minishell root
@@ -385,6 +389,201 @@ Y3 = e || f
     [||]
  ┏━━━┻━━━━┓
 [e]       [f]
+
+
+
+
+
+# 23/Jan/20th
+[0] a && (b && (c || d | (e || f)) && g)
+*create root
+    [root]
+ ┏━━━━┻━━━━━┓
+null       null                         
+
+[1] a && (b && (c || d | (e || f)) && g)
+      ^^ ope=&&
+
+ *create node
+         [&&]
+     ┏━━━━┻━━━━━┓
+    null        null                        
+
+ *create leaf
+      [command]
+     ┏━━━━┻━━━━━┓
+    [a]        null    
+
+ *connect command leaf to operator node
+              [&&]
+          ┏━━━━┻━━━━━┓
+      [command]     null                        
+     ┏━━━━┻━━━━━┓
+    [a]        null    
+                   
+
+ *connect to bottom operator node = root->left
+                 [root]
+               ┏━━━━┻━━━━━┓
+             [&&]       null
+          ┏━━━━┻━━━━━┓
+        [cmd]        null                        
+     ┏━━━━┻━━━━━┓
+    [a]        null                        
+
+         0     1         2     2 1     0
+[3] a && (b && (c || d | (e || f)) && g) = a && X1
+         ^0 skip subshell             0^ ^end
+
+ *create leaf
+
+      [subshell-0]
+     ┏━━━━┻━━━━━┓
+    [X1]        null                        
+
+
+ * connect to bottom operator node = &&->right 
+
+                    [root]
+                  ┏━━━━┻━━━━━┓
+                 [&&]       null
+          ┏━━━━━━━┻━━━━━━━┓
+        [cmd]          [subshell-0]   
+     ┏━━━━┻━━━━━┓     ┏━━━━┻━━━━━┓
+    [a]        null  [X1]        null                       
+
+
+実行時
+exec X1:subshell -> pass to parsing func
+## X1
+[4] X1 = b && (c || d | (e || f)) && g
+
+ *create root
+ 
+        [root]
+     ┏━━━━┻━━━━━┓
+    null       null                         
+
+
+[5] b && (c || d | (e || f)) && g
+      ^^ ope=&&
+
+ *create operator node
+
+         [&&]
+     ┏━━━━┻━━━━━┓
+    null        null                        
+
+ *create leaf
+
+      [command]
+     ┏━━━━┻━━━━━┓
+    [b]        null    
+
+
+ *connect command leaf to operator node
+
+              [&&]
+          ┏━━━━┻━━━━━┓
+      [command]     null                        
+     ┏━━━━┻━━━━━┓
+    [b]        null    
+
+                   
+ *connect to bottom operator node = root->left
+                 [root]
+               ┏━━━━┻━━━━━┓
+             [&&]       null
+          ┏━━━━┻━━━━━┓
+        [cmd]        null                        
+     ┏━━━━┻━━━━━┓
+    [b]        null                        
+    
+
+         1         2     2 1         
+[6] b && (c || d | (e || f)) && g = b && X2 && g
+         ^ skip subshell   ^ ^^ope       ^^ ^^
+
+ *create operator node
+         [&&]
+     ┏━━━━┻━━━━━┓
+    null        null                        
+
+ *create leaf
+      [subshell-1]
+     ┏━━━━┻━━━━━┓
+    [X2]        null    
+
+ *connect command leaf to operator node = &&->left
+              [&&]
+          ┏━━━━┻━━━━━┓
+   [subshell-1]     null                        
+     ┏━━━━┻━━━━━┓
+    [X2]        null    
+   
+ *connect to bottom root node = &&->right
+ 
+                       [root]
+                     ┏━━━━┻━━━━━┓
+                   [&&]        null
+          ┏━━━━━━━━━━┻━━━━━━━━━━━┓
+        [cmd]                   [&&]                        
+     ┏━━━━┻━━━━━┓           ┏━━━━┻━━━━━┓
+    [b]        null   [subshell-1]     null
+                       ┏━━━━┻━━━━━┓
+                     [X2]        null    
+
+[7] b && (c || d | (e || f)) && g = b && X2 && g
+      0                      1         0    1 ^ ^end
+                                               
+ *create leaf
+
+      [command]
+     ┏━━━━┻━━━━━┓
+    [g]        null    
+
+
+ *connect to &&-1 = &&1->right
+ 
+                         [root]
+                       ┏━━━━┻━━━━━┓
+                    [&&-0]        null
+          ┏━━━━━━━━━━━━┻━━━━━━━━━━━━┓
+        [cmd]                      [&&-1]                        
+     ┏━━━━┻━━━━━┓         ┏━━━━━━━━━┻━━━━━━━━┓
+    [b]        null  [subshell-1]        [command]
+                     ┏━━━━┻━━━━━┓       ┏━━━━┻━━━━━┓
+                   [X2]        null    [g]        null
+
+
+operator no必要？
+それともbottomに結合すれば十分？
+** A && B && Cの木構造はどうあるべき？
+
+            [root]
+         ┏━━━━┻━━━━━┓
+       [&&-1]      null
+  ┏━━━━━━┻━━━━━━┓
+ [A]          [&&-2]                        
+          ┏━━━━┻━━━━┓
+         [B]       [C]
+
+root->left = ope1(&&-1)
+ ope1->left = A
+ ope1->right = ope2(&&-2)
+  ope2->left = B
+  ope2->right = C
+
+実行順はA->B->C
+         [root]
+      ┏━━━━┻━━━━━┓
+    [&&-1]     [&&-2]
+  ┏━━━┻━━━┓   ┏━━━┻━━━┓
+ [A]     [B] [C]     null
+
+
+A && B && C && D
+
 
 ```
 
