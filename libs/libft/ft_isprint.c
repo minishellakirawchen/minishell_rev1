@@ -6,11 +6,9 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:30:15 by takira            #+#    #+#             */
-/*   Updated: 2022/10/17 10:30:34 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 16:43:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/libft.h"
 
 int	ft_isprint(int c)
 {

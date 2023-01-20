@@ -34,6 +34,8 @@ struct t_tree
     cmd; *list_head
 }
 
+
+
 ```
 
 
@@ -316,20 +318,110 @@ c = d || e
 
      
 
+
+
+
 ```
 ( = 1
 ) = -1
 でcloseをチェック
 0になった時までを区切りminishellに渡す
 
+```
+
+$ a && (b && (c || d | (e || f)) && g)
+$ X
+
+X = a && Y1
+Y1 = b && Y2 && g
+Y2 = c || d | Y3
+Y3 = e || f
+
+#before
+             [&&]
+ ┏━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┓
+[a]                         [sub-shell]
+                  ┏━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━┓
+                [&&]                           [&&]
+       ┏━━━━━━━━━━┻━━━━━━━━━━━┓             ┏━━━┻━━━━┓      
+  [sub-shell]            [sub-shell]       [g]       null
+  ┏━━━━┻━━━━┓           ┏━━━━━┻━━━━━━┓ 
+[b]        null       [||]           null
+                   ┏━━━┻━━━━┓
+                  [c]      [|]
+                        ┏━━━┻━━━━┓      
+                       [d]   [sub-shell]
+                             ┏━━━┻━━━━┓              
+                            [f]       [f]
+
+#after
+1)minishell root
+    [X]
+    [&&]
+ ┏━━━┻━━━━┓
+[a]       [Y1]
+           ^minishell child-1
+
+2)minishell child-1
+    [Y1]
+    [&&]
+ ┏━━━┻━━━━┓
+[b]      [&&]
+      ┏━━━┻━━━━┓
+    [Y2]       [g]
+     ^minishell child-2
+
+3)minishell child-2
+    [Y2]
+    [||]
+ ┏━━━┻━━━━┓
+[c]      [|]
+      ┏━━━┻━━━━┓
+    [d]       [Y3]
+               ^minishell child-3
+
+4)minishell child-3
+    [Y3]
+    [||]
+ ┏━━━┻━━━━┓
+[e]       [f]
+
+```
+
+
+
+
+## parameter
+
+```c
+# パラメータ構造体
+struct s_info
+{
+	t_list	*envlist_head;
+	t_list	*tokenlist_head;
+	t_tree  *tree_root;
+}   t_info;
+
+# 環境変数関係
+t_list *envlist_head->content;
+struct s_env_elem
+{
+	char *key;
+	char *value;
+};
+
+# input
+char **command_list = {"cmds1", "cmds2", "cmds3", "cmds4", ..., NULL};
+int ft_bulitin_hoge(char **command_list)
+{
+	
+}
 
 
 
 
 
-
-
-
+```
 
 
 

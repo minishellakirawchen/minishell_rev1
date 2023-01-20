@@ -51,7 +51,7 @@ LIBS		= $(addprefix $(LIBFT_DIR)/, $(LIBFT_NAME))
 # LFLAGS
 RL_DIR		= $(shell brew --prefix readline)/lib
 LIBS_DIR	= $(LIBFT_DIR) $(RL_DIR)
-LFLAGS		= $(addprefix -L, $(LIBS_DIR)) -lreadline
+LFLAGS		= $(addprefix -L, $(LIBS_DIR)) -lreadline -lhistory
 
 
 # IFLAGS
@@ -92,7 +92,7 @@ norm_lib	:
 	norminette -v
 	norminette $(LIBFT_DIR)
 
-
-.PHONY	: all clean fclean re bonus norm
-
 -include	$(DEPS)
+
+.PHONY	: all clean fclean re bonus norm $(DEPS)
+

@@ -6,10 +6,12 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 16:52:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 14:14:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "input.h"
 
 void	clear_input(t_info *info)

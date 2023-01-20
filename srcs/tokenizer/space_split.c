@@ -71,6 +71,7 @@ static t_token_elem	*create_word_token_from_src(t_split_info *split)
 	new_token->type = e_init;
 	new_token->is_connect_to_next_word = split->is_connect_to_next_word;
 	new_token->is_quoted = is_quoted;
+	new_token->parenthesis_no = -1;
 	return (new_token);
 }
 

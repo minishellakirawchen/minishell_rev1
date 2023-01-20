@@ -6,11 +6,9 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:40:13 by takira            #+#    #+#             */
-/*   Updated: 2022/10/17 10:40:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 16:47:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/libft.h"
 
 int	ft_tolower(int c)
 {

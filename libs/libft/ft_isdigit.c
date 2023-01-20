@@ -6,11 +6,9 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:33:40 by takira            #+#    #+#             */
-/*   Updated: 2022/10/17 10:33:42 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 16:43:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/libft.h"
 
 int	ft_isdigit(int c)
 {

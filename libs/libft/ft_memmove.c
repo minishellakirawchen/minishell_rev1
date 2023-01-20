@@ -6,11 +6,9 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:36:10 by takira            #+#    #+#             */
-/*   Updated: 2022/11/07 14:00:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 16:44:43 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/libft.h"
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {

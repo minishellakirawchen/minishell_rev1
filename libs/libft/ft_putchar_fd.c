@@ -6,11 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:36:29 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:52:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 16:46:13 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+# include <unistd.h>
+# include <errno.h>
+# include <stdio.h>
 
 ssize_t	ft_putchar_fd(char c, int fd)
 {

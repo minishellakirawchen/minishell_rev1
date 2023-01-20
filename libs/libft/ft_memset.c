@@ -6,11 +6,9 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:36:19 by takira            #+#    #+#             */
-/*   Updated: 2023/01/15 22:20:49 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 16:44:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/libft.h"
 
 void	*ft_memset(void *s, int c, size_t n)
 {

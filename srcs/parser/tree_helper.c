@@ -1,29 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input.h                                            :+:      :+:    :+:   */
+/*   ft_tree_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/17 15:13:31 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 18:49:15 by takira           ###   ########.fr       */
+/*   Created: 2022/12/27 18:28:00 by takira            #+#    #+#             */
+/*   Updated: 2023/01/07 20:03:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef INPUT_H
-# define INPUT_H
+#include "paeser.h"
 
-#include "minishell.h"
+void	tree_clear(t_tree **stk)
+{
+	t_tree	*right;
 
+	if (!stk)
+		return ;
+	while (*stk)
+	{
+		right = (*stk)->right;
+		free(*stk);
+		*stk = right;
+	}
+	*stk = NULL;
+}
 
-/*          typedef           */
-typedef struct s_info	t_info;
+size_t	get_tree_size(t_tree *stk)
+{
+	size_t	size;
 
-
-/* ************************** */
-/*           input            */
-/* ************************** */
-int	prompt_loop(t_info *info);
-
-
-#endif //INPUT_H
+	size = 0;
+	while (stk)
+	{
+		stk = stk->right;
+		size++;
+	}
+	return (size);
+}

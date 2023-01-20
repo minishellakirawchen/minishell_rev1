@@ -6,11 +6,9 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 21:31:51 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:47:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 16:44:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/libft.h"
 
 int	ft_isupper(int c)
 {
