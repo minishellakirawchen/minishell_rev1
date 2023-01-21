@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:05:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 17:06:07 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/21 14:52:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,3 +31,10 @@ int is_tokentype_subshell(t_token_type type)
 {
 	return (type == e_subshell_start || type == e_subshell_end);
 }
+
+// BNF
+int is_tokentype_list_operator(t_token_type type)
+{
+	return (is_tokentype_semicolon(type) || is_tokentype_pipe_or_and(type));
+}
+

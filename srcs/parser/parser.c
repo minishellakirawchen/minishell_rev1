@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/20 21:23:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/21 15:08:14 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ t_tree	*create_tree(t_list *tokenlist_head)
 	t_list			*list_node;
 	t_list			*section_list_head;
 	t_token_elem	*token_elem;
-	t_tree			*new_tree;
+	t_tree			*new_operator_node;
+	t_tree			*new_list_node;
 
 	tree_root = create_tree_node(e_root, NULL);
 	if (!tree_root)
@@ -89,21 +90,33 @@ t_tree	*create_tree(t_list *tokenlist_head)
 
 	list_node = tokenlist_head;
 	section_list_head = tokenlist_head;
+	new_list_node = NULL;
 	while (list_node)
 	{
 		token_elem = list_node->content;
 		// operator: create list_node and append tree_root
-		if (is_tokentype_semicolon(token_elem->type) || is_tokentype_pipe_or_and(token_elem->type))
+		if (is_tokentype_list_operator(token_elem->type))
 		{
 			// section_list_head->...->list_node->NULL
-			new_tree = create_tree_node(set_tree_type(token_elem->type), section_list_head);
-			
+			new_operator_node = create_tree_node(set_tree_type(token_elem->type), section_list_head);
+			if (!new_operator_node)
+				return (NULL); //TODO:free
+			new_operator_node->left = new_list_node;
+
 			// add new_tree to root
+			add_bottom_of_tree(&tree_root, new_operator_node);
+
 			//init setction_list_head
+			new_operator_node = NULL; //free?
+			new_list_node = NULL;
 		}
 		else
 		{
-			// make command list, handle redirect information
+			// command_list & readirection list
+			// make command list
+			// handle redirect information
+
+
 
 		}
 		list_node = list_node->next;

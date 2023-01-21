@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/20 10:23:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/21 14:51:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,11 +154,5 @@ void	free_token_elem(void *content);
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
 void	debug_print_token_word(t_list *head, char *str);
-
-int		is_tokentype_semicolon(t_token_type type);
-int		is_tokentype_pipe_or_and(t_token_type type);
-int		is_tokentype_redirection(t_token_type type);
-int		is_tokentype_subshell(t_token_type type);
-
 
 #endif //MINISHELL_H

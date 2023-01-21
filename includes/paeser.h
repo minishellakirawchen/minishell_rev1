@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/20 21:13:55 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/21 15:07:21 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,12 @@ struct s_tree
 	t_tree				*left;
 	t_tree				*right;
 };
+
+void	add_top_of_tree(t_tree **tree, t_tree *elem);
+void	add_bottom_of_tree(t_tree **tree, t_tree *elem);
+t_tree	*get_last_node(t_tree *elem);
+t_tree	*pop_from_top(t_tree **tree);
+t_tree	*pop_from_bottom(t_tree **tree);
+
 
 #endif //PAESER_H
