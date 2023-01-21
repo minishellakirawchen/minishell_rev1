@@ -328,6 +328,22 @@ c = d || e
 0になった時までを区切りminishellに渡す
 
 ```
+A ; B ; C    A->B->C
+A    echo hello | grep a && (cd /bin && ls) || hoge
+
+&&  cmd1=0 && cmd2
+||  
+
+A    a && b || c  a->b->c
+
+
+a && b && c
+   [&&]
+ ┏━━━┻━━━━┓
+[a]      [&&]
+     ┏━━━┻━━━━┓
+    [b]       [c]
+
 
 $ a && (b && (c || d | (e || f)) && g)
 $ X
@@ -586,6 +602,135 @@ A && B && C && D
 
 
 ```
+
+## EBNF(Extended Backus–Naur form)
+
+### わかっていること
+* control operator |, &&, ||, ;, ()
+* operator <, >, <<, >>
+* 構文解析、EBNFを使えると拡張性が高くなりそう
+* 力技で優先順位ごとに分割し、リスト構造で持てばやりたいことは実行できそう
+  * 力技の方法も構文木を分解しているだけっぽい
+
+### わかったこと
+* BNFによる表現方法
+* &&,||,;は同列扱いで良さそう、前から実行して次への渡し方を分岐するだけっぽい
+* BNFの使い方
+  * BNFは定義であり、これをloadしてvalidationなどはしない
+  * これをもとに実装していくということっぽい
+
+### わかっていないこと
+* 構文木の作成方法
+* 優先順位に基づく実行方法
+
+
+#### 文法の表現->生成規則'''
+```
+#  BNF->parsing
+
+<digit> ::= 0|1|2|3|4|5|6|7|8|9
+
+<number> ::= <digit>
+           | <number> <digit>
+
+<letter> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|
+             A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
+
+<word> ::= <letter>
+         | <word> <letter>
+
+<word_list> ::= <word>
+             |  <word_list> <word>
+
+<assignment_word> ::= <word> '=' <word>
+                | <word> '+=' <word>
+
+<redirection> ::=  '>' <word>
+                |  '<' <word>
+                |  '>>' <word>
+                |  '<<' <word>
+
+<command_element> ::= <word>
+                    | <assignment_word>
+                    | <redirection>
+
+<redirection_list> ::= <redirection>
+                    | <redirection_list> <redirection>
+
+<command> ::= <command_element>
+            | <subshell>
+            | <subshell> <redirection_list>
+            
+
+<pipeline> ::=  <pipeline> '|' <pipeline>
+                | <command>
+
+<list> ::= <list> '&&' <list>
+           |  <list> '||' <list>
+           |  <list> ';' <list>
+           |  <pipeline>
+
+<subshell> ::= '(' <list> ')'
+
+```
+
+
+
+
+
+
+
+
+
+//memo
+                shell
+* expr    +-     |
+* mul     */     && ||
+* primary ()     ;
+*                ()
+
+echo hello
+echo hello | grep a
+echo hello | grep a && cat Makefile
+echo hello | grep a && cat Makefile | grep a
+
+(cd /bin)
+(cd /bin && pwd)
+(cd /bin && pwd) | pwd
+echo hello && (cd /bin && pwd) | pwd
+
+
+
+A && (B | C) | (D || E) -> A && (B | C) | (D || E)
+(F) | G
+
+
+A && (B | C) | (D || E) ; (F) | G
+
+
+(A && (B | C) | (D || E) ; (F) | G) | H ; I
+
+
+```c
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

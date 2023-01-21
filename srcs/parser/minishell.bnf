@@ -20,12 +20,12 @@
                 |  '>>' <word>
                 |  '<<' <word>
 
-<command_element> ::= <word>
-                    | <assignment_word>
-                    | <redirection>
-
 <redirection_list> ::= <redirection>
                     | <redirection_list> <redirection>
+
+<command_element> ::= <word>
+                    | <assignment_word>
+                    | <redirection_list>
 
 <command> ::= <command_element>
             | <subshell>
