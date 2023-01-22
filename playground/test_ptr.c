@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcmp.c                                        :+:      :+:    :+:   */
+/*   test_ptr.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 10:36:02 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:40:05 by takira           ###   ########.fr       */
+/*   Created: 2023/01/22 09:24:38 by takira            #+#    #+#             */
+/*   Updated: 2023/01/22 09:29:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "test.h"
 
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
+int	main(void)
 {
-	const unsigned char	*str1 = (const unsigned char *)s1;
-	const unsigned char	*str2 = (const unsigned char *)s2;
-	size_t				i;
+	int	*num1;
+	int *num2;
+	int m = 1;
 
-	i = 0;
-	while (i < n)
-	{
-		if (str1[i] != str2[i])
-			return ((int)(str1[i] - str2[i]));
-		i++;
-	}
+	num1 = &m;
+	num2 = num1;
+	printf("num1:%d num2:%d\n", *num1, *num2);
+
+	int k = 2;
+	num1 = &k;
+	printf("num1:%d num2:%d\n", *num1, *num2);
+
+	num1 = NULL;
+	printf("num2:%d\n", *num2);
+
+	//num1:1 num2:1
+	//num1:2 num2:1
+	//num2:1
 	return (0);
 }

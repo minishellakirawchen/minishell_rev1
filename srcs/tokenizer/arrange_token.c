@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/01/20 18:43:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/22 16:17:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,23 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 
 	set_parenthesis_no(tokenlist_head);
 
-	debug_print_token_word(*tokenlist_head, "set opes");
+//	debug_print_token_word(*tokenlist_head, "set opes");
 
 	delete_empty_elem(tokenlist_head);
+//	debug_print_token_word(*tokenlist_head, "delete empty");
+
 	if (validate_syntax_operators(*tokenlist_head) == FAILURE)
 		return (FAILURE);
+
+//	debug_print_token_word(*tokenlist_head, "validated");
+
 	set_elem_type_if_word(tokenlist_head);
 
 	if (ft_lstsize(*tokenlist_head) == 0)
 		return (FAILURE);
+
+//	debug_print_token_word(*tokenlist_head, "set word type");
+
 	return (SUCCESS);
 }
 
@@ -106,16 +114,16 @@ static void	set_parenthesis_no(t_list **tokenlist_head)
 		token = node->content;
 		if (token->type == e_subshell_start)
 		{
-			token->parenthesis_no = parentesis_no;
 			parentesis_no++;
+			token->depth = parentesis_no;
 		}
 		else if (token->type == e_subshell_end)
 		{
+			token->depth = parentesis_no;
 			parentesis_no--;
-			token->parenthesis_no = parentesis_no;
 		}
 		else
-			token->parenthesis_no = -1;
+			token->depth = parentesis_no;
 		node = node->next;
 	}
 }

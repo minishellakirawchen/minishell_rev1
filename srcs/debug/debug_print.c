@@ -6,11 +6,75 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/20 10:33:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/22 16:21:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	debug_print_exec_list(t_exec_list *node, char *str)
+{
+	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
+
+	ft_dprintf(STDERR_FILENO, "\n[#DEBUG print] %s %s", str ? str : "", "\n");
+	if (!node)
+	{
+		ft_dprintf(STDERR_FILENO, "null\n");
+		return ;
+	}
+	while (node)
+	{
+		if (node->node_kind == e_head)
+			ft_dprintf(STDERR_FILENO, "[head]\n  |\n");
+		else if (node->node_kind == e_operator)
+			ft_dprintf(STDERR_FILENO, "  [%s]\n", type[node->token_type]);
+		else
+		{
+			ft_dprintf(STDERR_FILENO, "[pipeline] :");
+			debug_print_token_word(node->token_list_head, NULL);
+		}
+		node = node->next;
+	}
+	ft_dprintf(STDERR_FILENO, "  |\n[tail]\n");
+}
+
+void	debug_print_tree(t_exec_list *root, char *str)
+{
+	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
+	t_exec_list	*node;
+	t_exec_list	*left_node;
+
+	if (str)
+		ft_dprintf(STDERR_FILENO, "#%-15s\n", str);
+	if (!root)
+	{
+		ft_dprintf(STDERR_FILENO, "tree node is null\n");
+		return ;
+	}
+	ft_dprintf(STDERR_FILENO, "[root]\n  |\n");
+	node = root;
+	while (node)
+	{
+		if (node->node_kind == e_pipeline)
+		{
+			ft_dprintf(STDERR_FILENO, "[pipeline] :");
+			debug_print_token_word(node->token_list_head, NULL);
+		}
+		else
+		{
+			// prev = pipeline
+			left_node = node->prev;
+			ft_dprintf(STDERR_FILENO, "[pipeline] :");
+			debug_print_token_word(left_node->token_list_head, NULL);
+
+			// print operator node
+			if (node->token != e_head)
+				ft_dprintf(STDERR_FILENO, "[%s]\n  |\n", type[node->token_type]);
+		}
+		node = node->next;
+	}
+}
+
 void debug_print_2d_arr(char **arr, char *str)
 {
 	size_t	i;
@@ -34,7 +98,7 @@ void	debug_print_token_word(t_list *head, char *str)
 {
 	t_list			*node;
 	t_token_elem	*token;
-	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
+//	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
 
 	if (str)
 		ft_dprintf(STDERR_FILENO, "#%-15s:", str);
@@ -44,10 +108,9 @@ void	debug_print_token_word(t_list *head, char *str)
 		token = node->content;
 
 		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
-		ft_dprintf(STDERR_FILENO, "%s", type[token->type]);
-		if (is_tokentype_subshell(token->type))
-			ft_dprintf(STDERR_FILENO, "%2d", token->parenthesis_no);
-		ft_dprintf(STDERR_FILENO, "%c", token->is_quoted ? token->word[0] : '\0');
+//		ft_dprintf(STDERR_FILENO, "%s", type[token->type]);
+		ft_dprintf(STDERR_FILENO, "%d", token->depth);
+//		ft_dprintf(STDERR_FILENO, "%c", token->is_quoted ? token->word[0] : '\0');
 
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");

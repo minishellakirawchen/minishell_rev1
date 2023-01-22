@@ -101,7 +101,7 @@ static int	validate_context(t_token_elem *now_token, t_token_elem *next_token, b
 	is_syntax_err = false;
 //	printf("word:%s\n", now_token->word);
 	if (is_tokentype_semicolon(type))
-		if (is_head || is_tokentype_list_operator(next_type) || next_type == e_subshell_end)
+		if (is_head || is_tokentype_operator(next_type) || next_type == e_subshell_end)
 			is_syntax_err = true;
 	if (!is_syntax_err && is_tokentype_pipe_or_and(type))
 		if (is_head || is_tokentype_semicolon(next_type) ||

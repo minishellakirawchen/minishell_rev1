@@ -6,15 +6,19 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:13:31 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 18:49:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/22 13:37:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INPUT_H
 # define INPUT_H
 
-#include "minishell.h"
+# include <stdio.h>
 
+#include <readline/readline.h>
+#include <readline/history.h>
+
+#include "minishell.h"
 
 /*          typedef           */
 typedef struct s_info	t_info;

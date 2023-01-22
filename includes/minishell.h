@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/21 14:51:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/22 16:26:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 # include "input.h"
 # include "tokenizer.h"
+# include "paeser.h"
 
 /* ************************** */
 /*           macro            */
@@ -47,9 +48,12 @@ typedef struct s_info		t_info;
 typedef struct s_env_elem	t_env_elem;
 typedef struct s_token_elem	t_token_elem;
 typedef struct s_split_info	t_split_info;
+typedef struct s_exec_list			t_exec_list;
+
 
 typedef enum e_token_type	t_token_type;
 typedef enum e_syntax_err	t_syntax_err;
+typedef enum e_node_kind	t_node_kind;
 
 /* ************************** */
 /*           enum             */
@@ -80,15 +84,24 @@ enum e_syntax_err
 	e_newline,
 };
 
+enum e_node_kind
+{
+	e_head,			//root
+	e_operator,
+	e_subshell,
+	e_pipeline,
+};
+
+
 /* ************************** */
 /*          struct            */
 /* ************************** */
 // minishell info
 struct s_info
 {
-
 	t_list	*envlist_head;
 	t_list	*tokenlist_head;
+
 };
 
 // environment variable list
@@ -106,7 +119,7 @@ struct s_token_elem
 	bool			is_connect_to_next_word;
 	char			quote_chr;
 	bool			is_quoted;
-	ssize_t			parenthesis_no;
+	ssize_t			depth; //TODO:depth
 };
 
 // split
@@ -115,10 +128,35 @@ struct s_split_info
 	const char		*src;
 	const char 		*delim;
 	const char 		*setchars;
-	bool			is_connect_to_next_word;  // hello"world"
+	bool			is_connect_to_next_word;  // hello"world"->[hello]=["world"]
 	size_t			head_idx;
 	size_t			word_len;
 };
+
+struct s_exec_list
+{
+	// create_operator_list
+	t_node_kind			node_kind;
+	t_token_type		token_type;
+	t_exec_list				*prev;
+	t_exec_list				*next;
+
+	// create_command_list
+	t_list				*command_list_head;
+	t_list				*redirect_list_head;
+
+
+	t_list				*token_list_head; //tmp_save
+	t_token_elem		*token;
+};
+
+struct s_redirect_info
+{
+	t_token_type	type;
+	char			*file;
+	char			*heredoc_eof;
+};
+
 
 
 /* ************************** */
@@ -154,5 +192,7 @@ void	free_token_elem(void *content);
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
 void	debug_print_token_word(t_list *head, char *str);
+void	debug_print_tree(t_exec_list *root, char *str);
+void	debug_print_exec_list(t_exec_list *head, char *str);
 
 #endif //MINISHELL_H

@@ -20,25 +20,27 @@
                       | '>>' <word>
                       | '<<' <word>
 
-<redirection_list>  ::= <redirection>
-                      | <redirection_list> <redirection>
+<redirect_list>     ::= <redirect>
+                      | <redirect_list> <redirect>
 
 <command_element>   ::= <word_list>
                       | <assignment_word>
-                      | <redirection_list>
-                      | <command_element> <redirection_list>
-                      | <redirection_list> <command_element>
+                      | <redirect_list>
+                      | <command_element> <redirect_list>
+                      | <redirect_list> <command_element>
 
 <command_list>      ::= <command_element>
+                      | <command_list>
                       | <subshell>
-                      | <subshell> <redirection_list>
+                      | <subshell> <redirect_list>
+
+<subshell>          ::= '(' <operator_list> ')'
 
 <pipeline>          ::= <pipeline> '|' <pipeline>
                       | <command_list>
 
-<list>              ::= <list> '&&' <list>
-                      | <list> '||' <list>
-                      | <list> ';' <list>
+<operator_list>     ::= <operator_list> '&&' <operator_list>
+                      | <operator_list> '||' <operator_list>
+                      | <operator_list> ';' <operator_list>
                       | <pipeline>
 
-<subshell>          ::= '(' <list> ')'

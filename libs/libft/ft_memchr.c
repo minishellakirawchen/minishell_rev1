@@ -6,9 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:35:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/20 16:44:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/22 13:40:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../include/libft.h"
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {

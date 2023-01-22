@@ -12,29 +12,29 @@
 
 #include "paeser.h"
 
-void	tree_clear(t_tree **stk)
+void	tree_clear(t_exec_list **stk)
 {
-	t_tree	*right;
+	t_exec_list	*right;
 
 	if (!stk)
 		return ;
 	while (*stk)
 	{
-		right = (*stk)->right;
+		right = (*stk)->next;
 		free(*stk);
 		*stk = right;
 	}
 	*stk = NULL;
 }
 
-size_t	get_tree_size(t_tree *stk)
+size_t	get_tree_size(t_exec_list *stk)
 {
 	size_t	size;
 
 	size = 0;
 	while (stk)
 	{
-		stk = stk->right;
+		stk = stk->next;
 		size++;
 	}
 	return (size);

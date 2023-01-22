@@ -27,7 +27,7 @@ cmdi: list
 * cmd2 = cat -> Makefile -> NULL
 * cmd3 = grep -> a
 
-struct t_tree
+struct t_exec_list
 {
     type; root/ope/cmd
     ope; ;/&&/||/()/|
@@ -438,7 +438,7 @@ null       null
     [a]        null    
                    
 
- *connect to bottom operator node = root->left
+ *connect to bottom operator node = root->prev
                  [root]
                ┏━━━━┻━━━━━┓
              [&&]       null
@@ -458,7 +458,7 @@ null       null
     [X1]        null                        
 
 
- * connect to bottom operator node = &&->right 
+ * connect to bottom operator node = &&->next 
 
                     [root]
                   ┏━━━━┻━━━━━┓
@@ -506,7 +506,7 @@ exec X1:subshell -> pass to parsing func
     [b]        null    
 
                    
- *connect to bottom operator node = root->left
+ *connect to bottom operator node = root->prev
                  [root]
                ┏━━━━┻━━━━━┓
              [&&]       null
@@ -530,14 +530,14 @@ exec X1:subshell -> pass to parsing func
      ┏━━━━┻━━━━━┓
     [X2]        null    
 
- *connect command leaf to operator node = &&->left
+ *connect command leaf to operator node = &&->prev
               [&&]
           ┏━━━━┻━━━━━┓
    [subshell-1]     null                        
      ┏━━━━┻━━━━━┓
     [X2]        null    
    
- *connect to bottom root node = &&->right
+ *connect to bottom root node = &&->next
  
                        [root]
                      ┏━━━━┻━━━━━┓
@@ -556,10 +556,10 @@ exec X1:subshell -> pass to parsing func
 
       [command]
      ┏━━━━┻━━━━━┓
-    [g]        null    
+    [g]        null
 
 
- *connect to &&-1 = &&1->right
+ *connect to &&-1 = &&1->next
  
                          [root]
                        ┏━━━━┻━━━━━┓
@@ -584,19 +584,23 @@ operator no必要？
           ┏━━━━┻━━━━┓
          [B]       [C]
 
-root->left = ope1(&&-1)
- ope1->left = A
- ope1->right = ope2(&&-2)
-  ope2->left = B
-  ope2->right = C
+root->prev = pipeline or operator
+if (root->prev == operator)
+ operator->prev = pipeline
+ operator->rigth = pipeline or operator
 
-実行順はA->B->C
-         [root]
-      ┏━━━━┻━━━━━┓
-    [&&-1]     [&&-2]
-  ┏━━━┻━━━┓   ┏━━━┻━━━┓
- [A]     [B] [C]     null
+左結合なので左側はpipeline
+右側はpipeline or operator listのどちらか
 
+root->next = NULL
+
+
+
+root->prev = ope1(&&-1)
+ ope1->prev = A
+ ope1->next = ope2(&&-2)
+  ope2->prev = B
+  ope2->next = C
 
 A && B && C && D
 
@@ -671,101 +675,42 @@ A && B && C && D
            |  <pipeline>
 
 <subshell> ::= '(' <list> ')'
-
+ 
 ```
-
-
-
-
-
-
-
-
-
-//memo
-                shell
-* expr    +-     |
-* mul     */     && ||
-* primary ()     ;
-*                ()
-
-echo hello
-echo hello | grep a
-echo hello | grep a && cat Makefile
-echo hello | grep a && cat Makefile | grep a
-
-(cd /bin)
-(cd /bin && pwd)
-(cd /bin && pwd) | pwd
-echo hello && (cd /bin && pwd) | pwd
-
-
-
-A && (B | C) | (D || E) -> A && (B | C) | (D || E)
-(F) | G
-
-
-A && (B | C) | (D || E) ; (F) | G
-
-
-(A && (B | C) | (D || E) ; (F) | G) | H ; I
-
-
 ```c
+export key1=value1 key2=value2  key2value2  key3====value3
+
+export a=b/ a,=,b
+export a==b/ a,==,b  a,=,=,b
+
+export a=b
+{"export", "a=", "b", NULL}
+
+export a=b
+{"export", "a=b", NULL}
+
+export a= b=
+{"export", "a=", "b=" NULL}
 
 
+export a="  b"=
+{"export", "a=  b=", NULL};		
+			
+export a=" b"'c'
+{"export", "a= bc", NULL}
 
+export a=" b"  '  c'
+{"export", "a= b", "  c" NULL}
 
+export a=" b"
+{"export", "a= b", NULL};		
 
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## parameter
-
-```c
-# パラメータ構造体
-struct s_info
-{
-	t_list	*envlist_head;
-	t_list	*tokenlist_head;
-	t_tree  *tree_root;
-}   t_info;
-
-# 環境変数関係
-t_list *envlist_head->content;
-struct s_env_elem
-{
-	char *key;
-	char *value;
-};
-
-# input
-char **command_list = {"cmds1", "cmds2", "cmds3", "cmds4", ..., NULL};
-int ft_bulitin_hoge(char **command_list)
-{
-	
-}
-
-
-
-
+export a=' b'
+{"export", "a= b", NULL};		
 
 ```
+
+
 
 
 
