@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 16:52:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/21 14:55:06 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	prompt_loop(t_info *info)
 			ft_dprintf(STDERR_FILENO, "return input\n");
 		// parsing (Mandatory/Bonus)
 		// expansion
-		// command_execution
+		exit_status = command_execution(info);
 		add_history(input_line);
 		input_line = free_1d_alloc(input_line);
 		clear_input(info);

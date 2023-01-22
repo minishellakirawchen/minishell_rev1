@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 20:45:43 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/20 23:55:59 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	print_key_value(void *content)
-{
-	t_env_elem	*elem;
-
-	elem = content;
-	ft_printf("%s=%s\n", elem->key, elem->value);
-}
 
 static int	init_info(t_info *info)
 {

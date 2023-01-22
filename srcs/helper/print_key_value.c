@@ -1,17 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_export.c                                        :+:      :+:    :+:   */
+/*   print_key_value.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/22 10:30:53 by wchen            ###   ########.fr       */
+/*   Created: 2023/01/20 23:47:15 by wchen             #+#    #+#             */
+/*   Updated: 2023/01/20 23:56:16 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	export(t_info info, char **cmds)
+#include "minishell.h"
+
+
+void	print_key_value(void *content)
 {
+	t_env_elem	*elem;
 
-
+	elem = content;
+	ft_printf("%s=%s\n", elem->key, elem->value);
 }

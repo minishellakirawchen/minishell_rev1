@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 20:59:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/21 15:58:55 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,8 @@ struct s_split_info
 /* ************************** */
 /*     command execution      */
 /* ************************** */
+int		command_execution(t_info *info);
+int		execute_builtin(t_info *info, char **cmds);
 
 /* ************************** */
 /*       signal handler       */
@@ -139,7 +141,7 @@ struct s_split_info
 /* ************************** */
 /*         ft_builtin         */
 /* ************************** */
-
+int		ft_env(t_info *info);
 
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);
@@ -148,6 +150,7 @@ t_list	*get_envlist(void);
 void	*perror_ret_nullptr(char *err);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
+void	print_key_value(void *content);
 
 
 void	debug_print_2d_arr(char **arr, char *str);
