@@ -6,13 +6,13 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/22 18:56:54 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/22 20:40:31 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int define_key_value(char *cmd, char **key, char **value)
+static int	define_key_value(char *cmd, char **key, char **value)
 {
 	char		*key_sign;
 	int			exit_status;
@@ -35,7 +35,7 @@ static int define_key_value(char *cmd, char **key, char **value)
 	return (exit_status);
 }
 
-static t_key_type judge_key(char *key)
+static t_key_type	judge_key(char *key)
 {
 	ssize_t	i;
 	ssize_t key_len;
@@ -54,6 +54,40 @@ static t_key_type judge_key(char *key)
 		key ++;
 	}
 	return (e_add);
+}
+
+static int	append_env(t_info *info, char *key, char *value)
+{
+	char	**elem_value;
+	ssize_t	key_len;
+	char 	*elem_key;
+	char	*temp_ptr;
+
+	key_len = ft_strlen(key);
+	elem_key = malloc(sizeof(char) * (key_len));
+	if (!elem_key)
+		perror_and_return_int("malloc", EXIT_FAILURE);
+	elem_key = ft_memmove(elem_key, key, key_len - 1);
+	free (key);
+	printf("elem_key:%s\n", elem_key);
+	(void) value;
+	elem_value = get_elem(info, elem_key);
+	if (elem_value == NULL)
+	{
+		printf("not get\n");
+		set_elem(info, elem_key, value);
+		ft_env(info);
+	}
+	else
+	{
+		printf("*elem_value: %s\n", *elem_value);
+		temp_ptr = *elem_value;
+		*elem_value = ft_strjoin(*elem_value, value);
+		free (temp_ptr);
+		ft_env(info);
+	}
+
+	return (EXIT_SUCCESS);
 }
 
 int	ft_export(t_info *info, char **cmds)
@@ -79,6 +113,8 @@ int	ft_export(t_info *info, char **cmds)
 		key_type = judge_key(key);
 		if (key_type == e_error)
 			ft_dprintf(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", *cmds);
+		if (key_type == e_append)
+			exit_status = append_env(info, key, value);
 
 		// 	return (exit_status);
 		// export_env(info, key, value);

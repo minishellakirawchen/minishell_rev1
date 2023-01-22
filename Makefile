@@ -32,6 +32,7 @@ SRC		= main.c \
 		  helper/get_envlist.c \
 		  helper/print_key_value.c \
 		  helper/error_handler.c \
+		  helper/get_set_elem.c \
 		  debug/debug_print.c \
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))

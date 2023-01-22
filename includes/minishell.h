@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 17:59:08 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/22 20:38:41 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,8 @@ void	free_env_elem(void *content);
 void	free_token_elem(void *content);
 void	print_key_value(void *content);
 int		perror_and_return_int(char *err, int exit_status);
-
+char	**get_elem(t_info *info, char *key);
+int		set_elem(t_info *info, char *key, char *value);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
