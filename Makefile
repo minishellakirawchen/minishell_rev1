@@ -27,9 +27,11 @@ SRC		= main.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \
 		  ft_builtin/ft_env.c \
+		  ft_builtin/ft_export.c \
 		  helper/alloc_free.c \
 		  helper/get_envlist.c \
 		  helper/print_key_value.c \
+		  helper/error_handler.c \
 		  debug/debug_print.c \
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))

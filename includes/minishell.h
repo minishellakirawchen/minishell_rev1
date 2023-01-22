@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/21 15:58:55 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/22 17:59:08 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_split_info	t_split_info;
 
 typedef enum e_token_type	t_token_type;
 typedef enum e_syntax_err	t_syntax_err;
+typedef enum e_key_type		t_key_type;
 
 /* ************************** */
 /*           enum             */
@@ -78,6 +79,13 @@ enum e_syntax_err
 {
 	e_unexpected_token,
 	e_newline,
+};
+
+enum e_key_type
+{
+	e_append,
+	e_add,
+	e_error,
 };
 
 /* ************************** */
@@ -142,6 +150,7 @@ int		execute_builtin(t_info *info, char **cmds);
 /*         ft_builtin         */
 /* ************************** */
 int		ft_env(t_info *info);
+int		ft_export(t_info *info, char **cmds);
 
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);
@@ -151,6 +160,7 @@ void	*perror_ret_nullptr(char *err);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
 void	print_key_value(void *content);
+int		perror_and_return_int(char *err, int exit_status);
 
 
 void	debug_print_2d_arr(char **arr, char *str);

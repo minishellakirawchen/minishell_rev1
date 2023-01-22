@@ -1,22 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_builtin.c                                  :+:      :+:    :+:   */
+/*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/21 15:35:04 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/22 16:23:21 by wchen            ###   ########.fr       */
+/*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
+/*   Updated: 2023/01/22 16:54:15 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute_builtin(t_info *info, char **cmds)
+int	perror_and_return_int(char *err, int exit_status)
 {
-	if (is_same_str("env", cmds[0]))
-		return (ft_env(info));
-	if (is_same_str("export", cmds[0]))
-		return (ft_export(info, cmds));
-	return (EXIT_FAILURE);
+	perror(err);
+	return (exit_status);
 }
