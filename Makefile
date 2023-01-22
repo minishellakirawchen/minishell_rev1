@@ -29,7 +29,9 @@ SRC		= main.c \
 		  ft_builtin/ft_echo.c \
 		  helper/alloc_free.c \
 		  helper/get_envlist.c \
+		  helper/error_return.c \
 		  debug/debug_print.c \
+
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))
 

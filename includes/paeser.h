@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:08:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/22 20:11:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ typedef struct s_info			t_info;
 typedef struct s_env_elem		t_env_elem;
 typedef struct s_token_elem		t_token_elem;
 typedef struct s_split_info		t_split_info;
-typedef struct s_exec_list			t_exec_list;
+typedef struct s_exec_list		t_exec_list;
+typedef struct s_command_list_info	t_commands_info;
 typedef struct s_redirect_info	t_redirect_info;
 
 typedef enum e_token_type		t_token_type;

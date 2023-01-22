@@ -676,44 +676,126 @@ A && B && C && D
 
 <subshell> ::= '(' <list> ')'
  
+ 
+ 
+ 
+ 
+ 
+<command_list>      ::= <command_element>
+                      | <command_list>
+                      | <subshell>
+                      | <subshell> <redirect_list>
+
+<subshell>          ::= '(' <operator_list> ')'
+
+<pipeline>          ::= <pipeline> '|' <pipeline>
+                      | <command_list>
+
+<operator_list>     ::= <operator_list> '&&' <operator_list>
+                      | <operator_list> '||' <operator_list>
+                      | <operator_list> ';' <operator_list>
+                      | <pipeline>
 ```
+
+### tokenlist -> opetarot_list (= pipeline && pipeline || ...)
+
+echo hello world | grep a && cat Makefile; echo hello; echo world
+pipeline1                 && pipeline2   ; pipeline3 ; pipeline4
+
 ```c
-export key1=value1 key2=value2  key2value2  key3====value3
 
-export a=b/ a,=,b
-export a==b/ a,==,b  a,=,=,b
+t_exec_list *exec_list
+{
+    enum        node_kind; (head/operator/pipeline)
+    t_list      *token_list_head; (pipeline; token1->token2->... for next process)
+    t_list      *command_list_head; (create content in next process)
+    t_exec_list *prev;
+    t_exec_list *next;
+}
 
-export a=b
-{"export", "a=", "b", NULL}
+```
+head->pipeline1->operator(&&)->pipeline2->operator(;)->pipeline3->operator(;)->pipeline4
 
-export a=b
-{"export", "a=b", NULL}
+### pipeline -> command_list (= commands | commands | ...)
 
-export a= b=
-{"export", "a=", "b=" NULL}
+pipeline = command_list1 | command_list2 | ...
+command_list1-> command_list2->...
+"->(next)" means "|(pipe)"
 
+```c
 
-export a="  b"=
-{"export", "a=  b=", NULL};		
-			
-export a=" b"'c'
-{"export", "a= bc", NULL}
-
-export a=" b"  '  c'
-{"export", "a= b", "  c" NULL}
-
-export a=" b"
-{"export", "a= b", NULL};		
-
-export a=' b'
-{"export", "a= b", NULL};		
+struct s_command_info
+{
+    char        *commands;      {"echo", "hello", NULL} for execve argument. expansion yet
+    t_r_info    *redirect_info;  infomation of "infile, outfile, read, write, append, heredoc,.."
+    t_list      *next;
+}
 
 ```
 
+1) echo hello world | grep a > out
+
+2) cat Makefile > out | (echo hello; echo world && echo hoge) > out
 
 
 
+### execute
+```c
 
+int execute_operator_list(t_exec_list *exec_list_head)
+{
+    t_exec_list *exec_node;
+    t_pipe_line *pipe_node;
+    t_node_kind operator_type;
+    int         exit_status;
+    
+	if (!exec_list_head || !*exec_list_head)
+		return (FAILURE);
+	exec_node = *exec_list_head;
+    operator_type = -1;
+    while (exec_node)
+    {
+        if (exec_node->kind == operator)
+        {
+            operator_type = get_operator_type(exec_node); &&, ||, ;
+            exec_node = exec_node->next;
+        }
+        if (operator_type == ';' && !exec_node)
+            break ;
+        exit_status = exec_pipeline(exec_node); pipeline->operator->pipeline->operator,...
+        
+        if (operator_type == '&&' && exit_status == 0)
+            break ;
+        if (operator_type == '||' && exit_status != 0)
+            break ;
+        if (operator_type == ';')
+            exit_status = 0; // TODO: check
+        exec_node = exec_node->next;
+    }
+    return (exit_status);	
+};
+
+
+int execute_pipeline(t_list *command_list_head)
+{
+	
+	t_list  *node;
+	
+	while (node)
+	{
+		if (subshell)
+			execute_subshell(node);
+		pipe
+		dup
+		fork
+		exec
+		
+		node = node->next;
+	}
+	return (exit_status;)
+}
+
+```
 
 
 

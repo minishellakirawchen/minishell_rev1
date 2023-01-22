@@ -27,12 +27,6 @@ void	*free_info(t_info *info)
 	return (NULL);
 }
 
-void	*perror_ret_nullptr(char *err)
-{
-	perror(err);
-	return (NULL);
-}
-
 void	free_env_elem(void *content)
 {
 	t_env_elem	*elem;

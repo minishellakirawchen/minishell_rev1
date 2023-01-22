@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 16:26:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/22 22:52:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,13 @@
 /* ************************** */
 /*          typedef           */
 /* ************************** */
-typedef struct s_info		t_info;
-typedef struct s_env_elem	t_env_elem;
-typedef struct s_token_elem	t_token_elem;
-typedef struct s_split_info	t_split_info;
-typedef struct s_exec_list			t_exec_list;
+typedef struct s_info			t_info;
+typedef struct s_env_elem		t_env_elem;
+typedef struct s_token_elem		t_token_elem;
+typedef struct s_split_info		t_split_info;
+typedef struct s_exec_list		t_exec_list;
+typedef struct s_command_list	t_command_list;
+typedef struct s_redirect_list	t_redirect_list;
 
 
 typedef enum e_token_type	t_token_type;
@@ -65,15 +67,19 @@ enum e_token_type
 	e_ope_pipe = 1,				// |
 	e_ope_or = 2,				// ||
 	e_ope_and = 3,				// &&
+
 	e_subshell_start = 4,		// (
 	e_subshell_end = 5,			// )
+
 	e_redirect_in = 6,			// <
 	e_redirect_out = 7,			// >
 	e_redirect_append = 8,		// >>
 	e_heredoc = 9,				// <<
 	e_file = 10,				//
 	e_heredoc_eof = 11,			//
+
 	e_word = 12,				//
+
 	e_init = 13,				// init
 	e_nothing = 20
 };
@@ -90,8 +96,8 @@ enum e_node_kind
 	e_operator,
 	e_subshell,
 	e_pipeline,
+	e_commands,
 };
-
 
 /* ************************** */
 /*          struct            */
@@ -142,22 +148,32 @@ struct s_exec_list
 	t_exec_list				*next;
 
 	// create_command_list
-	t_list				*command_list_head;
-	t_list				*redirect_list_head;
+	// pipeline_node
+	t_list				*token_list_head; //tmp_save in create_operating_list
 
+	t_list				*pipeline;//content=command_list
+	t_command_list		*command_list;
 
-	t_list				*token_list_head; //tmp_save
 	t_token_elem		*token;
 };
 
-struct s_redirect_info
+//
+struct s_command_list
+{
+	t_node_kind		type; // command or subshell
+	char 			**commands;
+	t_list			*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する
+	t_list			*subshell_token_list; //parsing create_operator_listから実行できる
+
+	t_redirect_list	*redirect_list;
+};
+
+struct s_redirect_list
 {
 	t_token_type	type;
 	char			*file;
 	char			*heredoc_eof;
 };
-
-
 
 /* ************************** */
 /*          parsing           */
@@ -184,9 +200,12 @@ struct s_redirect_info
 void	*free_1d_alloc(void *alloc);
 void	*free_info(t_info *info);
 t_list	*get_envlist(void);
-void	*perror_ret_nullptr(char *err);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
+
+/*         error_return.c           */
+void	*perror_ret_nullptr(char *err);
+int		perror_ret_int(char *err, int retno);
 
 
 void	debug_print_2d_arr(char **arr, char *str);
