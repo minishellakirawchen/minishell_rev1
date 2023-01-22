@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 20:38:41 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/22 22:52:09 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ enum e_syntax_err
 enum e_key_type
 {
 	e_append,
-	e_add,
 	e_error,
+	e_add,
 };
 
 /* ************************** */
@@ -125,6 +125,14 @@ struct s_split_info
 	bool			is_connect_to_next_word;  // hello"world"
 	size_t			head_idx;
 	size_t			word_len;
+};
+
+// ft_export
+struct s_export_info
+{
+	t_env_elem		*elem;
+	t_key_type		key_type;
+	int				skip_flag;
 };
 
 

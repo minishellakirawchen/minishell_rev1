@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/21 14:55:06 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/22 21:28:01 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,10 @@ int	prompt_loop(t_info *info)
 		// parsing (Mandatory/Bonus)
 		// expansion
 		exit_status = command_execution(info);
+		printf("exit_status: %d\n", exit_status);
+		printf("------------------debug_env-------------\n");
+		ft_env(info);
+		printf("------------------debug_env-------------\n");
 		add_history(input_line);
 		input_line = free_1d_alloc(input_line);
 		clear_input(info);

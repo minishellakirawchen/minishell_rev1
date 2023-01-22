@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/22 20:40:01 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/22 22:45:52 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 static char	**get_value(t_env_elem *elem, char *key)
 {
-	printf("elem_key:%s\n", elem->key);
-	printf("key:%s\n", key);
 	if (is_same_str(elem->key, key))
 		return (&elem->value);
 	return (NULL);
@@ -31,7 +29,6 @@ char	**get_elem(t_info *info, char *key)
 	value = NULL;
 	while (env_node != NULL)
 	{
-		printf("test\n");
 		value = get_value(env_node->content, key);
 		if (value != NULL)
 			return (value);
