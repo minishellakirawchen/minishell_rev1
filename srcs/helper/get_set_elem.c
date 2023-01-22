@@ -6,12 +6,11 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/22 22:45:52 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 00:07:12 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 static char	**get_value(t_env_elem *elem, char *key)
 {
@@ -55,4 +54,50 @@ int	set_elem(t_info *info, char *key, char *value)
 	else
 		ft_lstadd_back(&info->envlist_head, new_env_node);
 	return (EXIT_SUCCESS);
+}
+
+int	append_env(t_info *info, char *key, char *value)
+{
+	char	**elem_value;
+	ssize_t	key_len;
+	char 	*elem_key;
+	char	*temp_ptr;
+
+	key_len = ft_strlen(key);
+	elem_key = malloc(sizeof(char) * (key_len));
+	if (!elem_key)
+		return(perror_and_return_int("malloc", EXIT_FAILURE));
+	elem_key = ft_memmove(elem_key, key, key_len - 1);
+	free (key);
+	elem_value = get_elem(info, elem_key);
+	if (elem_value == NULL)
+		set_elem(info, elem_key, value);
+	else
+	{
+		temp_ptr = *elem_value;
+		*elem_value = ft_strjoin(*elem_value, value);
+		if(!elem_value)
+			return(perror_and_return_int("malloc", EXIT_FAILURE));
+		free (temp_ptr);
+	}
+	return (EXIT_SUCCESS);
+}
+
+int add_env(t_info *info, char *key, char *value)
+{
+	int		exit_status;
+	char	**elem_value;
+	char	*temp_ptr;
+
+	exit_status = EXIT_SUCCESS;
+	elem_value = get_elem(info, key);
+	if (elem_value != NULL)
+	{
+		temp_ptr = *elem_value;
+		*elem_value = value;
+		free(temp_ptr);
+	}
+	else
+		exit_status = set_elem(info, key, value);
+	return(exit_status);
 }

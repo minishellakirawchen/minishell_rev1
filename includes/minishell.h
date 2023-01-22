@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 22:52:09 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/22 23:55:43 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,11 @@
 /* ************************** */
 /*          typedef           */
 /* ************************** */
-typedef struct s_info		t_info;
-typedef struct s_env_elem	t_env_elem;
-typedef struct s_token_elem	t_token_elem;
-typedef struct s_split_info	t_split_info;
+typedef struct s_info			t_info;
+typedef struct s_env_elem		t_env_elem;
+typedef struct s_token_elem		t_token_elem;
+typedef struct s_split_info		t_split_info;
+typedef struct s_export_info	t_export_info;
 
 typedef enum e_token_type	t_token_type;
 typedef enum e_syntax_err	t_syntax_err;
@@ -130,7 +131,8 @@ struct s_split_info
 // ft_export
 struct s_export_info
 {
-	t_env_elem		*elem;
+	char			*key;
+	char			*value;
 	t_key_type		key_type;
 	int				skip_flag;
 };
@@ -171,6 +173,8 @@ void	print_key_value(void *content);
 int		perror_and_return_int(char *err, int exit_status);
 char	**get_elem(t_info *info, char *key);
 int		set_elem(t_info *info, char *key, char *value);
+int		append_env(t_info *info, char *key, char *value);
+int		add_env(t_info *info, char *key, char *value);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
