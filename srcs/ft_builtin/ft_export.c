@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 00:05:29 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 00:16:37 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	define_key_value(char *cmd, char **key, char **value,
 	exit_status = EXIT_SUCCESS;
 	equal_index = 0;
 	key_sign = ft_strchr(cmd, '=');
-	//'='を見つからないときに、何もせずに、e_return(skip_sign)を返す
+	//'='を見つからないときに、何もせずに、return(0) and (skip_flag = 1)を返す
 	if (key_sign == NULL)
 	{
 		*skip_flag = 1;
