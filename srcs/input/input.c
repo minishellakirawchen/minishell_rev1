@@ -6,18 +6,20 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:44:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:00:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
 
-void	clear_input(t_info *info)
+void	clear_input(t_info **info)
 {
-	if (!info)
+	if (!info || !*info)
 		return ;
-	ft_lstclear(&info->tokenlist_head, free_token_elem);
-	info->tokenlist_head = NULL;
+	ft_lstclear(&(*info)->tokenlist_head, free_token_elem);
+	clear_exec_list(&(*info)->execlist_head);
+	(*info)->tokenlist_head = NULL;
+	(*info)->execlist_head = NULL;
 }
 
 // FAILURE: 致命的なエラー(malloc)のためexit
@@ -35,6 +37,8 @@ int	prompt_loop(t_info *info)
 	while (true)
 	{
 		is_return_input = false;
+
+		/* input */
 		input_line = readline(PROMPT);
 		if (!input_line)
 		{
@@ -43,39 +47,40 @@ int	prompt_loop(t_info *info)
 		}
 		if (is_same_str(input_line, ""))
 		{
+			is_return_input = true;
 			input_line = free_1d_alloc(input_line);
-//			ft_dprintf(STDERR_FILENO, "NL only, Not add to history\n");
-			continue ;
+//			continue ;
 		}
 
 		ft_dprintf(STDERR_FILENO, "#%-15s:[%s]\n", "input", input_line);
-		// tokenize
-		if (tokenize_input_line(info, input_line) == FAILURE)
+
+		/* tokenize */
+		if (!is_return_input && tokenize_input_line(info, input_line) == FAILURE)
 		{
 			ft_dprintf(STDERR_FILENO, "tokenize failure");
 			return (FAILURE);//free
 		}
 
-		// input validation (Mandatory/Bonus)
-		if (arrange_and_validate_token_list(&info->tokenlist_head) == FAILURE)
+		/* input validation (Mandatory/Bonus) */
+		if (!is_return_input && arrange_and_validate_token_list(&info->tokenlist_head) == FAILURE)
 			is_return_input = true;//add_history & free(line)
 
 		debug_print_token_word(info->tokenlist_head, "arranged");
 
-		if (parsing_token_list(info) == FAILURE)
+		/* parsing (Mandatory/Bonus) */
+		if (!is_return_input && parsing_token_list(info) == FAILURE)
 		{
 			ft_dprintf(STDERR_FILENO, "parsing failure");
 			return (FAILURE);
 		}
 
-		if (is_return_input)
-			ft_dprintf(STDERR_FILENO, "return input\n");
-		// parsing (Mandatory/Bonus)
-		// expansion
-		// command_execution
+		/* expansion */
+		/* command_execution */
+
 		add_history(input_line);
 		input_line = free_1d_alloc(input_line);
-		clear_input(info);
+		clear_input(&info);
 	}
+
 	return (exit_status);
 }

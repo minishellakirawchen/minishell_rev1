@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 09:02:03 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 18:40:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ struct s_info
 	t_exec_list	*execlist_head;
 };
 
+// commands list for execute
 struct s_exec_list
 {
 	// create_operator_list
@@ -117,14 +118,8 @@ struct s_exec_list
 	t_exec_list				*next;
 
 	// create_command_list
-	// pipeline_node
-	t_list				*token_list_head; //tmp_save in create_operating_list
-
-	t_list				*pipeline;//content=command_list
-
-	t_command_list		*command_list;
-
-	t_token_elem		*token;
+	t_list				*token_list_head; // tmp_save in create_operating_list
+	t_list				*pipeline; // content=command_list
 };
 
 
@@ -199,10 +194,12 @@ struct s_redirect_list
 
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);
-void	*free_info(t_info *info);
+void	*free_info(t_info **info);
 t_list	*get_envlist(void);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
+void	free_command_list_elem(void *content);
+void	clear_exec_list(t_exec_list **exec_list);
 
 /*         error_return.c           */
 void	*perror_ret_nullptr(char *err);

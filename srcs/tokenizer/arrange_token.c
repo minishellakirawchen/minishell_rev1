@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 16:17:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 18:21:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 {
 	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
+
 	if (valid_and_set_control_operator(tokenlist_head) == FAILURE)
 		return (FAILURE);
 	set_elem_type_if_operator(tokenlist_head);
@@ -49,6 +50,7 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 		return (FAILURE);
 
 //	debug_print_token_word(*tokenlist_head, "set word type");
+
 
 	return (SUCCESS);
 }

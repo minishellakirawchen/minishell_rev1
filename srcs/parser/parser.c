@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 16:58:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 18:17:12 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,58 +152,26 @@ t_exec_list	*create_operator_list(t_list **tokenlist_head)
 	return (exec_head);
 }
 
-
-// echo hello | echo world && cat Makefile | grep a || (cd /bin && ls) > out; cat <infile;
-// {echo hello}->{echo world && cat Makefile}->{grep a}
-// {(cd /bin && ls)}->{> out}
-
-// pipeline_node = echo hello | echo world
-// split by pipe
-// 前から見ていき、command_list->pipeline_tokenに仮保存
-// expansion後、char **commandsに整形する。redirect_listはその時作成する？
-// subshellならばcommand_list->
-
-// command_list1->command_list2->..
-//  command_list->content=command_info
-//  command_info->
-//create_command_list;
-// node++
-// if type!=pipe
-//		if (subshell)
-//			while (type!=pipe)
-//	 			token_list_head_for_subshell+=token
-//  	else
-//  		while (type!=pipe)
-//				commands_info+=token
-//
-// if type==pipe
-//  pipeline_node->command_list_head+=command_info;
-//
-// pipeline_node++;
-//
-//create_redirect_list;
-// node++
-//
-
-
+/* create_command_list_from_pipeline_node(t_exec_list **pipeline_node) */
+/*
 // command_list->subshell_token_list : token list in subshell w/o ( and ) which same depth
 // command_list->pipeline_token_list : token list in until pipe
 
 // exec_list->token_list[i]				: cat Makefile    |  grep a       | (echo hello) > out1 | (pwd && (cd /bin && pwd) || echo hoge) >> out2 < in1
 // exec_list->token_list[i]->pipeline	: command_list[0]->command_list[1]->command_list[2]    ->command_list[3]
 
-// command_list[0]->subsuell_token_list	: NULL
+// command_list[0]->subshell_token_list	: NULL
 // command_list[0]->pipeline_token_list	: cat Makefile
 
-// command_list[1]->subsuell_token_list	: NULL
+// command_list[1]->subshell_token_list	: NULL
 // command_list[1]->pipeline_token_list	: grep a
 
-// command_list[2]->subsuell_token_list	: echo hello
+// command_list[2]->subshell_token_list	: echo hello
 // command_list[2]->pipeline_token_list	: > out1
 
-// command_list[3]->subsuell_token_list	: pwd && (cd /bin && pwd) || echo hoge
+// command_list[3]->subshell_token_list	: pwd && (cd /bin && pwd) || echo hoge
 // command_list[3]->pipeline_token_list	: >> out2 < in1
-
+*/
 int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 {
 	t_list			*pipeline_tokens;
@@ -230,7 +198,7 @@ int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 	command_list->subshell_token_list = NULL;
 
 	pipeline_tokens = (*pipeline_node)->token_list_head;
-	(*pipeline_node)->command_list = NULL;//for lstadd_back;
+	(*pipeline_node)->pipeline = NULL;//for lstadd_back;
 
 	while (pipeline_tokens)
 	{
@@ -276,11 +244,6 @@ int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 					token = pipeline_tokens->content;
 			}
 		}
-		// pipe or end
-//		debug_print_token_word(command_list->subshell_token_list, "while create subshell");
-//		debug_print_token_word(command_list->pipeline_token_list, "while create pipeline");
-//		printf("\n");
-
 		new_pipeline = ft_lstnew(command_list);
 		if (!new_pipeline)
 			return (FAILURE); //TODO
@@ -346,6 +309,7 @@ int	parsing_token_list(t_info *info)
 	// print
 //	debug_print_exec_list(exec_list_head, "operator_list");
 
+
 	if (create_command_list(&exec_list_head) == FAILURE)
 	{
 		ft_dprintf(STDERR_FILENO, "fail to create_command_list\n");
@@ -354,8 +318,6 @@ int	parsing_token_list(t_info *info)
 
 	debug_print_exec_list(exec_list_head, "command_list");
 
-	// tokenlist->tree
-	// return
 	return (SUCCESS);
 }
 

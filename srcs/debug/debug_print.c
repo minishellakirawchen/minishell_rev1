@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 17:06:21 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 17:43:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	debug_print_tree(t_exec_list *root, char *str)
 			debug_print_token_word(left_node->token_list_head, NULL);
 
 			// print operator node
-			if (node->token != e_head)
+			if (node->node_kind != e_head)
 				ft_dprintf(STDERR_FILENO, "[%s]\n  |\n", type[node->token_type]);
 		}
 		node = node->next;
