@@ -6,14 +6,14 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 18:21:02 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 21:58:41 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
 
 static void	delete_empty_elem(t_list **tokenlist_head);
-static int	valid_and_set_control_operator(t_list **tokenlist_head);
+static int	valid_control_operator(t_list **tokenlist_head);
 static void	set_elem_type_if_operator(t_list **tokenlist_head);
 static int	set_elem_type_if_word(t_list **tokenlist_head);
 static void	set_parenthesis_no(t_list **tokenlist_head);
@@ -24,7 +24,7 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
 
-	if (valid_and_set_control_operator(tokenlist_head) == FAILURE)
+	if (valid_control_operator(tokenlist_head) == FAILURE)
 		return (FAILURE);
 	set_elem_type_if_operator(tokenlist_head);
 	if (validate_quote(*tokenlist_head) == FAILURE)
@@ -49,8 +49,7 @@ int	arrange_and_validate_token_list(t_list **tokenlist_head)
 	if (ft_lstsize(*tokenlist_head) == 0)
 		return (FAILURE);
 
-//	debug_print_token_word(*tokenlist_head, "set word type");
-
+	debug_print_token_word(*tokenlist_head, "set word type");
 
 	return (SUCCESS);
 }
@@ -132,7 +131,7 @@ static void	set_parenthesis_no(t_list **tokenlist_head)
 
 
 // TODO: separate set_elem_type_if_operator
-static int	valid_and_set_control_operator(t_list **tokenlist_head)
+static int	valid_control_operator(t_list **tokenlist_head)
 {
 	t_list			*node;
 	t_token_elem	*token;

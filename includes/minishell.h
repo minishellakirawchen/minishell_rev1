@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 18:40:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 21:51:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,28 +63,23 @@ typedef enum e_node_kind		t_node_kind;
 /*           enum             */
 /* ************************** */
 
-//TODO: toupper?
 enum e_token_type
 {
 	e_ope_semicolon = 0,		// ;
 	e_ope_pipe = 1,				// |
 	e_ope_or = 2,				// ||
 	e_ope_and = 3,				// &&
-
 	e_subshell_start = 4,		// (
 	e_subshell_end = 5,			// )
-
 	e_redirect_in = 6,			// <
 	e_redirect_out = 7,			// >
 	e_redirect_append = 8,		// >>
 	e_heredoc = 9,				// <<
 	e_file = 10,				//
 	e_heredoc_eof = 11,			//
-
 	e_word = 12,				//
-
 	e_init = 13,				// init
-	e_nothing = 20
+	e_nothing
 };
 
 enum e_node_kind
@@ -94,7 +89,7 @@ enum e_node_kind
 	e_subshell,
 	e_pipeline,
 	e_commands,
-	e_init_kind = -1,
+	e_init_kind,
 };
 
 /* ************************** */
@@ -106,6 +101,7 @@ struct s_info
 	t_list		*envlist_head;
 	t_list		*tokenlist_head;
 	t_exec_list	*execlist_head;
+	char 		*readline_input;
 };
 
 // commands list for execute
@@ -118,8 +114,8 @@ struct s_exec_list
 	t_exec_list				*next;
 
 	// create_command_list
-	t_list				*token_list_head; // tmp_save in create_operating_list
-	t_list				*pipeline; // content=command_list
+	t_list				*token_list_head; // content=command_list, tmp_save
+	t_list				*pipeline; //content=command_list, create at expansion part
 };
 
 

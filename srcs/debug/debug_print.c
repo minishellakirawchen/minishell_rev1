@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 17:43:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 21:52:58 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 	{
 		if (node->node_kind == e_head)
 			ft_dprintf(STDERR_FILENO, "  [head]\n    v\n");
-		else if (node->node_kind == e_operator)
+		if (node->node_kind == e_operator)
 			ft_dprintf(STDERR_FILENO, "    %s operator\n", type[node->token_type]);
 		else
 		{
@@ -61,7 +61,7 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 		}
 		node = node->next;
 	}
-	ft_dprintf(STDERR_FILENO, "    v\n[tail]\n");
+	ft_dprintf(STDERR_FILENO, "    v\n  [tail]\n");
 }
 
 void	debug_print_tree(t_exec_list *root, char *str)
@@ -124,7 +124,7 @@ void	debug_print_token_word(t_list *head, char *str)
 {
 	t_list			*node;
 	t_token_elem	*token;
-//	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
+	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
 
 	if (str)
 		ft_dprintf(STDERR_FILENO, "#%-15s:", str);
@@ -134,9 +134,9 @@ void	debug_print_token_word(t_list *head, char *str)
 		token = node->content;
 
 		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
-//		ft_dprintf(STDERR_FILENO, "%s", type[token->type]);
+		ft_dprintf(STDERR_FILENO, "%s", type[token->type]);
 		ft_dprintf(STDERR_FILENO, "%d", token->depth);
-//		ft_dprintf(STDERR_FILENO, "%c", token->is_quoted ? token->word[0] : '\0');
+		ft_dprintf(STDERR_FILENO, "%c", token->is_quoted ? token->word[0] : '\0');
 
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");

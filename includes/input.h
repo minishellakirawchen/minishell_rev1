@@ -28,6 +28,6 @@ typedef struct s_info	t_info;
 /*           input            */
 /* ************************** */
 int		prompt_loop(t_info *info);
-void	clear_input(t_info **info);
+void	clear_input_info(t_info **info);
 
 #endif //INPUT_H

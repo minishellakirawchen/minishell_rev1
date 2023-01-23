@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 18:48:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 21:10:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ void	clear_exec_list(t_exec_list **exec_list)
 	while (node)
 	{
 		next = node->next;
-
 		ft_lstclear(&node->token_list_head, free_token_elem);
 		ft_lstclear(&node->pipeline, free_command_list_elem);
-
+		free(node);
 		node = next;
 	}
 }
@@ -60,8 +59,8 @@ void	*free_info(t_info **info)
 		return (NULL);
 
 	ft_lstclear(&(*info)->envlist_head, free_env_elem);
-
-	clear_input(info);
+	(*info)->envlist_head = NULL;
+	clear_input_info(info);
 	free(*info);
 	*info = NULL;
 	return (NULL);
@@ -87,8 +86,8 @@ void	free_command_list_elem(void *content)
 		return ;
 	elem = content;
 	elem->commands = (char **)free_2d_alloc((void **)elem->commands);
-	ft_lstclear(&elem->pipeline_token_list, free_env_elem);
-	ft_lstclear(&elem->subshell_token_list, free_env_elem);
+	ft_lstclear(&elem->pipeline_token_list, free_token_elem);
+	ft_lstclear(&elem->subshell_token_list, free_token_elem);
 	//TODO: delete redirect_list
 }
 
