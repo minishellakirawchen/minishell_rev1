@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 00:07:12 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 20:39:26 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int	append_env(t_info *info, char *key, char *value)
 		*elem_value = ft_strjoin(*elem_value, value);
 		if(!elem_value)
 			return(perror_and_return_int("malloc", EXIT_FAILURE));
+		free (elem_key);
+		free (value);
 		free (temp_ptr);
 	}
 	return (EXIT_SUCCESS);
@@ -96,6 +98,7 @@ int add_env(t_info *info, char *key, char *value)
 		temp_ptr = *elem_value;
 		*elem_value = value;
 		free(temp_ptr);
+		free (key);
 	}
 	else
 		exit_status = set_elem(info, key, value);

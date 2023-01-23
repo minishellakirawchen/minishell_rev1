@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 00:16:37 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 20:50:55 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 		ft_dprintf(STDERR_FILENO,
 			"minishell: export: `%s': not a valid identifier\n", *cmds);
 		exit_status = EXIT_FAILURE;
+		free (e_info->key);
+		free (e_info->value);
 	}
 	if (e_info->key_type == e_append && e_info->skip_flag != 1)
 		exit_status = append_env(info, e_info->key, e_info->value);
@@ -110,7 +112,7 @@ int	ft_export(t_info *info, char **cmds)
 	cmds++;
 	//export NULL の挙動は未定義（shell変数を表示するが、実装しない！？なんのエラーを表示する？）
 	if (*cmds == NULL)
-		ft_dprintf(STDERR_FILENO, "minishell: export: invalid variable");
+		ft_dprintf(STDERR_FILENO, "minishell: export: invalid variable\n");
 	while (*cmds != NULL)
 	{
 		exit_status = export_cmd(info, e_info, cmds);
