@@ -6,14 +6,13 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 20:50:55 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 22:59:01 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	define_key_value(char *cmd, char **key, char **value,
-	int *skip_flag)
+static int	define_key_value(char *cmd, t_export_info *e_info)
 {
 	char	*key_sign;
 	int		exit_status;
@@ -23,42 +22,22 @@ static int	define_key_value(char *cmd, char **key, char **value,
 	exit_status = EXIT_SUCCESS;
 	equal_index = 0;
 	key_sign = ft_strchr(cmd, '=');
-	//'='を見つからないときに、何もせずに、return(0) and (skip_flag = 1)を返す
+	//'='を見つからないときに、cmdをkeyとして認識、return(0) and (key_type == e_novalue)を返す
 	if (key_sign == NULL)
 	{
-		*skip_flag = 1;
-		return (EXIT_SUCCESS);
+		e_info->key_type = e_novalue;
+		e_info->key = cmd;
+		return (exit_status);
 	}
-	*skip_flag = 0;
 	cmd_len = ft_strlen(cmd);
 	while (cmd[equal_index] != '=')
 		equal_index++;
-	*key = ft_substr(cmd, 0, equal_index);
-	*value = ft_substr(cmd, equal_index + 1, (cmd_len - (equal_index + 1)));
-	if (!key || !value)
+	e_info->key = ft_substr(cmd, 0, equal_index);
+	e_info->value = ft_substr(cmd, equal_index + 1, (cmd_len - (equal_index
+					+ 1)));
+	if (!e_info->key || !e_info->value)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	return (exit_status);
-}
-
-static t_key_type	judge_key(char *key)
-{
-	ssize_t	i;
-	ssize_t	key_len;
-
-	i = 0;
-	if (ft_isdigit(*key) || *key == '\0')
-		return (e_error);
-	key_len = ft_strlen(key);
-	while (*key)
-	{
-		if ((i + 1) == key_len && *key == '+')
-			return (e_append);
-		if (!ft_isalnum(*key) && *key != '_')
-			return (e_error);
-		i++;
-		key++;
-	}
-	return (e_add);
 }
 
 static t_export_info	*init_export_info(void)
@@ -73,7 +52,7 @@ static t_export_info	*init_export_info(void)
 	}
 	e_info->key = NULL;
 	e_info->value = NULL;
-	e_info->skip_flag = 0;
+	e_info->key_type = e_tpyeinit;
 	return (e_info);
 }
 
@@ -81,21 +60,24 @@ int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 {
 	int	exit_status;
 
-	exit_status = define_key_value(*cmds, &(e_info->key), &(e_info->value),
-			&(e_info->skip_flag));
-	if (e_info->skip_flag == 0)
-		e_info->key_type = judge_key(e_info->key);
-	if (e_info->key_type == e_error && e_info->skip_flag != 1)
+	exit_status = define_key_value(*cmds, e_info);
+	e_info->key_type = judge_key(e_info);
+	if (e_info->key_type == e_append || e_info->key_type == e_add)
+		e_info->key_type = judge_value(e_info);
+	if (e_info->key_type == e_error)
 	{
 		ft_dprintf(STDERR_FILENO,
-			"minishell: export: `%s': not a valid identifier\n", *cmds);
+			"minishell: export: `%s': not a valid identifier\n",*cmds);
 		exit_status = EXIT_FAILURE;
-		free (e_info->key);
-		free (e_info->value);
+		if (e_info->value != NULL)
+		{
+			free(e_info->key);
+			free(e_info->value);
+		}
 	}
-	if (e_info->key_type == e_append && e_info->skip_flag != 1)
+	if (e_info->key_type == e_append)
 		exit_status = append_env(info, e_info->key, e_info->value);
-	if (e_info->key_type == e_add && e_info->skip_flag != 1)
+	if (e_info->key_type == e_add)
 		exit_status = add_env(info, e_info->key, e_info->value);
 	return (exit_status);
 }
@@ -116,6 +98,7 @@ int	ft_export(t_info *info, char **cmds)
 	while (*cmds != NULL)
 	{
 		exit_status = export_cmd(info, e_info, cmds);
+		e_info->value = NULL;
 		cmds++;
 	}
 	free(e_info);

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 20:55:00 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 22:42:04 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ enum e_syntax_err
 
 enum e_key_type
 {
+	e_tpyeinit,
 	e_append,
 	e_error,
 	e_add,
@@ -135,7 +136,6 @@ struct s_export_info
 	char			*key;
 	char			*value;
 	t_key_type		key_type;
-	int				skip_flag;
 };
 
 
@@ -160,8 +160,11 @@ int		execute_builtin(t_info *info, char **cmds);
 /* ************************** */
 /*         ft_builtin         */
 /* ************************** */
-int		ft_env(t_info *info);
-int		ft_export(t_info *info, char **cmds);
+int			ft_env(t_info *info);
+int			ft_export(t_info *info, char **cmds);
+t_key_type	judge_key(t_export_info *e_info);
+t_key_type	judge_value(t_export_info *e_info);
+
 
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 20:39:26 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 21:14:41 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ int	set_elem(t_info *info, char *key, char *value)
 
 	new_elem = malloc(sizeof(t_env_elem));
 	if (!new_elem)
-		perror_and_return_int("malloc", EXIT_FAILURE);
+		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	new_elem -> key = key;
 	new_elem -> value = value;
 	new_env_node = ft_lstnew(new_elem);
 	if (!new_env_node)
-		perror_and_return_int("malloc", EXIT_FAILURE);
+		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	if (!info->envlist_head)
 		info->envlist_head = new_env_node;
 	else
