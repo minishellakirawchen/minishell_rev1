@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 16:21:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 17:06:21 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void	debug_print_exec_list(t_exec_list *node, char *str)
 {
 	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
+	t_command_list	*command_list;
+	t_list			*pipeline;
 
 	ft_dprintf(STDERR_FILENO, "\n[#DEBUG print] %s %s", str ? str : "", "\n");
 	if (!node)
@@ -25,17 +27,41 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 	while (node)
 	{
 		if (node->node_kind == e_head)
-			ft_dprintf(STDERR_FILENO, "[head]\n  |\n");
+			ft_dprintf(STDERR_FILENO, "  [head]\n    v\n");
 		else if (node->node_kind == e_operator)
-			ft_dprintf(STDERR_FILENO, "  [%s]\n", type[node->token_type]);
+			ft_dprintf(STDERR_FILENO, "    %s operator\n", type[node->token_type]);
 		else
 		{
-			ft_dprintf(STDERR_FILENO, "[pipeline] :");
-			debug_print_token_word(node->token_list_head, NULL);
+			if (node->token_list_head)
+			{
+				ft_dprintf(STDERR_FILENO, "  [pipeline] ");
+				ft_dprintf(STDERR_FILENO, "%-10s:", "token_list");
+				debug_print_token_word(node->token_list_head, NULL);
+			}
+			pipeline = node->pipeline;
+			while (pipeline)
+			{
+				command_list = pipeline->content;
+				if (command_list && command_list->subshell_token_list)
+				{
+					ft_dprintf(STDERR_FILENO, "  [pipeline] ");
+					ft_dprintf(STDERR_FILENO, "%-10s:", "subshell");
+					debug_print_token_word(command_list->subshell_token_list, NULL);
+				}
+				if (command_list && command_list->pipeline_token_list)
+				{
+					ft_dprintf(STDERR_FILENO, "  [pipeline] ");
+					ft_dprintf(STDERR_FILENO, "%-10s:", "pipeline");
+					debug_print_token_word(command_list->pipeline_token_list, NULL);
+				}
+				pipeline = pipeline->next;
+				if (pipeline)
+					ft_dprintf(STDERR_FILENO, "      v pipe\n");
+			}
 		}
 		node = node->next;
 	}
-	ft_dprintf(STDERR_FILENO, "  |\n[tail]\n");
+	ft_dprintf(STDERR_FILENO, "    v\n[tail]\n");
 }
 
 void	debug_print_tree(t_exec_list *root, char *str)

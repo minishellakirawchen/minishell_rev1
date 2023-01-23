@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 22:52:54 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/23 09:02:03 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,26 @@
 /* ************************** */
 /*          typedef           */
 /* ************************** */
+/* struct */
 typedef struct s_info			t_info;
+typedef struct s_exec_list		t_exec_list;
+
+/* lst->constent */
 typedef struct s_env_elem		t_env_elem;
 typedef struct s_token_elem		t_token_elem;
 typedef struct s_split_info		t_split_info;
-typedef struct s_exec_list		t_exec_list;
 typedef struct s_command_list	t_command_list;
 typedef struct s_redirect_list	t_redirect_list;
 
-
-typedef enum e_token_type	t_token_type;
-typedef enum e_syntax_err	t_syntax_err;
-typedef enum e_node_kind	t_node_kind;
+/* enum */
+typedef enum e_token_type		t_token_type;
+typedef enum e_node_kind		t_node_kind;
 
 /* ************************** */
 /*           enum             */
 /* ************************** */
 
+//TODO: toupper?
 enum e_token_type
 {
 	e_ope_semicolon = 0,		// ;
@@ -84,12 +87,6 @@ enum e_token_type
 	e_nothing = 20
 };
 
-enum e_syntax_err
-{
-	e_unexpected_token,
-	e_newline,
-};
-
 enum e_node_kind
 {
 	e_head,			//root
@@ -97,19 +94,41 @@ enum e_node_kind
 	e_subshell,
 	e_pipeline,
 	e_commands,
+	e_init_kind = -1,
 };
 
 /* ************************** */
 /*          struct            */
 /* ************************** */
-// minishell info
+// minishell parameter
 struct s_info
 {
-	t_list	*envlist_head;
-	t_list	*tokenlist_head;
-
+	t_list		*envlist_head;
+	t_list		*tokenlist_head;
+	t_exec_list	*execlist_head;
 };
 
+struct s_exec_list
+{
+	// create_operator_list
+	t_node_kind			node_kind;
+	t_token_type		token_type;
+	t_exec_list				*prev;
+	t_exec_list				*next;
+
+	// create_command_list
+	// pipeline_node
+	t_list				*token_list_head; //tmp_save in create_operating_list
+
+	t_list				*pipeline;//content=command_list
+
+	t_command_list		*command_list;
+
+	t_token_elem		*token;
+};
+
+
+/*  lst->(void *)content  */
 // environment variable list
 struct s_env_elem
 {
@@ -137,24 +156,6 @@ struct s_split_info
 	bool			is_connect_to_next_word;  // hello"world"->[hello]=["world"]
 	size_t			head_idx;
 	size_t			word_len;
-};
-
-struct s_exec_list
-{
-	// create_operator_list
-	t_node_kind			node_kind;
-	t_token_type		token_type;
-	t_exec_list				*prev;
-	t_exec_list				*next;
-
-	// create_command_list
-	// pipeline_node
-	t_list				*token_list_head; //tmp_save in create_operating_list
-
-	t_list				*pipeline;//content=command_list
-	t_command_list		*command_list;
-
-	t_token_elem		*token;
 };
 
 //
