@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 16:09:59 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:23:59 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,8 +211,9 @@ void	move_tokens_to_subshell_list(t_list **token_list, t_command_list **command_
 	t_token_elem	*token_elem;
 	ssize_t			subshell_depth;
 
+	if (!token_list || !command_list || !popped_token)
+		return ;
 	token_elem = popped_token->content;
-
 	(*command_list)->type = e_node_subshell;
 	subshell_depth = token_elem->depth;
 	ft_lstdelone(popped_token, free_token_elem); // delete (
@@ -229,6 +230,39 @@ void	move_tokens_to_subshell_list(t_list **token_list, t_command_list **command_
 	}
 }
 
+void	move_tokens_to_pipeline_list(t_command_list **command_list, t_list *popped_token)
+{
+	if (!command_list || !popped_token)
+		return ;
+
+	if ((*command_list)->type == e_node_init)
+			(*command_list)->type = e_node_pipeline;
+	ft_lstadd_back(&(*command_list)->pipeline_token_list, popped_token);
+}
+
+void	move_tokens_to_command_list(t_list **token_list, t_command_list **command_list, t_list *popped_token)
+{
+	t_token_elem	*token_elem;
+
+	if (!token_list || !command_list || !popped_token)
+		return ;
+	token_elem = popped_token->content;
+	if (is_tokentype_subshell(token_elem->type))
+		move_tokens_to_subshell_list(token_list, command_list, popped_token);
+	else
+		move_tokens_to_pipeline_list(command_list, popped_token);
+}
+
+int	connect_command_list_to_execlist(t_list **connect_to, t_command_list *command_list)
+{
+	t_list	*new_pipeline;
+
+	new_pipeline = ft_lstnew(command_list);
+	if (!new_pipeline)
+		return (FAILURE); //TODO
+	ft_lstadd_back(connect_to, new_pipeline);
+	return (SUCCESS);
+}
 
 // TODO:leaks, 見直し
 // exec_pipeline_node=exec_list
@@ -237,69 +271,48 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 {
 	t_token_elem	*token_elem;
 	t_list			*popped_token;
-
 	t_command_list	*command_list;
-	t_list			*new_pipeline;
+//	t_list			*new_pipeline;
 
 	if (!exec_pipeline_node || !*exec_pipeline_node || !(*exec_pipeline_node)->token_list_head)
 		return (FAILURE);
-
 	command_list = create_command_list_node();
 	if (!command_list)
 		return (FAILURE);
-
 	while ((*exec_pipeline_node)->token_list_head)
 	{
 		popped_token = ft_lstpop(&(*exec_pipeline_node)->token_list_head);
 		token_elem = popped_token->content;
-		/* subshell */
-		if (is_tokentype_subshell(token_elem->type))
-		{
-			/*
-			command_list->type = e_node_subshell;
-			subshell_depth = token_elem->depth;
-			ft_lstdelone(popped_token, free_token_elem); // delete (
-			while ((*exec_pipeline_node)->token_list_head)
-			{
-				popped_token = ft_lstpop(&(*exec_pipeline_node)->token_list_head);
-				token_elem = popped_token->content;
-				if (token_elem->type == e_subshell_end && token_elem->depth == subshell_depth)
-				{
-					ft_lstdelone(popped_token, free_token_elem); // delete )
-					break ;
-				}
-				ft_lstadd_back(&command_list->subshell_token_list, popped_token);
-			}
-			*/
-			move_tokens_to_subshell_list(&(*exec_pipeline_node)->token_list_head, &command_list, popped_token);
-			continue ;
-		}
-		/* command */
+		/* subshell or commands */
 		if (token_elem->type != e_ope_pipe)
 		{
-			if (command_list->type == e_node_init)
-				command_list->type = e_node_pipeline;
-			ft_lstadd_back(&command_list->pipeline_token_list, popped_token);
+			move_tokens_to_command_list(&(*exec_pipeline_node)->token_list_head, &command_list, popped_token);
 			continue ;
 		}
 		/* pipe */
-		if (token_elem->type == e_ope_pipe)
-		{
-			new_pipeline = ft_lstnew(command_list);
-			if (!new_pipeline)
-				return (FAILURE); //TODO
-			ft_lstadd_back(&(*exec_pipeline_node)->pipeline_commands, new_pipeline);
-			ft_lstdelone(popped_token, free_token_elem); // delete |
-			command_list = create_command_list_node();
-			if (!command_list)
-				return (FAILURE);
-		}
+		if (connect_command_list_to_execlist(&(*exec_pipeline_node)->pipeline_commands, command_list) == FAILURE)
+			return (FAILURE);
+		/*
+		new_pipeline = ft_lstnew(command_list);
+		if (!new_pipeline)
+			return (FAILURE); //TODO
+		ft_lstadd_back(&(*exec_pipeline_node)->pipeline_commands, new_pipeline);
+		*/
+		ft_lstdelone(popped_token, free_token_elem); // delete |
+		command_list = create_command_list_node();
+		if (!command_list)
+			return (FAILURE);
 	}
 	/* last command line */
+	if (connect_command_list_to_execlist(&(*exec_pipeline_node)->pipeline_commands, command_list) == FAILURE)
+		return (FAILURE);
+
+	/*
 	new_pipeline = ft_lstnew(command_list);
 	if (!new_pipeline)
 		return (FAILURE); //TODO
 	ft_lstadd_back(&(*exec_pipeline_node)->pipeline_commands, new_pipeline);
+	 */
 	return (SUCCESS);
 }
 

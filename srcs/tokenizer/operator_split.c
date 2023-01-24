@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 21:00:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:49:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 	t_list			*splitted_list_head;
 	bool			is_connect_to_next;
 	char			quote_chr;
+	bool			is_quoted;
 
 	splitted_list_head = NULL;
 	head_idx = 0;
@@ -74,6 +75,7 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 	{
 		word_len = 0;
 		quote_chr = '\0';
+		is_quoted = false;
 		is_connect_to_next = false;
 
 		// quote -> go to next quote
@@ -82,6 +84,7 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 		{
 			watching_chr = ft_strchr(quote, src[ + word_len])[0];
 			quote_chr = watching_chr;
+			is_quoted = true;
 			word_len++;
 			while (src[head_idx + word_len] && src[head_idx + word_len] != watching_chr)
 				word_len++;
@@ -117,6 +120,7 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 		token_elem->type = e_init;
 		token_elem->is_connect_to_next_word = is_connect_to_next;
 		token_elem->quote_chr = quote_chr;
+		token_elem->is_quoted = is_quoted;
 		new_list = ft_lstnew(token_elem);
 		if (!new_list)
 		{
@@ -159,7 +163,6 @@ int	split_by_operators(t_list **token_head)
 	while (now_node)
 	{
 		token_elem = now_node->content;
-
 		if (!token_elem->is_quoted && is_str1chrs_in_str2(STR_OPERATOR, token_elem->word))
 		{
 			splitted_list_head = get_split_before_after_opes(token_elem->word, STR_OPERATOR, STR_SPACE);

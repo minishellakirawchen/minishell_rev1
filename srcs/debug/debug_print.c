@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 15:42:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:44:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,8 +134,9 @@ void	debug_print_token_word(t_list *head, char *str)
 
 		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
 		ft_dprintf(STDERR_FILENO, "%s", type[token->type]);
-		ft_dprintf(STDERR_FILENO, "%d", token->depth);
-		ft_dprintf(STDERR_FILENO, "%c", token->is_quoted ? token->word[0] : '\0');
+		if (token->depth >= 0)
+			ft_dprintf(STDERR_FILENO, "%zd", token->depth);
+		ft_dprintf(STDERR_FILENO, "%c", token->is_quoted ? 'q' : '\0');
 
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
