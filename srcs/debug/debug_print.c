@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 21:52:58 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 11:12:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 	}
 	while (node)
 	{
-		if (node->node_kind == e_head)
+		if (node->node_kind == e_node_head)
 			ft_dprintf(STDERR_FILENO, "  [head]\n    v\n");
-		if (node->node_kind == e_operator)
+		if (node->node_kind == e_node_operator)
 			ft_dprintf(STDERR_FILENO, "    %s operator\n", type[node->token_type]);
 		else
 		{
@@ -81,7 +81,7 @@ void	debug_print_tree(t_exec_list *root, char *str)
 	node = root;
 	while (node)
 	{
-		if (node->node_kind == e_pipeline)
+		if (node->node_kind == e_node_pipeline)
 		{
 			ft_dprintf(STDERR_FILENO, "[pipeline] :");
 			debug_print_token_word(node->token_list_head, NULL);
@@ -94,7 +94,7 @@ void	debug_print_tree(t_exec_list *root, char *str)
 			debug_print_token_word(left_node->token_list_head, NULL);
 
 			// print operator node
-			if (node->node_kind != e_head)
+			if (node->node_kind != e_node_head)
 				ft_dprintf(STDERR_FILENO, "[%s]\n  |\n", type[node->token_type]);
 		}
 		node = node->next;
@@ -124,7 +124,7 @@ void	debug_print_token_word(t_list *head, char *str)
 {
 	t_list			*node;
 	t_token_elem	*token;
-	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
+	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "f", "e", "w", "i", NULL};
 
 	if (str)
 		ft_dprintf(STDERR_FILENO, "#%-15s:", str);

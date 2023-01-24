@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 21:51:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 10:49:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ typedef enum e_node_kind		t_node_kind;
 
 enum e_token_type
 {
-	e_ope_semicolon = 0,		// ;
+	e_semicolon = 0,		// ;
 	e_ope_pipe = 1,				// |
 	e_ope_or = 2,				// ||
 	e_ope_and = 3,				// &&
@@ -84,12 +84,12 @@ enum e_token_type
 
 enum e_node_kind
 {
-	e_head,			//root
-	e_operator,
-	e_subshell,
-	e_pipeline,
-	e_commands,
-	e_init_kind,
+	e_node_head,			//root
+	e_node_operator,
+	e_node_subshell,
+	e_node_pipeline,
+	e_node_commands,
+	e_node_init,
 };
 
 /* ************************** */

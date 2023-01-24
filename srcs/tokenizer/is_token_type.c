@@ -14,7 +14,7 @@
 
 int is_tokentype_semicolon(t_token_type type)
 {
-	return (type == e_ope_semicolon);
+	return (type == e_semicolon);
 }
 
 int is_tokentype_pipe_or_and(t_token_type type)
@@ -35,7 +35,7 @@ int is_tokentype_subshell(t_token_type type)
 // BNF
 int is_tokentype_operator(t_token_type type)
 {
-	return (type == e_ope_semicolon || type == e_ope_and || type == e_ope_or);
+	return (type == e_semicolon || type == e_ope_and || type == e_ope_or);
 }
 
 int is_tokentype_pipeline(t_token_type type)

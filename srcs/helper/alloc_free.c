@@ -88,6 +88,7 @@ void	free_command_list_elem(void *content)
 	elem->commands = (char **)free_2d_alloc((void **)elem->commands);
 	ft_lstclear(&elem->pipeline_token_list, free_token_elem);
 	ft_lstclear(&elem->subshell_token_list, free_token_elem);
+	
 	//TODO: delete redirect_list
 }
 
