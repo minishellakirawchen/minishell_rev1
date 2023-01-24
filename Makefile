@@ -21,6 +21,9 @@ SRC		= main.c \
 		  tokenizer/validate_operator.c \
 		  tokenizer/arrange_token.c \
 		  parser/parser.c \
+		  parser/create_operator_list.c \
+		  parser/create_command_list.c \
+		  parser/move_tokens_to_command_list.c \
 		  parser/tree_operation.c \
 		  parser/tree_helper.c \
 		  expansion/expansion.c \

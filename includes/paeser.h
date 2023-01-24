@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 14:05:06 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:14:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ typedef struct s_env_elem		t_env_elem;
 typedef struct s_token_elem		t_token_elem;
 typedef struct s_split_info		t_split_info;
 typedef struct s_exec_list		t_exec_list;
-typedef struct s_command_list_info	t_commands_info;
-typedef struct s_redirect_info	t_redirect_info;
+typedef struct s_command_list	t_command_list;
 
 typedef enum e_token_type		t_token_type;
 typedef enum e_syntax_err		t_syntax_err;
@@ -42,6 +41,16 @@ typedef enum e_node_kind		t_node_kind;
 /* ************************** */
 /*         function           */
 /* ************************** */
+
+/* create_operator_list.c */
+t_exec_list	*create_operator_list(t_list **tokenlist_head);
+
+
+/* create_command_list.c */
+int	create_command_list(t_exec_list **exec_list_head);
+
+/* move_tokens_to_command_list.c */
+void	move_tokens_to_command_list(t_list **token_list, t_command_list **command_list, t_list *popped_token);
 
 void	add_top_of_tree(t_exec_list **tree, t_exec_list *add_elem);
 void	add_bottom_of_tree(t_exec_list **tree, t_exec_list *add_elem);
