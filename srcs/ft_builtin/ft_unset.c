@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:36 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 22:27:33 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 22:40:32 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	unset_env(t_info *info, char *cmd)
 	env_node = info->envlist_head;
 	while (env_node != NULL)
 	{
-		if(get_value_from_key(env_node->content, cmd) != NULL)
+		if (get_value_from_key(env_node->content, cmd) != NULL)
 			return (unset_elem(pre_node, env_node));
 		pre_node = env_node;
 		env_node = env_node->next;
@@ -47,24 +47,25 @@ static int	unset_env(t_info *info, char *cmd)
 	return (EXIT_SUCCESS);
 }
 
-int	 ft_unset(t_info *info, char **cmds)
+int	ft_unset(t_info *info, char **cmds)
 {
 	int	exit_status;
 
-	(void)info;
 	exit_status = EXIT_SUCCESS;
-	cmds ++;
+	if (!info || !cmds)
+		return (EXIT_FAILURE);
+	cmds++;
 	while (*cmds != NULL)
 	{
 		if (judge_chr_key(*cmds) == FAILURE)
 		{
 			ft_dprintf(STDERR_FILENO,
-			"minishell: export: `%s': not a valid identifier\n",*cmds);
+				"minishell: export: `%s': not a valid identifier\n",*cmds);
 			exit_status += EXIT_FAILURE;
 		}
 		else
 			exit_status += unset_env(info, *cmds);
-		cmds ++;
+		cmds++;
 	}
 	if (exit_status > 0)
 		return (EXIT_FAILURE);
