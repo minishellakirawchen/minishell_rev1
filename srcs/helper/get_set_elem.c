@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 21:14:41 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 18:16:57 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ int	set_elem(t_info *info, char *key, char *value)
 	new_env_node = ft_lstnew(new_elem);
 	if (!new_env_node)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
-	if (!info->envlist_head)
-		info->envlist_head = new_env_node;
 	else
 		ft_lstadd_back(&info->envlist_head, new_env_node);
 	return (EXIT_SUCCESS);
@@ -68,7 +66,7 @@ int	append_env(t_info *info, char *key, char *value)
 	if (!elem_key)
 		return(perror_and_return_int("malloc", EXIT_FAILURE));
 	elem_key = ft_memmove(elem_key, key, key_len - 1);
-	free (key);
+	key = free_1d_alloc(key);
 	elem_value = get_elem(info, elem_key);
 	if (elem_value == NULL)
 		set_elem(info, elem_key, value);
@@ -78,9 +76,9 @@ int	append_env(t_info *info, char *key, char *value)
 		*elem_value = ft_strjoin(*elem_value, value);
 		if(!elem_value)
 			return(perror_and_return_int("malloc", EXIT_FAILURE));
-		free (elem_key);
-		free (value);
-		free (temp_ptr);
+		elem_key = free_1d_alloc(elem_key);
+		value = free_1d_alloc(value);
+		temp_ptr = free_1d_alloc(temp_ptr);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -97,8 +95,8 @@ int add_env(t_info *info, char *key, char *value)
 	{
 		temp_ptr = *elem_value;
 		*elem_value = value;
-		free(temp_ptr);
-		free (key);
+		temp_ptr = free_1d_alloc(temp_ptr);
+		key = free_1d_alloc(key);
 	}
 	else
 		exit_status = set_elem(info, key, value);

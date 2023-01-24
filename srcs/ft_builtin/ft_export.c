@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 22:59:01 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 18:36:44 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ static t_export_info	*init_export_info(void)
 	e_info = malloc(sizeof(t_export_info));
 	if (!e_info)
 	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
+		return (perror_ret_nullptr("malloc"));
+		// perror("malloc");
+		// exit(EXIT_FAILURE);
 	}
 	e_info->key = NULL;
 	e_info->value = NULL;
@@ -71,8 +72,8 @@ int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 		exit_status = EXIT_FAILURE;
 		if (e_info->value != NULL)
 		{
-			free(e_info->key);
-			free(e_info->value);
+			e_info->key = free_1d_alloc(e_info->key);
+			e_info->value = free_1d_alloc(e_info->value);
 		}
 	}
 	if (e_info->key_type == e_append)
@@ -87,10 +88,10 @@ int	ft_export(t_info *info, char **cmds)
 	int				exit_status;
 	t_export_info	*e_info;
 
-	e_info = init_export_info();
 	exit_status = EXIT_SUCCESS;
 	if (!info || !cmds)
 		return (EXIT_FAILURE);
+	e_info = init_export_info();
 	cmds++;
 	//export NULL の挙動は未定義（shell変数を表示するが、実装しない！？なんのエラーを表示する？）
 	if (*cmds == NULL)
@@ -101,6 +102,6 @@ int	ft_export(t_info *info, char **cmds)
 		e_info->value = NULL;
 		cmds++;
 	}
-	free(e_info);
+	e_info = free_1d_alloc(e_info);
 	return (exit_status);
 }

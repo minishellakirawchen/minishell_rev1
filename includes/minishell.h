@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 22:42:04 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/23 23:41:13 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ enum e_key_type
 // minishell info
 struct s_info
 {
-
 	t_list	*envlist_head;
 	t_list	*tokenlist_head;
 };
