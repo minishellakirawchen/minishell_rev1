@@ -115,7 +115,7 @@ struct s_exec_list
 
 	// create_command_list
 	t_list				*token_list_head; // content=command_list, tmp_save
-	t_list				*pipeline; //content=command_list, create at expansion part
+	t_list				*pipeline; //content=command_list
 };
 
 

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 22:02:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 10:08:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,11 +218,12 @@ t_command_list	*create_command_list_node(void)
 	return (command_list);
 }
 
+// TODO:leaks, 見直し
+// pipeline_node=exec_list node_kind=pipeline(!=operator)
 int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 {
 	t_list			*pipeline_tokens;
 	t_token_elem	*token;
-	t_list			*prev;
 	t_list			*popped_token;
 	t_list			*next;
 	ssize_t			subshell_depth;
@@ -245,59 +246,59 @@ int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 	while (pipeline_tokens)
 	{
 		token = pipeline_tokens->content;
-		if (token->type == e_subshell_start)
+		/* subshell -> add to () */
+		if (token && token->type == e_subshell_start)
 		{
 			command_list->type = e_subshell;
+			subshell_depth = token->depth;
 			// ( )を取り除いてsubshell_token_listに入れる
 			// (hoge), (hoge)>out
-			subshell_depth = token->depth;
-			// 今のdepthよりも小さなdepthの|まで実行
-			while (pipeline_tokens && token->depth >= subshell_depth)
+
+			next = pipeline_tokens->next;
+			ft_lstdelone(pipeline_tokens, free_token_elem); // delete (
+			pipeline_tokens = next;
+
+			while (pipeline_tokens)
 			{
-				next = pipeline_tokens->next;
+				token = pipeline_tokens->content;
 				if (is_tokentype_subshell(token->type) && token->depth == subshell_depth)
 				{
-					ft_lstdelone(pipeline_tokens, free_token_elem); // delete "(", ")"
-					pipeline_tokens = NULL;
+					next = pipeline_tokens->next;
+					ft_lstdelone(pipeline_tokens, free_token_elem); // delete )
+					pipeline_tokens = next;
+					break ;
 				}
-				else
-				{
-					popped_token = pipeline_tokens;
-					popped_token->next = NULL;
-					pipeline_tokens = NULL;
-					ft_lstadd_back(&command_list->subshell_token_list, popped_token);
-				}
-				pipeline_tokens = next;
-				if (pipeline_tokens)
-					token = pipeline_tokens->content;
+				popped_token = ft_lstpop(&pipeline_tokens);
+				ft_lstadd_back(&command_list->subshell_token_list, popped_token);
+				pipeline_tokens = pipeline_tokens->next;
 			}
 		}
-		if (token && token->type != e_ope_pipe)
+		while (pipeline_tokens)
 		{
-			if (command_list->type == e_init_kind)//not subshell
-				command_list->type = e_commands;
-			while (pipeline_tokens && token->type != e_ope_pipe)
-			{
-				next = pipeline_tokens->next;
-				// command_list, command_list->pipeline_tolen_list+=pipeline_tokens;
-				popped_token = pipeline_tokens;
-				popped_token->next = NULL;
-				pipeline_tokens = NULL;
-				ft_lstadd_back(&command_list->pipeline_token_list, popped_token);
-				pipeline_tokens = next;
-				if (pipeline_tokens)
-					token = pipeline_tokens->content;
-			}
-		}
-		new_pipeline = ft_lstnew(command_list);
-		if (!new_pipeline)
-			return (FAILURE); //TODO
-		ft_lstadd_back(&(*pipeline_node)->pipeline, new_pipeline);
-		command_list = create_command_list_node();
-		prev = pipeline_tokens;
-		if (pipeline_tokens)
+			token = pipeline_tokens->content;
+			if (token->type == e_ope_pipe)
+				break ;
+			popped_token = ft_lstpop(&pipeline_tokens);
+			ft_lstadd_back(&command_list->pipeline_token_list, popped_token);
 			pipeline_tokens = pipeline_tokens->next;
-		ft_lstdelone(prev, free_token_elem); //delete pipe node
+		}
+		if (pipeline_tokens)
+		{
+			token = pipeline_tokens->content;
+			if (token->type != e_ope_pipe)
+				break ;
+
+			new_pipeline = ft_lstnew(command_list);
+			if (!new_pipeline)
+				return (FAILURE); //TODO
+			ft_lstadd_back(&(*pipeline_node)->pipeline, new_pipeline);
+
+			next = pipeline_tokens->next;
+			ft_lstdelone(pipeline_tokens, free_token_elem); // delete |
+			pipeline_tokens = next;
+			if (next)
+				command_list = create_command_list_node();
+		}
 	}
 	(*pipeline_node)->token_list_head = NULL;
 	return (SUCCESS);
@@ -345,7 +346,6 @@ int	parsing_token_list(t_info *info)
 	}
 	// print
 	debug_print_exec_list(info->execlist_head, "operator_list");
-
 
 	if (create_command_list(&info->execlist_head) == FAILURE)
 	{

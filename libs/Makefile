@@ -70,6 +70,7 @@ LIBFT_SRC	= ft_strlen.c \
 			  ft_lstclear.c \
 			  ft_lstiter.c \
 			  ft_lstmap.c \
+			  ft_lstpop.c \
 			  ft_math.c \
 			  ft_strtoll.c \
 			  is_in_str.c \
