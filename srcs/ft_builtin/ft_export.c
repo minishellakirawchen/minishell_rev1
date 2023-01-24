@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 18:36:44 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 19:02:12 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,7 @@ static t_export_info	*init_export_info(void)
 
 	e_info = malloc(sizeof(t_export_info));
 	if (!e_info)
-	{
 		return (perror_ret_nullptr("malloc"));
-		// perror("malloc");
-		// exit(EXIT_FAILURE);
-	}
 	e_info->key = NULL;
 	e_info->value = NULL;
 	e_info->key_type = e_tpyeinit;
@@ -92,10 +88,15 @@ int	ft_export(t_info *info, char **cmds)
 	if (!info || !cmds)
 		return (EXIT_FAILURE);
 	e_info = init_export_info();
+	if (!e_info)
+		return (EXIT_FAILURE);
 	cmds++;
 	//export NULL の挙動は未定義（shell変数を表示するが、実装しない！？なんのエラーを表示する？）
 	if (*cmds == NULL)
+	{
 		ft_dprintf(STDERR_FILENO, "minishell: export: invalid variable\n");
+		exit_status = EXIT_FAILURE;
+	}
 	while (*cmds != NULL)
 	{
 		exit_status = export_cmd(info, e_info, cmds);
