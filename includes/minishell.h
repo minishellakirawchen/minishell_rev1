@@ -38,6 +38,8 @@
 
 # define FAILURE	0
 # define SUCCESS	1
+# define CONTINUE	2
+# define BREAK		3
 
 # define DEBUG		1
 

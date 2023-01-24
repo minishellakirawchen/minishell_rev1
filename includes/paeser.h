@@ -43,7 +43,8 @@ typedef enum e_node_kind		t_node_kind;
 /* ************************** */
 
 /* create_operator_list.c */
-t_exec_list	*create_operator_list(t_list **tokenlist_head);
+//t_exec_list	*create_operator_list(t_list **tokenlist_head);
+int	create_operator_list(t_info *info);
 
 
 /* create_command_list.c */

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:06:20 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 17:10:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 18:12:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,50 +25,137 @@ static t_exec_list *create_execlist_node(t_node_kind kind, t_list *token_head, t
 // 初めはpipelineを作る
 // operatorがきたらpipeline->operator
 
-t_exec_list	*create_operator_list(t_list **tokenlist_head)
+static bool	is_pipeline_token(t_token_elem *token_elem, ssize_t	subshell_depth)
+{
+	if (!token_elem)
+		return (false);
+	if (!(is_tokentype_operator(token_elem->type) && token_elem->depth == subshell_depth))
+		return (true);
+	return (false);
+}
+
+t_exec_list	*create_execlist_operator_node(t_exec_list **prev_pipeline, t_list **popped_node, t_token_elem *token_elem)
+{
+	t_exec_list		*operator_node;
+
+	if (!popped_node || !*popped_node)
+		return (NULL);
+	operator_node = create_execlist_node(e_node_operator, NULL, prev_pipeline, NULL);
+	if (!operator_node)
+		return (perror_ret_nullptr("malloc"));
+	operator_node->token_type = token_elem->type; //for debug print
+	return (operator_node);
+}
+
+
+void	delete_operator_token(t_list **operator_token)
+{
+	if (!operator_token || !*operator_token)
+		return ;
+	ft_lstdelone(*operator_token, free_token_elem);
+	*operator_token = NULL;
+}
+
+int handle_each_token(t_list **tokenlist, t_exec_list *pipeline_node, t_exec_list **operator_node, ssize_t subshell_depth)
 {
 	t_list			*popped_node;
 	t_token_elem	*token_elem;
 
-	t_exec_list		*exec_head;
+	popped_node = ft_lstpop(tokenlist);
+	token_elem = popped_node->content;
+	if (is_pipeline_token(token_elem, subshell_depth))
+	{
+		ft_lstadd_back(&(pipeline_node->token_list_head), popped_node);
+		return (CONTINUE) ;
+	}
+	if (!operator_node)
+		return (FAILURE);
+	*operator_node = create_execlist_operator_node(&pipeline_node, &popped_node, token_elem);
+	if (!*operator_node)
+		return (perror_ret_int("malloc", FAILURE)); // TODO:all free
+	delete_operator_token(&popped_node);
+	if (!tokenlist)
+		return (BREAK);
+	return (SUCCESS);
+}
+
+int	create_operator_list(t_info *info)
+{
+	t_token_elem	*token_elem;
+	ssize_t			subshell_depth;
 	t_exec_list		*pipeline_node;
 	t_exec_list		*operator_node;
-	ssize_t			subshell_depth;
+	int				handle_result;
 
-	if (!tokenlist_head || !*tokenlist_head)
-		return (NULL);
-	exec_head = create_execlist_node(e_node_head, NULL, NULL, NULL);
-	pipeline_node = create_execlist_node(e_node_pipeline, NULL, &exec_head, NULL);
-
-	if (!exec_head || !pipeline_node)
-		return (NULL); //TODO:all free
-
-	token_elem = (*tokenlist_head)->content;
+	errno = 0;
+	if (!info || !info->tokenlist_head)
+		return (FAILURE);
+	info->execlist_head = create_execlist_node(e_node_pipeline, NULL, NULL, NULL);
+	if (!info->execlist_head)
+		return (FAILURE); //TODO:all free
+	token_elem = info->tokenlist_head->content;
 	subshell_depth = token_elem->depth;
-	while (*tokenlist_head)
+	pipeline_node = info->execlist_head;
+	while (info->tokenlist_head)
 	{
-		popped_node = ft_lstpop(&(*tokenlist_head));
-		token_elem = popped_node->content;
-		if (!(is_tokentype_operator(token_elem->type) && token_elem->depth == subshell_depth))
-			ft_lstadd_back(&(pipeline_node->token_list_head), popped_node);
-		else
-		{
-			operator_node = create_execlist_node(e_node_operator, NULL, &pipeline_node, NULL);
-			if (!operator_node)
-				return (perror_ret_nullptr("malloc")); // TODO:all free
-			operator_node->token_type = token_elem->type; //for debug print
-			ft_lstdelone(popped_node, free_token_elem);
-			popped_node = NULL;
-			if (*tokenlist_head)
-			{
-				pipeline_node = create_execlist_node(e_node_pipeline, NULL, &operator_node, NULL);
-				if (!pipeline_node)
-					return (perror_ret_nullptr("malloc")); // TODO:all free
-			}
-		}
+		handle_result = handle_each_token(&info->tokenlist_head, pipeline_node, &operator_node, subshell_depth);
+		if (handle_result == CONTINUE)
+			continue ;
+		if (handle_result == BREAK)
+			break ;
+		if (handle_result == FAILURE)
+			return (FAILURE);
+		pipeline_node = create_execlist_node(e_node_pipeline, NULL, &operator_node, NULL);
+		if (!pipeline_node)
+			return (perror_ret_int("malloc", FAILURE)); // TODO:all free
 	}
-	return (exec_head);
+	return (SUCCESS);
 }
+
+//t_exec_list	*create_operator_list(t_list **tokenlist_head)
+//{
+//	t_list			*popped_node;
+//	t_token_elem	*token_elem;
+//
+//	t_exec_list		*exec_head;
+//	t_exec_list		*pipeline_node;
+//	t_exec_list		*operator_node;
+//	ssize_t			subshell_depth;
+//
+//	if (!tokenlist_head || !*tokenlist_head)
+//		return (NULL);
+//	exec_head = create_execlist_node(e_node_head, NULL, NULL, NULL);
+//	pipeline_node = create_execlist_node(e_node_pipeline, NULL, &exec_head, NULL);
+//
+//	if (!exec_head || !pipeline_node)
+//		return (NULL); //TODO:all free
+//
+//	token_elem = (*tokenlist_head)->content;
+//	subshell_depth = token_elem->depth;
+//	while (*tokenlist_head)
+//	{
+//		popped_node = ft_lstpop(&(*tokenlist_head));
+//		token_elem = popped_node->content;
+//		if (!(is_tokentype_operator(token_elem->type) && token_elem->depth == subshell_depth))
+//			ft_lstadd_back(&(pipeline_node->token_list_head), popped_node);
+//		else
+//		{
+//			operator_node = create_execlist_node(e_node_operator, NULL, &pipeline_node, NULL);
+//			if (!operator_node)
+//				return (perror_ret_nullptr("malloc")); // TODO:all free
+//			operator_node->token_type = token_elem->type; //for debug print
+//			ft_lstdelone(popped_node, free_token_elem);
+//			popped_node = NULL;
+//			if (*tokenlist_head)
+//			{
+//				pipeline_node = create_execlist_node(e_node_pipeline, NULL, &operator_node, NULL);
+//				if (!pipeline_node)
+//					return (perror_ret_nullptr("malloc")); // TODO:all free
+//			}
+//		}
+//	}
+//	return (exec_head);
+//}
 
 
 t_exec_list *create_execlist_node(t_node_kind kind, t_list *token_head, t_exec_list **prev, t_exec_list **next)

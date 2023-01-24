@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 17:15:51 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:39:43 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ int	parsing_token_list(t_info *info)
 	if (!info || !info->tokenlist_head)
 		return (FAILURE);
 	/* operator list */
-
-	info->execlist_head = create_operator_list(&(info->tokenlist_head));
-	if (!info->execlist_head)
+//	info->execlist_head = create_operator_list(&(info->tokenlist_head));
+	if (create_operator_list(info) == FAILURE)
 	{
 		ft_dprintf(STDERR_FILENO, "fail to create_operator_list\n");
 		return (FAILURE);

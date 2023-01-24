@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:12:32 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 17:14:02 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:19:14 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	move_tokens_to_pipeline_list(t_command_list **command_list, t_list *popped_
 {
 	if (!command_list || !popped_token)
 		return ;
-
 	if ((*command_list)->type == e_node_init)
 		(*command_list)->type = e_node_pipeline;
 	ft_lstadd_back(&(*command_list)->pipeline_token_list, popped_token);
