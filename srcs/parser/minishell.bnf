@@ -36,11 +36,11 @@
 
 <subshell>          ::= '(' <operator_list> ')'
 
-<pipeline>          ::= <pipeline> '|' <pipeline>
+<pipeline_commands>          ::= <pipeline_commands> '|' <pipeline_commands>
                       | <command_list>
 
 <operator_list>     ::= <operator_list> '&&' <operator_list>
                       | <operator_list> '||' <operator_list>
                       | <operator_list> ';' <operator_list>
-                      | <pipeline>
+                      | <pipeline_commands>
 

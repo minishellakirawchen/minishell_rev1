@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 14:26:06 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 15:42:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 				ft_dprintf(STDERR_FILENO, "%-10s:", "token_list");
 				debug_print_token_word(node->token_list_head, NULL);
 			}
-			pipeline = node->pipeline;
+			pipeline = node->pipeline_commands;
 			while (pipeline)
 			{
 				command_list = pipeline->content;
@@ -48,7 +48,7 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 					debug_print_token_word(command_list->subshell_token_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
-				ft_dprintf(STDERR_FILENO, "             %-10s:", "pipeline");
+				ft_dprintf(STDERR_FILENO, "             %-10s:", "commands");
 				if (command_list && command_list->pipeline_token_list)
 					debug_print_token_word(command_list->pipeline_token_list, NULL);
 				else
@@ -82,14 +82,14 @@ void	debug_print_tree(t_exec_list *root, char *str)
 	{
 		if (node->node_kind == e_node_pipeline)
 		{
-			ft_dprintf(STDERR_FILENO, "[pipeline] :");
+			ft_dprintf(STDERR_FILENO, "[pipeline_commands] :");
 			debug_print_token_word(node->token_list_head, NULL);
 		}
 		else
 		{
-			// prev = pipeline
+			// prev = pipeline_commands
 			left_node = node->prev;
-			ft_dprintf(STDERR_FILENO, "[pipeline] :");
+			ft_dprintf(STDERR_FILENO, "[pipeline_commands] :");
 			debug_print_token_word(left_node->token_list_head, NULL);
 
 			// print operator node

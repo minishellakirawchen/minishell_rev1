@@ -584,10 +584,10 @@ operator no必要？
           ┏━━━━┻━━━━┓
          [B]       [C]
 
-root->prev = pipeline or operator
+root->prev = pipeline_commands or operator
 if (root->prev == operator)
- operator->prev = pipeline
- operator->rigth = pipeline or operator
+ operator->prev = pipeline_commands
+ operator->rigth = pipeline_commands or operator
 
 左結合なので左側はpipeline
 右側はpipeline or operator listのどちらか
@@ -666,13 +666,13 @@ A && B && C && D
             | <subshell> <redirection_list>
             
 
-<pipeline> ::=  <pipeline> '|' <pipeline>
+<pipeline_commands> ::=  <pipeline_commands> '|' <pipeline_commands>
                 | <command>
 
 <list> ::= <list> '&&' <list>
            |  <list> '||' <list>
            |  <list> ';' <list>
-           |  <pipeline>
+           |  <pipeline_commands>
 
 <subshell> ::= '(' <list> ')'
  
@@ -688,16 +688,16 @@ A && B && C && D
 
 <subshell>          ::= '(' <operator_list> ')'
 
-<pipeline>          ::= <pipeline> '|' <pipeline>
+<pipeline_commands>          ::= <pipeline_commands> '|' <pipeline_commands>
                       | <command_list>
 
 <operator_list>     ::= <operator_list> '&&' <operator_list>
                       | <operator_list> '||' <operator_list>
                       | <operator_list> ';' <operator_list>
-                      | <pipeline>
+                      | <pipeline_commands>
 ```
 
-### tokenlist -> opetarot_list (= pipeline && pipeline || ...)
+### tokenlist -> opetarot_list (= pipeline_commands && pipeline_commands || ...)
 
 echo hello world | grep a && cat Makefile; echo hello; echo world
 pipeline1                 && pipeline2   ; pipeline3 ; pipeline4
@@ -706,8 +706,8 @@ pipeline1                 && pipeline2   ; pipeline3 ; pipeline4
 
 t_exec_list *exec_list
 {
-    enum        node_kind; (head/operator/pipeline)
-    t_list      *token_list_head; (pipeline; token1->token2->... for next process)
+    enum        node_kind; (head/operator/pipeline_commands)
+    t_list      *token_list_head; (pipeline_commands; token1->token2->... for next process)
     t_list      *command_list_head; (create content in next process)
     t_exec_list *prev;
     t_exec_list *next;
@@ -716,9 +716,9 @@ t_exec_list *exec_list
 ```
 head->pipeline1->operator(&&)->pipeline2->operator(;)->pipeline3->operator(;)->pipeline4
 
-### pipeline -> command_list (= commands | commands | ...)
+### pipeline_commands -> command_list (= commands | commands | ...)
 
-pipeline = command_list1 | command_list2 | ...
+pipeline_commands = command_list1 | command_list2 | ...
 command_list1-> command_list2->...
 "->(next)" means "|(pipe)"
 
@@ -762,7 +762,7 @@ int execute_operator_list(t_exec_list *exec_list_head)
         }
         if (operator_type == ';' && !exec_node)
             break ;
-        exit_status = exec_pipeline(exec_node); pipeline->operator->pipeline->operator,...
+        exit_status = exec_pipeline(exec_node); pipeline_commands->operator->pipeline_commands->operator,...
         
         if (operator_type == '&&' && exit_status == 0)
             break ;

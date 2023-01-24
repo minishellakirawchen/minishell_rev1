@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 14:40:42 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 15:44:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*get_node_kind(t_node_kind kind)
 		return ("operator");
 	if (kind == e_node_subshell)
 		return ("subshell");
-	return ("pipeline");
+	return ("pipeline_commands");
 }
 
 t_exec_list *create_execlist_node(t_node_kind kind, t_list *token_head, t_exec_list **prev, t_exec_list **next)
@@ -95,7 +95,7 @@ t_exec_list *create_execlist_node(t_node_kind kind, t_list *token_head, t_exec_l
 	new_node->node_kind = kind;
 
 	new_node->token_list_head = token_head;
-	new_node->pipeline = NULL;
+	new_node->pipeline_commands = NULL;
 
 	new_node->token_type = e_init; //tmp
 
@@ -109,9 +109,9 @@ t_exec_list *create_execlist_node(t_node_kind kind, t_list *token_head, t_exec_l
 // A && B || C ; D
 // [root]
 //   |
-//  [pipeline]:echo hello | echo world
+//  [pipeline_commands]:echo hello | echo world
 //  [&&]
-//  [pipeline]:echo hello | echo world
+//  [pipeline_commands]:echo hello | echo world
 
 // 初めはpipelineを作る
 // operatorがきたらpipeline->operator
@@ -173,7 +173,7 @@ t_exec_list	*create_operator_list(t_list **tokenlist_head)
 // command_list->pipeline_token_list : token list in until pipe
 
 // exec_list->token_list[i]				: cat Makefile    |  grep a       | (echo hello) > out1 | (pwd && (cd /bin && pwd) || echo hoge) >> out2 < in1
-// exec_list->token_list[i]->pipeline	: command_list[0]->command_list[1]->command_list[2]    ->command_list[3]
+// exec_list->token_list[i]->pipeline_commands	: command_list[0]->command_list[1]->command_list[2]    ->command_list[3]
 
 // command_list[0]->subshell_token_list	: NULL
 // command_list[0]->pipeline_token_list	: cat Makefile
@@ -206,11 +206,10 @@ t_command_list	*create_command_list_node(void)
 }
 
 // TODO:leaks, 見直し
-// pipeline_node=exec_list
-// node_kind=pipeline(!=operator)
-int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
+// exec_pipeline_node=exec_list
+// node_kind=pipeline_commands(!=operator)
+int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 {
-	t_list			*pipeline_tokens;
 	t_token_elem	*token_elem;
 	t_list			*popped_token;
 	ssize_t			subshell_depth;
@@ -218,19 +217,20 @@ int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 	t_command_list	*command_list;
 	t_list			*new_pipeline;
 
-	if (!pipeline_node || !*pipeline_node || !(*pipeline_node)->token_list_head)
+	if (!exec_pipeline_node || !*exec_pipeline_node || !(*exec_pipeline_node)->token_list_head)
 		return (FAILURE);
 
 	command_list = create_command_list_node();
 	if (!command_list)
 		return (FAILURE);
+	printf("command_list:%p\n", command_list);
 		
-	pipeline_tokens = (*pipeline_node)->token_list_head;
-//	(*pipeline_node)->pipeline = NULL;//for lstadd_back;
+//	pipeline_tokens = (*exec_pipeline_node)->token_list_head;
+//	(*exec_pipeline_node)->pipeline_commands = NULL;//for lstadd_back;
 	
-	while (pipeline_tokens)
+	while ((*exec_pipeline_node)->token_list_head)
 	{
-		popped_token = ft_lstpop(&pipeline_tokens);
+		popped_token = ft_lstpop(&(*exec_pipeline_node)->token_list_head);
 		token_elem = popped_token->content;
 		/* subshell */
 		if (is_tokentype_subshell(token_elem->type))
@@ -239,9 +239,9 @@ int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 //			printf("popped subshell:%s, depth:%zu\n", token_elem->word, subshell_depth);
 			subshell_depth = token_elem->depth;
 			ft_lstdelone(popped_token, free_token_elem); // delete (
-			while (pipeline_tokens)
+			while ((*exec_pipeline_node)->token_list_head)
 			{
-				popped_token = ft_lstpop(&pipeline_tokens);
+				popped_token = ft_lstpop(&(*exec_pipeline_node)->token_list_head);
 				token_elem = popped_token->content;
 				if (token_elem->type == e_subshell_end && token_elem->depth == subshell_depth)
 				{
@@ -267,7 +267,7 @@ int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 			new_pipeline = ft_lstnew(command_list);
 			if (!new_pipeline)
 				return (FAILURE); //TODO
-			ft_lstadd_back(&(*pipeline_node)->pipeline, new_pipeline);
+			ft_lstadd_back(&(*exec_pipeline_node)->pipeline_commands, new_pipeline);
 			ft_lstdelone(popped_token, free_token_elem); // delete |
 			command_list = create_command_list_node();
 			if (!command_list)
@@ -278,10 +278,10 @@ int create_command_list_from_pipeline_node(t_exec_list **pipeline_node)
 	new_pipeline = ft_lstnew(command_list);
 	if (!new_pipeline)
 		return (FAILURE); //TODO
-	ft_lstadd_back(&(*pipeline_node)->pipeline, new_pipeline);
+	ft_lstadd_back(&(*exec_pipeline_node)->pipeline_commands, new_pipeline);
 
-//	ft_lstclear(&(*pipeline_node)->token_list_head, free_token_elem);
-	(*pipeline_node)->token_list_head = NULL;
+//	ft_lstclear(&(*exec_pipeline_node)->token_list_head, free_token_elem);
+//	(*exec_pipeline_node)->token_list_head = NULL;
 	return (SUCCESS);
 }
 
@@ -334,7 +334,7 @@ int	parsing_token_list(t_info *info)
 		return (FAILURE);
 	}
 
-	debug_print_exec_list(info->execlist_head, "command_list");
+//	debug_print_exec_list(info->execlist_head, "command_list");
 
 	return (SUCCESS);
 }

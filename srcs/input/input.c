@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 14:11:24 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 15:29:39 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	clear_input_info(t_info **info)
 	ft_lstclear(&(*info)->tokenlist_head, free_token_elem);
 	(*info)->tokenlist_head = NULL;
 
-	clear_exec_list(&(*info)->execlist_head);
+	clear_exec_list((*info)->execlist_head);
 	(*info)->execlist_head = NULL;
 
 	(*info)->readline_input = free_1d_alloc((*info)->readline_input);
@@ -54,6 +54,7 @@ int	prompt_loop(t_info *info)
 		}
 
 		ft_dprintf(STDERR_FILENO, "#%-15s:[%s]\n", "input", info->readline_input);
+
 		/* tokenize */
 		if (tokenize_input_line(info, info->readline_input) == FAILURE)
 		{
@@ -73,9 +74,9 @@ int	prompt_loop(t_info *info)
 			ft_dprintf(STDERR_FILENO, "parsing failure");
 			return (FAILURE);
 		}
+
 		/* expansion */
 		/* command_execution */
-
 
 		/* clear input */
 		add_history(info->readline_input);

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 10:49:08 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 15:19:21 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,13 @@ struct s_exec_list
 {
 	// create_operator_list
 	t_node_kind			node_kind;
-	t_token_type		token_type;//tmp
+	t_token_type		token_type; // tmp for print debug
 	t_exec_list				*prev;
 	t_exec_list				*next;
 
 	// create_command_list
-	t_list				*token_list_head; // content=command_list, tmp_save
-	t_list				*pipeline; //content=command_list
+	t_list				*token_list_head;	// content=command_list, tmp_save
+	t_list				*pipeline_commands;			//content=command_list
 };
 
 
@@ -195,7 +195,7 @@ t_list	*get_envlist(void);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
 void	free_command_list_elem(void *content);
-void	clear_exec_list(t_exec_list **exec_list);
+void	clear_exec_list(t_exec_list *exec_list);
 
 /*         error_return.c           */
 void	*perror_ret_nullptr(char *err);
