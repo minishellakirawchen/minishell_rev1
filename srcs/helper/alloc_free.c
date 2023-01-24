@@ -6,12 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 15:57:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:09:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/* use in debug print to display node kind */
 char *get_node_char(t_node_kind type)
 {
 	if (type == e_node_head)
@@ -34,9 +35,9 @@ void	clear_exec_list(t_exec_list *exec_list)
 		return ;
 	while (exec_list)
 	{
-		printf("free_exec node:%s\n", get_node_char(exec_list->node_kind));
-		if (exec_list->pipeline_commands)
-			printf("command_list:%p\n", exec_list->pipeline_commands->content);
+//		printf("free_exec node:%s\n", get_node_char(exec_list->node_kind));
+//		if (exec_list->pipeline_commands)
+//			printf("command_list:%p\n", exec_list->pipeline_commands->content);
 		next = exec_list->next;
 		ft_lstclear(&exec_list->token_list_head, free_token_elem);
 		ft_lstclear(&exec_list->pipeline_commands, free_command_list_elem);

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 15:44:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:09:59 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,31 @@ t_command_list	*create_command_list_node(void)
 	return (command_list);
 }
 
+
+void	move_tokens_to_subshell_list(t_list **token_list, t_command_list **command_list, t_list *popped_token)
+{
+	t_token_elem	*token_elem;
+	ssize_t			subshell_depth;
+
+	token_elem = popped_token->content;
+
+	(*command_list)->type = e_node_subshell;
+	subshell_depth = token_elem->depth;
+	ft_lstdelone(popped_token, free_token_elem); // delete (
+	while (*token_list)
+	{
+		popped_token = ft_lstpop(&(*token_list));
+		token_elem = popped_token->content;
+		if (token_elem->type == e_subshell_end && token_elem->depth == subshell_depth)
+		{
+			ft_lstdelone(popped_token, free_token_elem); // delete )
+			return ;
+		}
+		ft_lstadd_back(&(*command_list)->subshell_token_list, popped_token);
+	}
+}
+
+
 // TODO:leaks, 見直し
 // exec_pipeline_node=exec_list
 // node_kind=pipeline_commands(!=operator)
@@ -212,7 +237,6 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 {
 	t_token_elem	*token_elem;
 	t_list			*popped_token;
-	ssize_t			subshell_depth;
 
 	t_command_list	*command_list;
 	t_list			*new_pipeline;
@@ -223,11 +247,7 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 	command_list = create_command_list_node();
 	if (!command_list)
 		return (FAILURE);
-	printf("command_list:%p\n", command_list);
-		
-//	pipeline_tokens = (*exec_pipeline_node)->token_list_head;
-//	(*exec_pipeline_node)->pipeline_commands = NULL;//for lstadd_back;
-	
+
 	while ((*exec_pipeline_node)->token_list_head)
 	{
 		popped_token = ft_lstpop(&(*exec_pipeline_node)->token_list_head);
@@ -235,8 +255,8 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 		/* subshell */
 		if (is_tokentype_subshell(token_elem->type))
 		{
+			/*
 			command_list->type = e_node_subshell;
-//			printf("popped subshell:%s, depth:%zu\n", token_elem->word, subshell_depth);
 			subshell_depth = token_elem->depth;
 			ft_lstdelone(popped_token, free_token_elem); // delete (
 			while ((*exec_pipeline_node)->token_list_head)
@@ -250,6 +270,8 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 				}
 				ft_lstadd_back(&command_list->subshell_token_list, popped_token);
 			}
+			*/
+			move_tokens_to_subshell_list(&(*exec_pipeline_node)->token_list_head, &command_list, popped_token);
 			continue ;
 		}
 		/* command */
@@ -261,7 +283,6 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 			continue ;
 		}
 		/* pipe */
-		// command | comamnd <-
 		if (token_elem->type == e_ope_pipe)
 		{
 			new_pipeline = ft_lstnew(command_list);
@@ -279,9 +300,6 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 	if (!new_pipeline)
 		return (FAILURE); //TODO
 	ft_lstadd_back(&(*exec_pipeline_node)->pipeline_commands, new_pipeline);
-
-//	ft_lstclear(&(*exec_pipeline_node)->token_list_head, free_token_elem);
-//	(*exec_pipeline_node)->token_list_head = NULL;
 	return (SUCCESS);
 }
 
@@ -326,7 +344,7 @@ int	parsing_token_list(t_info *info)
 		return (FAILURE);
 	}
 	// print
-	debug_print_exec_list(info->execlist_head, "operator_list");
+//	debug_print_exec_list(info->execlist_head, "operator_list");
 
 	if (create_command_list(&info->execlist_head) == FAILURE)
 	{
@@ -334,7 +352,7 @@ int	parsing_token_list(t_info *info)
 		return (FAILURE);
 	}
 
-//	debug_print_exec_list(info->execlist_head, "command_list");
+	debug_print_exec_list(info->execlist_head, "command_list");
 
 	return (SUCCESS);
 }
