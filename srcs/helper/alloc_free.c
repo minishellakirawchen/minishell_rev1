@@ -6,11 +6,25 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 22:16:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 14:15:58 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char *get_node_char(t_node_kind type)
+{
+	if (type == e_node_head)
+		return ("node_head");
+	if (type == e_node_operator)
+		return ("node_operator");
+	if (type == e_node_subshell)
+		return ("node_subshell");
+	if (type == e_node_pipeline)
+		return ("node_pipeline");
+	if (type == e_node_commands)
+		return ("node_commands");
+	return ("node_init");}
 
 void	clear_exec_list(t_exec_list **exec_list)
 {
@@ -21,7 +35,7 @@ void	clear_exec_list(t_exec_list **exec_list)
 		return ;
 	node = *exec_list;
 	while (node)
-	{
+	{   printf("free_exec node:%s\n", get_node_char(node->node_kind));
 		next = node->next;
 		ft_lstclear(&node->token_list_head, free_token_elem);
 		ft_lstclear(&node->pipeline, free_command_list_elem);

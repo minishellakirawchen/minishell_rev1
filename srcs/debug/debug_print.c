@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 11:12:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/24 14:26:06 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,17 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 			while (pipeline)
 			{
 				command_list = pipeline->content;
+				ft_dprintf(STDERR_FILENO, "  [pipeline] ");
+				ft_dprintf(STDERR_FILENO, "%-10s:", "subshell");
 				if (command_list && command_list->subshell_token_list)
-				{
-					ft_dprintf(STDERR_FILENO, "  [pipeline] ");
-					ft_dprintf(STDERR_FILENO, "%-10s:", "subshell");
 					debug_print_token_word(command_list->subshell_token_list, NULL);
-				}
+				else
+					ft_dprintf(STDERR_FILENO, "\n");
+				ft_dprintf(STDERR_FILENO, "             %-10s:", "pipeline");
 				if (command_list && command_list->pipeline_token_list)
-				{
-					ft_dprintf(STDERR_FILENO, "  [pipeline] ");
-					ft_dprintf(STDERR_FILENO, "%-10s:", "pipeline");
 					debug_print_token_word(command_list->pipeline_token_list, NULL);
-				}
+				else
+					ft_dprintf(STDERR_FILENO, "\n");
 				pipeline = pipeline->next;
 				if (pipeline)
 					ft_dprintf(STDERR_FILENO, "      v pipe\n");

@@ -109,7 +109,7 @@ struct s_exec_list
 {
 	// create_operator_list
 	t_node_kind			node_kind;
-	t_token_type		token_type;
+	t_token_type		token_type;//tmp
 	t_exec_list				*prev;
 	t_exec_list				*next;
 
