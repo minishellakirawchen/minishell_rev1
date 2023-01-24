@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 23:41:13 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 21:44:40 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,9 +161,10 @@ int		execute_builtin(t_info *info, char **cmds);
 /* ************************** */
 int			ft_env(t_info *info);
 int			ft_export(t_info *info, char **cmds);
-t_key_type	judge_key(t_export_info *e_info);
+int			judge_chr_key(char *key);
+t_key_type	judge_info_key(t_export_info *e_info);
 t_key_type	judge_value(t_export_info *e_info);
-
+int			ft_unset(t_info *info, char **cmds);
 
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);
@@ -174,6 +175,7 @@ void	free_env_elem(void *content);
 void	free_token_elem(void *content);
 void	print_key_value(void *content);
 int		perror_and_return_int(char *err, int exit_status);
+char	**get_value_from_key(t_env_elem *elem, char *key);
 char	**get_elem(t_info *info, char *key);
 int		set_elem(t_info *info, char *key, char *value);
 int		append_env(t_info *info, char *key, char *value);

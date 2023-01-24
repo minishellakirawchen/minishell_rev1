@@ -6,13 +6,13 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 18:16:57 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 22:02:04 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**get_value(t_env_elem *elem, char *key)
+char	**get_value_from_key(t_env_elem *elem, char *key)
 {
 	if (is_same_str(elem->key, key))
 		return (&elem->value);
@@ -28,7 +28,7 @@ char	**get_elem(t_info *info, char *key)
 	value = NULL;
 	while (env_node != NULL)
 	{
-		value = get_value(env_node->content, key);
+		value = get_value_from_key(env_node->content, key);
 		if (value != NULL)
 			return (value);
 		env_node = env_node->next;

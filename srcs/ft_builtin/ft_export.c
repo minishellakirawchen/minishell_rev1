@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 19:02:12 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 21:10:13 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 	int	exit_status;
 
 	exit_status = define_key_value(*cmds, e_info);
-	e_info->key_type = judge_key(e_info);
+	e_info->key_type = judge_info_key(e_info);
 	if (e_info->key_type == e_append || e_info->key_type == e_add)
 		e_info->key_type = judge_value(e_info);
 	if (e_info->key_type == e_error)
@@ -90,7 +90,7 @@ int	ft_export(t_info *info, char **cmds)
 	e_info = init_export_info();
 	if (!e_info)
 		return (EXIT_FAILURE);
-	cmds++;
+	cmds ++;
 	//export NULL の挙動は未定義（shell変数を表示するが、実装しない！？なんのエラーを表示する？）
 	if (*cmds == NULL)
 	{
@@ -99,10 +99,12 @@ int	ft_export(t_info *info, char **cmds)
 	}
 	while (*cmds != NULL)
 	{
-		exit_status = export_cmd(info, e_info, cmds);
+		exit_status += export_cmd(info, e_info, cmds);
 		e_info->value = NULL;
 		cmds++;
 	}
 	e_info = free_1d_alloc(e_info);
+	if (exit_status > 0)
+		return (EXIT_FAILURE);
 	return (exit_status);
 }

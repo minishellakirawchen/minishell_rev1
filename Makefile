@@ -28,7 +28,8 @@ SRC		= main.c \
 		  ft_builtin/ft_echo.c \
 		  ft_builtin/ft_env.c \
 		  ft_builtin/ft_export.c \
-		  ft_builtin/judge_export.c \
+		  ft_builtin/judge_key_value.c \
+		  ft_builtin/ft_unset.c \
 		  helper/alloc_free.c \
 		  helper/get_envlist.c \
 		  helper/print_key_value.c \

@@ -1,18 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   judge_export.c                                     :+:      :+:    :+:   */
+/*   judge_key_value.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 22:26:30 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/23 22:57:59 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/24 21:16:00 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_key_type	judge_key(t_export_info *e_info)
+int	judge_chr_key(char *key)
+{
+	if (ft_isdigit(*key) || *key == '\0')
+		return (FAILURE);
+	while (*key != '\0')
+	{
+		if (!ft_isalnum(*key) && *key != '_')
+			return (FAILURE);
+		key ++;
+	}
+	return (SUCCESS);
+}
+
+t_key_type	judge_info_key(t_export_info *e_info)
 {
 	ssize_t	i;
 	ssize_t	key_len;
