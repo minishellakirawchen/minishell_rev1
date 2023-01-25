@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 16:09:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 22:56:03 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void	free_env_elem(void *content)
 void	free_command_list_elem(void *content)
 {
 	t_command_list	*elem;
+	t_redirect_list	*redirect_list;
 
 	if (!content)
 		return ;
@@ -106,8 +107,11 @@ void	free_command_list_elem(void *content)
 	elem->commands = (char **)free_2d_alloc((void **)elem->commands);
 	ft_lstclear(&(elem->pipeline_token_list), free_token_elem);
 	ft_lstclear(&(elem->subshell_token_list), free_token_elem);
+	redirect_list = elem->redirect_list;
+	redirect_list->file = free_1d_alloc(redirect_list->file);
+	redirect_list->heredoc_eof = free_1d_alloc(redirect_list->heredoc_eof);
+	redirect_list = free_1d_alloc(redirect_list);
 	free_1d_alloc(elem);
-	//TODO: delete redirect_list
 }
 
 void	free_token_elem(void *content)
