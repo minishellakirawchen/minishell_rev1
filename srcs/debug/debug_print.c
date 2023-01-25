@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 16:44:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 22:19:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,27 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 			{
 				command_list = pipeline->content;
 				ft_dprintf(STDERR_FILENO, "  [pipeline] ");
+				/* subshell */
 				ft_dprintf(STDERR_FILENO, "%-10s:", "subshell");
 				if (command_list && command_list->subshell_token_list)
 					debug_print_token_word(command_list->subshell_token_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
+
+				/* commands */
 				ft_dprintf(STDERR_FILENO, "             %-10s:", "commands");
 				if (command_list && command_list->pipeline_token_list)
 					debug_print_token_word(command_list->pipeline_token_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
+
+				/* redirection */
+				ft_dprintf(STDERR_FILENO, "             %-10s:", "redirect");
+				if (command_list && command_list->redirect_list)
+					debug_print_redirect_list(command_list->redirect_list, NULL);
+				else
+					ft_dprintf(STDERR_FILENO, "\n");
+
 				pipeline = pipeline->next;
 				if (pipeline)
 					ft_dprintf(STDERR_FILENO, "      v pipe\n");
@@ -62,6 +73,8 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 	}
 	ft_dprintf(STDERR_FILENO, "    v\n  [tail]\n");
 }
+
+
 
 void	debug_print_tree(t_exec_list *root, char *str)
 {
@@ -119,6 +132,25 @@ void debug_print_2d_arr(char **arr, char *str)
 	ft_dprintf(STDERR_FILENO, "}\n");
 }
 
+void	debug_print_redirect_list(t_redirect_list *node, char *str)
+{
+	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "f", "e", "w", "i", NULL};
+
+	if (str)
+		ft_dprintf(STDERR_FILENO, "#%-15s:", str);
+	if (!node)
+	{
+		ft_dprintf(STDERR_FILENO, "(null)");
+		return ;
+	}
+	ft_dprintf(STDERR_FILENO, "type:%s, ", type[node->type]);
+	if (node->file)
+		ft_dprintf(STDERR_FILENO, "file:%s", node->file);
+	else
+		ft_dprintf(STDERR_FILENO, "heredoc:%s", node->heredoc_eof);
+	ft_dprintf(STDERR_FILENO, "\n");
+}
+
 void	debug_print_token_word(t_list *head, char *str)
 {
 	t_list			*node;
@@ -130,6 +162,7 @@ void	debug_print_token_word(t_list *head, char *str)
 	node = head;
 	while (node)
 	{
+//		printf("\nnode:%p, next:%p\n", node, node->next);
 		token = node->content;
 
 		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
@@ -146,3 +179,6 @@ void	debug_print_token_word(t_list *head, char *str)
 	}
 	ft_dprintf(STDERR_FILENO, "\n");
 }
+
+
+

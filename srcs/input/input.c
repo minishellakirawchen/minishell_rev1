@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 15:29:39 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 22:17:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	prompt_loop(t_info *info)
 		/* tokenize */
 		if (tokenize_input_line(info, info->readline_input) == FAILURE)
 		{
-			ft_dprintf(STDERR_FILENO, "tokenize failure");
+			ft_dprintf(STDERR_FILENO, "tokenize failure\n");
 			return (FAILURE);//free
 		}
 
@@ -71,12 +71,15 @@ int	prompt_loop(t_info *info)
 		/* parsing (Mandatory/Bonus) */
 		if (!is_return_input && parsing_token_list(info) == FAILURE)
 		{
-			ft_dprintf(STDERR_FILENO, "parsing failure");
+			ft_dprintf(STDERR_FILENO, "parsing failure\n");
 			return (FAILURE);
 		}
 
-		/* expansion */
-		/* command_execution */
+		/* expansion & command_execution */
+		exit_status = expansion(info);
+//		exit_status = execute_execlist(info);
+
+		ft_dprintf(STDERR_FILENO, "after expansion\n");
 
 		/* clear input */
 		add_history(info->readline_input);

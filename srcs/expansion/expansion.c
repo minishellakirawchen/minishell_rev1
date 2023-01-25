@@ -6,12 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 16:09:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 22:51:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-static int	expand_and_create_commands(t_command_list *cmd_list, t_list *envlist);
+
+static int	expand_and_create_commands(t_command_list *cmd_list, t_info *info);
 
 
 // operator && || ;のように、区切りまでのexpansionにしなければならない
@@ -46,24 +47,25 @@ static int	expand_and_create_commands(t_command_list *cmd_list, t_list *envlist)
 
 // input pipeline is type=pipeline
 // type=subshell is expanded in execution->parsing process
-int	expand_variable(t_exec_list **pipeline, t_list *envlist)
+
+int	expand_variable(t_exec_list **pipeline, t_info *info)
 {
 	t_list			*command_list_node;
 	t_command_list	*command_list;
 
-	if (!pipeline || !envlist)
+	if (!pipeline || !info)
 		return (FAILURE);
 	command_list_node = (*pipeline)->pipeline_commands;
 	while (command_list_node)
 	{
-
 		command_list = command_list_node->content;
-		if (expand_and_create_commands(command_list, envlist) == FAILURE)
+		if (expand_and_create_commands(command_list, info) == FAILURE)
 			return (FAILURE);
 		command_list_node = command_list_node->next;
 	}
 	return (SUCCESS);
 }
+
 
 // pipeline_token_list		->	expand				->	split					->	char **commands
 // ------------------------------------------------------------------------------------------------------------------------
@@ -103,90 +105,335 @@ t_redirect_list	*create_redirect_list(t_token_type type, char *str)
 	return (redirect_list);
 }
 
-int	expand_var_in_tokens(t_list **list_head, t_list *envlist)
+// name=value
+// name=[_a-zA-z][_a-zA-Z0-9]
+// str=$hoo$var$hoge
+//      ^^^ ここまでを判定して return (true);
+bool	is_name(const char *str)
 {
-	t_list	*list_node;
+	size_t idx;
 
-	if (!list_head || !*list_head || !envlist)
+	if (!str || !str[0])
+		return (false);
+	if (str[0] != '_' && !ft_isalpha(str[0]))
+		return (false);
+	idx = 1;
+	while (str[idx] && is_chr_in_str(str[idx], STR_EXPAND_EXIT_STATUS))
+	{
+		if (str[idx] != '_' && !ft_isalnum(str[idx]))
+			return (false);
+		idx++;
+	}
+	return (true);
+}
+// return true if $? or $name in str, do not depend on validate $name
+bool is_expandable(const char *str, char quote_chr)
+{
+	size_t	idx;
+
+	if (!str || quote_chr == CHR_SINGLE_QUOTE)
+		return (false);
+	idx = 0;
+	while (str[idx])
+	{
+		if (str[idx] == CHR_DOLLAR && str[idx + 1])
+		{
+			if (str[idx + 1] == CHR_QUESTION)
+				return (true);
+			if (is_name(&str[idx + 1]))
+				return (true);
+		}
+		idx++;
+	}
+	return (false);
+}
+
+bool	is_str_expandable_name(const char *str)
+{
+	if (!str)
+		return (false);
+	if (str[0] == CHR_DOLLAR && !ft_ispunct(str[1]))
+		return (true);
+	return (false);
+}
+
+bool	is_str_expandable_exitstatus(const char *str)
+{
+	const size_t	len_flag = ft_strlen_ns(STR_EXPAND_EXIT_STATUS);
+
+	if (ft_strncmp_ns(str, STR_EXPAND_EXIT_STATUS, len_flag) == 0)
+		return (true);
+	return (false);
+}
+
+/*
+bool	is_expandable(const char *str, char quote_chr)
+{
+	return (is_str_expandable_exitstatus(str) || is_expandable_name(str, quote_chr));
+}
+*/
+
+/* free dest */
+char	*concat_dst_to_src(char **dst, char **src)
+{
+	size_t	dstlen;
+	size_t	srclen;
+	char	*concat_str;
+
+	if (!dst || !src)
+		return (NULL);
+	dstlen = ft_strlen_ns(*dst);
+	srclen = ft_strlen_ns(*src);
+	concat_str = (char *)ft_calloc(sizeof(char), dstlen + srclen + 1);
+	if (!concat_str)
+		return (perror_ret_nullptr("malloc"));
+	ft_strlcat(concat_str, *dst, dstlen + 1);
+	ft_strlcat(concat_str, *src, dstlen + srclen + 1);
+	free(*dst);
+	*dst = NULL;
+	return (concat_str);
+}
+
+int	expand_exit_status(char **expanded_str, int exit_status)
+{
+	char	*var;
+
+	if (!expanded_str)
+		return (FAILURE);
+	var = ft_itoa(exit_status);
+	if (!var)
+		return (perror_ret_int("malloc", FAILURE));
+	*expanded_str = concat_dst_to_src(expanded_str, &var);
+	if (*expanded_str)
+		return (FAILURE);
+	return (SUCCESS);
+}
+
+char	*get_name_str(const char *str_start_with_dollar)
+{
+	const char	*src = str_start_with_dollar;
+	char		*name_str;
+	size_t		idx;
+
+	if (!src || src[0] != CHR_DOLLAR || !src[1])
+		return (NULL);
+	idx = 1;
+	while (src[idx] && src[idx] == '_' && ft_isalnum(src[idx]))
+		idx++;
+	name_str = ft_substr(src, 1, idx + 1);
+	if (!name_str)
+		return (perror_ret_nullptr("malloc"));
+	return (name_str);
+}
+
+char *get_env_value(const char *search_key, t_list *env_list_head)
+{
+	const size_t	search_key_len = ft_strlen_ns(search_key);
+	t_env_elem		*elem;
+
+	if (search_key_len == 0)
+		return ("");
+	while (env_list_head)
+	{
+		elem = env_list_head->content;
+		if ((ft_strlen_ns(elem->key) == search_key_len) \
+		&& (ft_strncmp_ns(elem->key, search_key, search_key_len) == 0))
+			return (elem->value);
+		env_list_head = env_list_head->next;
+	}
+	return ("");
+}
+
+// expandable_src is string start with $name or $?
+// $
+char	*get_expanded_str(char *src, t_info *info)
+{
+	size_t	idx;
+	size_t	skip;
+	char	*expanded_str;
+	char	*key;
+	char	*value;
+	char	*skip_str;
+
+	if (!src || !info)
+		return (FAILURE);
+	expanded_str = NULL;
+	idx = 0;
+	while (src[idx])
+	{
+		// $? or $nameまでidx++
+		skip = 0;
+		while (src[idx + skip] && !(src[idx + skip] == CHR_DOLLAR && is_expandable(&src[idx + skip + 1], '\0')))
+			skip++;
+		if (skip)
+		{
+			// idx++した分をexpanded_strへ結合
+			skip_str = ft_substr(src, idx, skip);
+			expanded_str = concat_dst_to_src(&expanded_str, &skip_str);
+			if (!skip_str || !expanded_str)
+				return (perror_ret_nullptr("malloc"));
+			skip_str = free_1d_alloc(skip_str);
+			idx += skip;
+		}
+		if (!src[idx])
+			break ;
+		// $? or $name のvalueをexpanded_strへ結合子、$? or $name分idx++
+		if (is_str_expandable_exitstatus(&src[idx]))
+		{
+			if (expand_exit_status(&expanded_str, info->exit_status) == FAILURE)
+				return (NULL);
+			idx += 2; // $?
+		}
+		else
+		{
+			key = get_name_str(&src[idx]);
+			value = get_env_value(key, info->envlist_head);
+			if (!key | !value)
+				return (perror_ret_nullptr("malloc"));
+			expanded_str = concat_dst_to_src(&expanded_str, &value);
+			idx += ft_strlen_ns(key) + 1; // $key
+			key = free_1d_alloc(key);
+		}
+		idx++;
+	}
+	free(src);
+	printf("expanded_str:%s\n", expanded_str);
+	return (expanded_str);
+}
+
+int remove_quotes(char **token_word)
+{
+	if (!token_word || !*token_word)
+		return (FAILURE);
+
+
+	return (SUCCESS);
+}
+
+// "$hoge $huga"
+// remove "'	//"'hoge'"->'hoge'
+
+// $hoge$huga -> helloworld$huga
+// ^^^^^         ^^^^^^^^^^
+// ^idx                    ^idx
+// pop->addback newlist
+
+// mendokusai...
+int	expand_var_in_tokens(t_list **list_head, t_info *info)
+{
+	t_list			*list_node;
+	t_token_elem	*token_elem;
+
+	if (!list_head || !*list_head || !info)
 		return (SUCCESS);
 
 	list_node = *list_head;
 	while (list_node)
 	{
-
-
-
+		token_elem = list_node->content;
+		if (is_expandable(token_elem->word, token_elem->quote_chr))
+		{
+			token_elem->word = get_expanded_str(token_elem->word, info);
+			if (!token_elem->word)
+				return (FAILURE);
+			if (token_elem->is_quoted)
+				if (remove_quotes(&token_elem->word) == FAILURE)
+					return (FAILURE);
+		}
 		list_node = list_node->next;
 	}
-
 	return (SUCCESS);
 }
 
 char	*concat_tokens(t_list *list_head)
 {
-	char	*str;
+	char			*concat_str;
+	t_list			*node;
+	t_token_elem	*token_elem;
+	size_t			size;
+
 	if (!list_head)
 		return (NULL);
-
-	return (str);
+	size = 0;
+	node = list_head;
+	while (node)
+	{
+		token_elem = node->content;
+		size += ft_strlen_ns(token_elem->word);
+		node = node->next;
+	}
+	concat_str = (char *)ft_calloc(sizeof(char), size + 1);
+	if (!concat_str)
+		return (perror_ret_nullptr("malloc"));
+	node = list_head;
+	while (node)
+	{
+		token_elem = node->content;
+		ft_strlcat(concat_str, token_elem->word, size + 1);
+		node = node->next;
+	}
+	return (concat_str);
 }
 
 /* token node filename or heredoc eof is cleared in function */
-char	*get_filename_or_heredoc_eof(t_list **token_get_from, t_list *envlist)
+char	*get_filename_or_heredoc_eof(t_list **token_get_from, t_info *info)
 {
-	char			*ret_str;
+	char			*str_concatted_token;
 	t_list			*tmp_list;
 	t_list			*popped_list;
 	t_token_elem	*token_elem;
 
-	if (!token_get_from || !*token_get_from || !envlist)
+	if (!token_get_from || !*token_get_from || !info)
 		return (NULL);
 	tmp_list = NULL;
-	while (true)
+	while (*token_get_from)
 	{
 		popped_list = ft_lstpop(token_get_from);
 		ft_lstadd_back(&tmp_list, popped_list);
 		token_elem = popped_list->content;
-		if (!token_elem->is_connect_to_next_word || !*token_get_from)
+		if (!token_elem->is_connect_to_next_word)
 			break ;
 	}
-	if (expand_var_in_tokens(&tmp_list, envlist) == FAILURE)
+	if (expand_var_in_tokens(&tmp_list, info) == FAILURE)
 		return (NULL);
-	ret_str = concat_tokens(tmp_list);
-	if (!ret_str)
+	str_concatted_token = concat_tokens(tmp_list);
+	if (!str_concatted_token)
 		return (NULL);
 	ft_lstclear(&tmp_list, free_token_elem);
-	return (ret_str);
+	return (str_concatted_token);
 }
 
 /* redirect token node clear in function */
-static int	create_redirect_list_from_pipeline_tokens(t_command_list *cmd_list, t_list *envlist)
+static int	create_redirect_list_from_pipeline_tokens(t_command_list **cmd_list, t_info *info)
 {
-	t_list			*token_node;
 	t_list			*popped_node;
 	t_token_elem	*token_elem;
 	t_redirect_list	*redirect_list;
+	t_token_type	type;
 	char			*filename_or_heredoc_eof;
+	t_list			*command_save;
 
-	if (!cmd_list || !envlist)
+	if (!cmd_list || !*cmd_list || !info)
 		return (FAILURE);
-	token_node = cmd_list->pipeline_token_list;
-	while (token_node)
+	command_save = NULL;
+	while ((*cmd_list)->pipeline_token_list)
 	{
-		token_elem = token_node->content;
+		popped_node = ft_lstpop(&(*cmd_list)->pipeline_token_list);
+		token_elem = popped_node->content;
 		if (is_tokentype_redirection(token_elem->type))
 		{
-			popped_node = ft_lstpop(&token_node);
-			ft_lstdelone(popped_node, free_token_elem);
-			filename_or_heredoc_eof = get_filename_or_heredoc_eof(&token_node, envlist);
-			redirect_list = create_redirect_list(token_elem->type, filename_or_heredoc_eof);
+			type = token_elem->type;
+			ft_lstdelone_null(&popped_node, free_token_elem);
+			filename_or_heredoc_eof = get_filename_or_heredoc_eof(&(*cmd_list)->pipeline_token_list, info);
+			redirect_list = create_redirect_list(type, filename_or_heredoc_eof);
 			if (!filename_or_heredoc_eof || !redirect_list)
 				return (FAILURE);
-			cmd_list->redirect_list = redirect_list;
-			return (SUCCESS);
+			(*cmd_list)->redirect_list = redirect_list;
+			continue ;
 		}
-		token_node = token_node->next;
+		ft_lstadd_back(&command_save, popped_node);
 	}
+	(*cmd_list)->pipeline_token_list = command_save;
 	return (SUCCESS);
 }
 
@@ -202,29 +449,49 @@ int	create_commands_from_pipeline_tokens(t_command_list *cmd_list, t_list *envli
 
 
 /* pipeline_token_list clear in this func */
-static int	expand_and_create_commands(t_command_list *cmd_list, t_list *envlist)
+static int	expand_and_create_commands(t_command_list *cmd_list, t_info *info)
 {
-	t_list			*token_node;
-	t_token_elem	*token_elem;
+//	t_list			*token_node;
+//	t_token_elem	*token_elem;
 
-	if (!cmd_list || !envlist)
+	if (!cmd_list || !info)
 		return (FAILURE);
-	token_node = cmd_list->pipeline_token_list;
+//	token_node = cmd_list->pipeline_token_list;
+
 	//count pipeline_token_list
 	//expand && split, insert
 	//create char **cmds;
 
 	// create redirect_list, expanded
-	if (create_redirect_list_from_pipeline_tokens(cmd_list, envlist) == FAILURE)
+	if (create_redirect_list_from_pipeline_tokens(&cmd_list, info) == FAILURE)
 		return (FAILURE);
+
+	/*
 	if (create_commands_from_pipeline_tokens(cmd_list, envlist) == FAILURE)
 		return (FAILURE);
 	cmd_list->pipeline_token_list = NULL;
+	*/
+
 	return (SUCCESS);
 }
 
 
+int	expansion(t_info *info)
+{
+	t_exec_list		*exec_node;
 
+	if (!info)
+		return (FAILURE);
+	exec_node = info->execlist_head;
+	while (exec_node)
+	{
+		if (expand_variable(&exec_node, info) == FAILURE)
+			return (FAILURE);
+		exec_node = exec_node->next;
+	}
+	debug_print_exec_list(info->execlist_head, "expansion");
+	return (SUCCESS);
+}
 
 
 

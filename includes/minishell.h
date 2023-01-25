@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 15:33:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 21:31:12 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include "input.h"
 # include "tokenizer.h"
 # include "paeser.h"
+# include "expansion.h"
+# include "command_execution.h"
 
 /* ************************** */
 /*           macro            */
@@ -33,8 +35,11 @@
 # define STR_OPERATOR	";&|<>()"
 # define STR_SUBSHELL	"()"
 
-# define STD_EXPANSION_DELIM	" !#$%&*+=./:=?@[]{}^~'`\\\"" //ft_ispunct
+# define STR_EXPAND_EXIT_STATUS	"$?"
+# define STR_EXPANSION_DELIM	" !#$%&*+=./:=j?@[]{}^~'`\\\"" //ispunct include "_"
 
+# define CHR_DOLLAR			'$'
+# define CHR_QUESTION		'?'
 # define CHR_SINGLE_QUOTE	'\''
 # define CHR_DOUBLE_QUOTE	'\"'
 
@@ -106,6 +111,7 @@ struct s_info
 	t_list		*tokenlist_head;
 	t_exec_list	*execlist_head;
 	char 		*readline_input;
+	int			exit_status;
 };
 
 // commands list for execute
@@ -211,5 +217,6 @@ void	debug_print(const char *fmt,...);
 void	debug_print_token_word(t_list *head, char *str);
 void	debug_print_tree(t_exec_list *root, char *str);
 void	debug_print_exec_list(t_exec_list *head, char *str);
+void	debug_print_redirect_list(t_redirect_list *node, char *str);
 
 #endif //MINISHELL_H

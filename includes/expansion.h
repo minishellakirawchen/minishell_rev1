@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 15:15:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 22:23:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ typedef enum e_node_kind		t_node_kind;
 /* ************************** */
 /*         function           */
 /* ************************** */
-int	expand_variable(t_exec_list **pipeline, t_list *envlist);
+int	expand_variable(t_exec_list **pipeline, t_info *info);
+int	expansion(t_info *info);//test
 
 
 #endif //EXPANSION_H

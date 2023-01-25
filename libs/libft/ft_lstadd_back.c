@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:33:52 by takira            #+#    #+#             */
-/*   Updated: 2022/10/17 10:33:56 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 22:30:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 
 	if (lst == NULL || new == NULL)
 		return ;
+	new->next = NULL;
 	if (*lst == NULL)
 		*lst = new;
 	else
