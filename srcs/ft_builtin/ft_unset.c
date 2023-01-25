@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:36 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 22:40:32 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/25 20:58:39 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_unset(t_info *info, char **cmds)
 		if (judge_chr_key(*cmds) == FAILURE)
 		{
 			ft_dprintf(STDERR_FILENO,
-				"minishell: export: `%s': not a valid identifier\n",*cmds);
+				"minishell: unset: `%s': not a valid identifier\n",*cmds);
 			exit_status += EXIT_FAILURE;
 		}
 		else
