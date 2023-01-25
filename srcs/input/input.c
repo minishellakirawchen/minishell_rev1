@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 22:17:02 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 23:06:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,7 @@ void	clear_input_info(t_info **info)
 	if (!info || !*info)
 		return ;
 	ft_lstclear(&(*info)->tokenlist_head, free_token_elem);
-	(*info)->tokenlist_head = NULL;
-
-	clear_exec_list((*info)->execlist_head);
-	(*info)->execlist_head = NULL;
-
+	clear_exec_list(&(*info)->execlist_head);
 	(*info)->readline_input = free_1d_alloc((*info)->readline_input);
 }
 

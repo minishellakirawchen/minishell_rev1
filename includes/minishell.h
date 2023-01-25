@@ -205,7 +205,7 @@ t_list	*get_envlist(void);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
 void	free_command_list_elem(void *content);
-void	clear_exec_list(t_exec_list *exec_list);
+void	clear_exec_list(t_exec_list **exec_list);
 
 /*         error_return.c           */
 void	*perror_ret_nullptr(char *err);
