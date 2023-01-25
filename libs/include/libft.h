@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 10:46:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 10:52:24 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 10:03:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int			ft_isalnum(int c);
 int			ft_isascii(int c);
 int			ft_isprint(int c);
 int			ft_isspace(char c);
+int			ft_ispunct(char c);
 
 bool		is_chr_in_str(char chr, const char *str);
 bool		is_str1chrs_in_str2(const char *str1, const char *str2);

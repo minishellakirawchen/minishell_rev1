@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 15:19:21 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 15:33:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 # define STR_QUOTE		"'\""
 # define STR_OPERATOR	";&|<>()"
 # define STR_SUBSHELL	"()"
+
+# define STD_EXPANSION_DELIM	" !#$%&*+=./:=?@[]{}^~'`\\\"" //ft_ispunct
 
 # define CHR_SINGLE_QUOTE	'\''
 # define CHR_DOUBLE_QUOTE	'\"'
@@ -154,19 +156,19 @@ struct s_split_info
 //
 struct s_command_list
 {
-	t_node_kind		type; // command or subshell
-	char 			**commands;
+	t_node_kind		type;			// command or subshell
+	char 			**commands;		// argument of execve()
+	t_redirect_list	*redirect_list;	// set fd before execute commands
+
 	t_list			*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する
 	t_list			*subshell_token_list; //parsing create_operator_listから実行できる
-
-	t_redirect_list	*redirect_list;
 };
 
 struct s_redirect_list
 {
 	t_token_type	type;
-	char			*file;
-	char			*heredoc_eof;
+	char			*file;			// malloc
+	char			*heredoc_eof;	// malloc
 };
 
 /* ************************** */

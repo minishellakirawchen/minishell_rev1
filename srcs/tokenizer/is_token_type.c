@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:05:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 21:36:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/25 15:24:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,9 @@ int is_tokentype_operator(t_token_type type)
 int is_tokentype_pipeline(t_token_type type)
 {
 	return (!is_tokentype_operator(type));
+}
+
+int is_tokentype_io(t_token_type type)
+{
+	return (is_tokentype_redirection(type) || type == e_file || type == e_heredoc_eof);
 }

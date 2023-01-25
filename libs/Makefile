@@ -74,6 +74,7 @@ LIBFT_SRC	= ft_strlen.c \
 			  ft_math.c \
 			  ft_strtoll.c \
 			  is_in_str.c \
+			  ft_ispunct.c \
 
 GNL_SRC		= get_next_line.c \
               get_next_line_utils.c

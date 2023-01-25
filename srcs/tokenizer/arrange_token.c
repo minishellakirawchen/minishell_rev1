@@ -173,6 +173,7 @@ static void	set_elem_type_if_operator(t_list **tokenlist_head)
 	}
 }
 
+// echo hello > "hoge"huga
 static int	set_elem_type_if_word(t_list **tokenlist_head)
 {
 	t_list			*node;

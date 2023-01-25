@@ -1,3 +1,120 @@
+
+
+# Expansion
+
+```shell
+
+bash-3.2$ export d1="echo -n hello world"
+bash-3.2$ $d1       # hello worldbash-3.2$  promptにecho~を入力した時と同じ挙動
+
+bash-3.2$ export d3=$d1$d2
+bash-3.2$ echo $d3  # echo -n hello worldls -l > outfile
+bash-3.2$ $d3       # hello worldls -l > outfilebash-3.2$ 
+
+bash-3.2$ echo $d3  # echo -n hello worldls -l > outfile
+
+bash-3.2$ export d5="echo hello world | $d3"
+bash-3.2$ echo $d5  # echo hello world | echo -n hello worldls -l > outfile
+bash-3.2$ $d5       # hello world | echo -n hello worldls -l > outfile
+# echoコマンドの引数に"hello world | echo -n hello worldls -l > outfile"があったときの挙動
+# expansion->space splitで良さそう
+# "hoge"huga問題はある？
+
+bash-3.2$ export e1="echo hello"world'huga'
+bash-3.2$ echo $e1  # echo helloworldhuga
+bash-3.2$ export e2="test   a  $e1'hogehoge'"
+bash-3.2$ echo $e2  # test a echo helloworldhuga'hogehoge'
+
+bash-3.2$ env
+e1=echo helloworldhug
+e2=test   a  echo helloworldhuga'hogehoge'  # expansion後にspace splitしてtokenizeされている
+
+
+bash-3.2$ export a=b
+bash-3.2$ export c=d$a
+bash-3.2$ export e=c"$a"
+bash-3.2$ env
+a=b
+c=db
+e=cb
+
+bash-3.2$ echo $a$a$a   # bbb
+bash-3.2$ echo $a_$a$a  # bb
+bash-3.2$ echo $a?$a$a  # b?bb
+
+bash-3.2$ export x1=ech"o hello"
+bash-3.2$ $x1           # hello
+
+bash-3.2$ export x2=outfile
+bash-3.2$ echo hoge > $x2 #echo hoge > outfile
+bash-3.2$ export x3=">outfile"
+bash-3.2$ echo hoge $x3   #echo "hoge >outfile"
+
+bash-3.2$ export x4="test test"
+bash-3.2$ echo hoge > $x4      
+bash: $x4: ambiguous redirect
+
+bash-3.2$ echo hoge > "test test" <-"test test"
+bash-3.2$ cat "test test"
+hoge
+bash-3.2$ echo hoge > a b        
+bash-3.2$ cat a
+hoge b
+
+bash-3.2$ echo hoge>a b c >d
+bash-3.2$ ls
+a               d               outfile         test test       test1           test2
+bash-3.2$ cat a
+bash-3.2$ cat d
+hoge b c
+bash-3.2$ echo hoge>a b c   
+bash-3.2$ ls  
+a               d               outfile         test test       test1           test2
+bash-3.2$ cat a
+hoge b c
+bash-3.2$ 
+
+// same as echo b c > a
+```
+
+* $を探す
+* $key_candidate を探す
+  * delimまでがkey候補
+    * "$? "
+* $key1, key1=key2, key3=key3,...だった時は？
+
+
+```shell
+bash-3.2$ 
+bash-3.2$ export key1=key2
+bash-3.2$ export key3=$key1               # $key1=key2
+bash-3.2$ export key4=$key3$key1          # $key3=$key1=key2, $key1=key2->$key3$key1=key2key2
+bash-3.2$ export key5=$key4"$key4"'$key4' # key4=key2key2, "$key4"=key2key2, '$key4'='$key4'
+bash-3.2$ env    
+key1=key2
+key3=key2
+key4=key2key2
+key5=key2key2key2key2$key4
+bash-3.2$ 
+
+bash-3.2$ export a1=A1 && echo $a1 && export a2=$a1 && export a1=AA1; echo $a1 ;echo $a2
+A1  # a1=A1
+AA1 # a1=AA1
+A1  # a2=$a1=A1(when assign a2=$a1, $a1=A1)
+
+
+bash-3.2$ export z1=">"
+bash-3.2$ echo hello $z1 testfile
+hello > testfile
+
+
+```
+exportもどこかのタイミングでexpansionが必要か？
+
+<br>
+<br>
+<br>
+
 echo hello world; cat Makefile | grep a
 
 ```
@@ -33,7 +150,6 @@ struct t_exec_list
     ope; ;/&&/||/()/|
     cmd; *list_head
 }
-
 
 
 ```
@@ -742,6 +858,7 @@ struct s_command_info
 ### execute
 ```c
 
+
 int execute_operator_list(t_exec_list *exec_list_head)
 {
     t_exec_list *exec_node;
@@ -755,7 +872,9 @@ int execute_operator_list(t_exec_list *exec_list_head)
     operator_type = -1;
     while (exec_node)
     {
-        if (exec_node->kind == operator)
+		// while (operator != ';') これが必要かも
+		// 前から見ていくだけだったら、A || B && C; D |E のAで終了する可能性もある
+		if (exec_node->kind == operator)
         {
             operator_type = get_operator_type(exec_node); &&, ||, ;
             exec_node = exec_node->next;
