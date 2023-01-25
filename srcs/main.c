@@ -1,65 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
+/*   Updated: 2023/01/24 20:20:40 by wchen            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	test_echo(int no, char **input, char *expected)
+static int	init_info(t_info *info)
 {
-	printf("\n## test:%d, ##\n", no);fflush(stdout);
-	printf("vvvvvvvvvvvvvvvvvvvvvvvvvv\n");fflush(stdout);
-	printf(" expected:[%s]\n", expected);fflush(stdout);
-	printf(" ft_echo :[");fflush(stdout);
-	ft_echo(input);fflush(stdout);
-	printf("]");fflush(stdout);
-	printf("\n^^^^^^^^^^^^^^^^^^^^^^^^^^\n");fflush(stdout);
-	return (no++);
-}
-
-int	main(void)
-{
-	int no = 0;
-	char *test_input[20][20] = {
-			{"echo", NULL},
-			{"echo", "hello", NULL},
-			{"echo", "hello",  "world", NULL},
-			{"echo", "hoge", "", "huga", NULL},
-			{"echo", "hoge", " ", "huga", NULL},
-			{"echo", "hoge", "", "", "", "", "", "huga", NULL},
-			{"echo", "hoge", "            ",  "            ","huga", NULL},
-			{"echo", "newline->\n<-newline", NULL},
-			{"echo", "-unknown_op", NULL},
-			{"echo", "-n", "no newline:-n", NULL},
-			{"echo", "-n", "no newline:-n", "-n", NULL},
-			{"echo", "-n", "-n", "no newline:-n -n", NULL},
-			{"echo", "-n", "-n", "-n", "-n", "-n", "no newline: -n -n -n -n -n", NULL},
-			{"echo", "-nnnnnnnnnnnn", "no newline:-nnnnnnnnnnnn", NULL},
-			{"echo", "-n-n-n-n-n-n", "no newline:-n-n-n-n-n-n", NULL},
-			{"echo", "-N", "optin -N", NULL},
-			{"echo", "-n", NULL},
-			{NULL},
-	};
-	char *expected[20] = {
-			"\n",
-			"hello\n",
-			"hello world\n",
-			"hoge  huga\n",
-			"hoge   huga\n",
-			"hoge      huga\n",
-			"hoge                           huga\n",
-			"newline->\\n<-newline\n",
-			"-unknown_op\n",
-			"no newline:-n",
-			"no newline:-n -n",
-			"no newline:-n -n",
-			"no newline: -n -n -n -n -n",
-			"no newline:-nnnnnnnnnnnn",
-			"-n-n-n-n-n-n no newline:-n-n-n-n-n-n\n",
-			"-N optin -N\n",
-			"",
-			NULL,
-	};
-
-
-	while (test_input[no][0])
+	info->envlist_head = get_envlist();
+	if (!info->envlist_head)
 	{
-		test_echo(no, test_input[no], expected[no]);
-		no++;
+		info->envlist_head = free_1d_alloc(info->envlist_head);
+		return (FAILURE);
 	}
+	info->tokenlist_head = NULL;
+//	ft_dprintf(STDERR_FILENO, "## envlist_head ##\n");
+//	ft_lstiter(info->envlist_head, print_key_value);
+	return (SUCCESS);
 }
+
+int	main(int argc, char **argv)
+{
+	int		exit_status;
+	t_info	info;
+
+	if (argc != 1 || !argv)
+	{
+		ft_dprintf(STDERR_FILENO,
+				   "[Error]Too many argument."
+				       "       Input following:$> ./minishell");
+		return (EXIT_FAILURE);
+	}
+	// init info
+	info = (t_info){ 0 };
+
+	init_info(&info);
+
+	// prompt loop
+	exit_status = prompt_loop(&info);
+
+	// free param
+	free_info(&info);
+	system("leaks -q minishell");
+	return (exit_status);
+}
+
+
+__attribute__((destructor))
+static void	destructor(void)
+{
+	system("leaks -q minishell");
+}
+
