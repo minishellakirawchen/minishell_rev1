@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:03:07 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 11:41:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,11 @@ int		expand_exit_status(char **expanded_str, int exit_status);
 
 
 /* is_expand.c */
-bool	is_expandable(const char *str, char quote_chr);
+bool	is_expandable_var_in_str(const char *str, char quote_chr);
 bool	is_name(const char *str);
 bool	is_str_expandable_name(const char *str);
 bool	is_expandable_exit_status(const char *str);
+bool	is_expandable_str_with_dollar(const char *str);
 
 
 #endif //EXPANSION_H

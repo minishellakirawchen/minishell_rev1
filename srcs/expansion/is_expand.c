@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:20:25 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 23:21:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 11:40:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	is_name(const char *str)
 }
 
 // return true if $? or $name in str, do not depend on validate $name
-bool is_expandable(const char *str, char quote_chr)
+bool is_expandable_var_in_str(const char *str, char quote_chr)
 {
 	size_t	idx;
 
@@ -56,7 +56,7 @@ bool is_expandable(const char *str, char quote_chr)
 	return (false);
 }
 
-bool	is_str_expandable_name(const char *str)
+bool	is_str_expandable_(const char *str)
 {
 	if (!str)
 		return (false);
@@ -73,3 +73,35 @@ bool	is_expandable_exit_status(const char *str)
 		return (true);
 	return (false);
 }
+
+// $?
+bool	is_expandable_str_with_dollar(const char *str)
+{
+	if (!str || str[0] != CHR_DOLLAR)
+		return (false);
+	if (str[1] == CHR_QUESTION)
+		return (true);
+	if (str[1] == '_' || ft_isalnum(str[1]))
+		return (true);
+	return (false);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
