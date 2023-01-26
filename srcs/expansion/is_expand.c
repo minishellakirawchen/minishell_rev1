@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:20:25 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 11:40:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 12:15:10 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,21 +85,6 @@ bool	is_expandable_str_with_dollar(const char *str)
 		return (true);
 	return (false);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
