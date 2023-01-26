@@ -18,8 +18,8 @@ CFLAGS		= -Wall -Wextra -Werror -MMD -MP
 
 # DIRS
 LIBFT_DIR	= ./libft
-GNL_DIR		= ./libgnl
-PRINTF_DIR	= ./libftprintf
+GNL_DIR		= ./libft/gnl
+PRINTF_DIR	= ./libft/printf
 OBJ_DIR		= ./objs
 
 # SRCS
