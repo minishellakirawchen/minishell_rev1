@@ -1,41 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_math.c                                          :+:      :+:    :+:   */
+/*   ft_math.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/02 21:34:59 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:40:20 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 18:09:43 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#ifndef FT_MATH_H
+# define FT_MATH_H
 
-int	max_int(int a, int b)
-{
-	if (a >= b)
-		return (a);
-	return (b);
-}
+# include <stdlib.h>
 
-int	min_int(int a, int b)
-{
-	if (a <= b)
-		return (a);
-	return (b);
-}
+/* math */
+size_t		min_size(size_t a, size_t b);
+size_t		max_size(size_t a, size_t b);
+int			min_int(int a, int b);
+int			max_int(int a, int b);
 
-size_t	max_size(size_t a, size_t b)
-{
-	if (a >= b)
-		return (a);
-	return (b);
-}
-
-size_t	min_size(size_t a, size_t b)
-{
-	if (a <= b)
-		return (a);
-	return (b);
-}
+#endif //FT_MATH_H

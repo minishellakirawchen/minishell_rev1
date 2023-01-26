@@ -1,34 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_gnl.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/16 10:46:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:05:55 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 18:04:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#ifndef FT_GNL_H
+# define FT_GNL_H
 
-/*
-# include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <errno.h>
-# include <limits.h>
-# include <fcntl.h>
-*/
 
-# include "ft_gnl.h"
-# include "ft_math.h"
-# include "ft_printf.h"
-# include "ft_put.h"
-# include "ft_std.h"
-# include "ft_string.h"
-# include "ft_list.h"
+# define BUFFER_SIZE 256
 
-#endif
+/* gnl */
+char		*get_next_line(int fd, bool is_include_nl);
+char		*strjoin_and_free_dst(char *dst, char *src);
+
+void		*ft_free_gnl(char **alloc1, char **alloc2);
+
+size_t		ft_strlen_gnl(const char *str);
+size_t		cnt_chr_in_str(const char c, const char *str);
+size_t		ft_strlcpy_gnl(char *dst, const char *src, size_t dstsize);
+
+
+#endif //FT_GNL_H
+

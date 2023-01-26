@@ -18,7 +18,7 @@ ssize_t	print_c(char chr, t_printf_info info)
 	size_t	printsize;
 
 	ret_bytes = 0;
-	printsize = maxsize(info.width_siz, info.fd);
+	printsize = max_size(info.width_siz, info.fd);
 	if (printsize == 1)
 		return (ft_putchar_for_printf(chr, info.fd));
 	if (info.flag_left && errno == 0)
@@ -45,8 +45,8 @@ ssize_t	print_s(char *str, t_printf_info info)
 		str = "(null)";
 	strlen = ft_strlen_printf(str);
 	if (info.prec_dot)
-		strlen = minsize(strlen, info.perc_siz);
-	printsize = maxsize(strlen, info.width_siz);
+		strlen = min_size(strlen, info.perc_siz);
+	printsize = max_size(strlen, info.width_siz);
 	padlen = 0;
 	if (printsize > strlen)
 		padlen = printsize - strlen;
@@ -71,7 +71,7 @@ ssize_t	print_percent(t_printf_info info)
 	ret_bytes = 0;
 	if ((info.flag_left || !info.width_siz) && info.flag_zero_pad)
 		info.flag_zero_pad = 0;
-	printsize = maxsize(info.width_siz, info.fd);
+	printsize = max_size(info.width_siz, info.fd);
 	if (printsize == 1 && errno == 0)
 		return (ft_putchar_for_printf('%', info.fd));
 	padlen = printsize - 1;

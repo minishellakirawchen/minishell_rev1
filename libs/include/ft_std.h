@@ -1,41 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_math.c                                          :+:      :+:    :+:   */
+/*   ft_std.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/02 21:34:59 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:40:20 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 18:05:55 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#ifndef FT_STD_H
+# define FT_STD_H
 
-int	max_int(int a, int b)
-{
-	if (a >= b)
-		return (a);
-	return (b);
-}
+# include <stdbool.h>
+# include <limits.h>
 
-int	min_int(int a, int b)
-{
-	if (a <= b)
-		return (a);
-	return (b);
-}
+/* itoa atoi */
+char		*ft_itoa(int n);
+int			ft_atoi(const char *str, bool *is_success);
+long long	ft_strtoll(char *num, bool *is_success);
 
-size_t	max_size(size_t a, size_t b)
-{
-	if (a >= b)
-		return (a);
-	return (b);
-}
-
-size_t	min_size(size_t a, size_t b)
-{
-	if (a <= b)
-		return (a);
-	return (b);
-}
+#endif //FT_STD_H

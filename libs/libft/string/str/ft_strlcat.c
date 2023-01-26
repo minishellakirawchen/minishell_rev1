@@ -24,7 +24,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 	dst_len = ft_strlen(dst);
 	if (dstsize <= dst_len)
 		return (src_len + dstsize);
-	cat_len = minsize(dstsize - dst_len - 1, src_len);
+	cat_len = min_size(dstsize - dst_len - 1, src_len);
 	ft_memcpy(&dst[dst_len], &src[0], cat_len);
 	dst[dst_len + cat_len] = '\0';
 	return (dst_len + src_len);

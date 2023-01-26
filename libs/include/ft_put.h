@@ -1,41 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_math.c                                          :+:      :+:    :+:   */
+/*   ft_put.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/02 21:34:59 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:40:20 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 18:01:21 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#ifndef FT_PUT_H
+# define FT_PUT_H
 
-int	max_int(int a, int b)
-{
-	if (a >= b)
-		return (a);
-	return (b);
-}
+# include <unistd.h>
 
-int	min_int(int a, int b)
-{
-	if (a <= b)
-		return (a);
-	return (b);
-}
+/* put */
+ssize_t		ft_putchar_fd(char c, int fd);
+void		ft_putstr_fd(char *s, int fd);
+void		ft_putendl_fd(char *s, int fd);
+void		ft_putnbr_fd(int n, int fd);
 
-size_t	max_size(size_t a, size_t b)
-{
-	if (a >= b)
-		return (a);
-	return (b);
-}
-
-size_t	min_size(size_t a, size_t b)
-{
-	if (a <= b)
-		return (a);
-	return (b);
-}
+#endif //FT_PUT_H
