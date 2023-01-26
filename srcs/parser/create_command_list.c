@@ -13,8 +13,8 @@
 #include "paeser.h"
 
 static int				create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node);
-static t_command_list	*create_command_list_node(void);
-int						connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_list *command_list);
+static t_command_info	*create_command_list_node(void);
+int						connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_info *command_list);
 
 // operatorなら飛ばす
 // そうでなければlist=create_command_list(node->tokenlist)でpipeをnextとする線形リストを作成
@@ -71,7 +71,7 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 {
 	t_token_elem	*token_elem;
 	t_list_bdi		*popped_token;
-	t_command_list	*command_list;
+	t_command_info	*command_list;
 
 	if (!exec_pipeline_node || !*exec_pipeline_node || !(*exec_pipeline_node)->token_list_head)
 		return (FAILURE);
@@ -102,12 +102,12 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 	return (SUCCESS);
 }
 
-t_command_list	*create_command_list_node(void)
+t_command_info	*create_command_list_node(void)
 {
-	t_command_list	*command_list;
+	t_command_info	*command_list;
 
 	errno = 0;
-	command_list = (t_command_list *)malloc(sizeof(t_command_list));
+	command_list = (t_command_info *)malloc(sizeof(t_command_info));
 	if (!command_list)
 		return (perror_ret_nullptr("malloc"));
 	command_list->type = e_node_init;
@@ -118,7 +118,7 @@ t_command_list	*create_command_list_node(void)
 	return (command_list);
 }
 
-int	connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_list *command_list)
+int	connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_info *command_list)
 {
 	t_list_bdi	*new_pipeline;
 

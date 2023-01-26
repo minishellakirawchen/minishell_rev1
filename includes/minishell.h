@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:08:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 14:35:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define PROMPT	"minishell $> "
 # define NL		"\n"
 
+# define IFS	"\t\n\v\f\r "
 # define STR_SPACE		"\t\n\v\f\r "
 # define STR_QUOTE		"'\""
 # define STR_OPERATOR	";&|<>()"
@@ -42,6 +43,7 @@
 # define CHR_QUESTION		'?'
 # define CHR_SINGLE_QUOTE	'\''
 # define CHR_DOUBLE_QUOTE	'\"'
+
 
 # define FAILURE	0
 # define SUCCESS	1
@@ -61,8 +63,8 @@ typedef struct s_exec_list		t_exec_list;
 typedef struct s_env_elem		t_env_elem;
 typedef struct s_token_elem		t_token_elem;
 typedef struct s_split_info		t_split_info;
-typedef struct s_command_list	t_command_list;
-typedef struct s_redirect_list	t_redirect_list;
+typedef struct s_command_info	t_command_info;
+typedef struct s_redirect_info	t_redirect_info;
 
 /* enum */
 typedef enum e_token_type		t_token_type;
@@ -160,19 +162,19 @@ struct s_split_info
 };
 
 //
-struct s_command_list
+struct s_command_info
 {
 	t_node_kind		type;			// command or subshell
 	char 			**commands;		// argument of execve()
-	t_redirect_list	*redirect_list;	// set fd before execute commands
+	t_list_bdi		*redirect_list;	// set fd before execute commands
 
 	t_list_bdi		*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する
 	t_list_bdi		*subshell_token_list; //parsing create_operator_listから実行できる
 };
 
-struct s_redirect_list
+struct s_redirect_info
 {
-	t_token_type	type;
+	t_token_type	io_type;
 	char			*file;			// malloc
 	char			*heredoc_eof;	// malloc
 };
@@ -204,7 +206,8 @@ void	*free_info(t_info **info);
 t_list	*get_envlist(void);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
-void	free_command_list_elem(void *content);
+void	free_command_info(void *content);
+void	free_redirect_info(void *content);
 void	clear_exec_list(t_exec_list **exec_list);
 
 /*         error_return.c           */
@@ -217,6 +220,6 @@ void	debug_print(const char *fmt,...);
 void	debug_print_token_word(t_list_bdi *head, char *str);
 void	debug_print_tree(t_exec_list *root, char *str);
 void	debug_print_exec_list(t_exec_list *head, char *str);
-void	debug_print_redirect_list(t_redirect_list *node, char *str);
+void	debug_print_redirect_list(t_list_bdi *head, char *str);
 
 #endif //MINISHELL_H

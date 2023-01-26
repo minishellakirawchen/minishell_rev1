@@ -12,10 +12,10 @@
 
 #include "paeser.h"
 
-static void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_list **command_list, t_list_bdi *popped_token);
-static void	move_tokens_to_pipeline_list(t_command_list **command_list, t_list_bdi *popped_token);
+static void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token);
+static void	move_tokens_to_pipeline_list(t_command_info **command_list, t_list_bdi *popped_token);
 
-void	move_tokens_to_command_list(t_list_bdi **token_list, t_command_list **command_list, t_list_bdi *popped_token)
+void	move_tokens_to_command_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token)
 {
 	t_token_elem	*token_elem;
 
@@ -28,7 +28,7 @@ void	move_tokens_to_command_list(t_list_bdi **token_list, t_command_list **comma
 		move_tokens_to_pipeline_list(command_list, popped_token);
 }
 
-void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_list **command_list, t_list_bdi *popped_token)
+void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token)
 {
 	t_token_elem	*token_elem;
 	ssize_t			subshell_depth;
@@ -52,7 +52,7 @@ void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_list **comm
 	}
 }
 
-void	move_tokens_to_pipeline_list(t_command_list **command_list, t_list_bdi *popped_token)
+void	move_tokens_to_pipeline_list(t_command_info **command_list, t_list_bdi *popped_token)
 {
 	if (!command_list || !popped_token)
 		return ;

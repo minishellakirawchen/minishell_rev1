@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:08:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 15:14:55 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	debug_print_exec_list(t_exec_list *node, char *str)
 {
 	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
-	t_command_list	*command_list;
+	t_command_info	*command_list;
 	t_list_bdi		*pipeline;
 
 	ft_dprintf(STDERR_FILENO, "\n[#DEBUG print] %s %s", str ? str : "", "\n");
@@ -132,23 +132,29 @@ void debug_print_2d_arr(char **arr, char *str)
 	ft_dprintf(STDERR_FILENO, "}\n");
 }
 
-void	debug_print_redirect_list(t_redirect_list *node, char *str)
+void	debug_print_redirect_list(t_list_bdi *head, char *str)
 {
+	t_list_bdi		*node;
+	t_redirect_info	*info;
 	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "f", "e", "w", "i", NULL};
 
 	if (str)
 		ft_dprintf(STDERR_FILENO, "#%-15s:", str);
-	if (!node)
+	node = head;
+	while (node)
 	{
-		ft_dprintf(STDERR_FILENO, "(null)");
-		return ;
+		info = node->content;
+		ft_dprintf(STDERR_FILENO, "%s[", type[info->io_type]);
+		if (info->file)
+			ft_dprintf(STDERR_FILENO, "file:%s]", info->file);
+		else
+			ft_dprintf(STDERR_FILENO, "heredoc:%s]", info->heredoc_eof);
+		node = node->next;
+		if (node)
+			ft_dprintf(STDERR_FILENO, ", ");
+		else
+			ft_dprintf(STDERR_FILENO, "\n");
 	}
-	ft_dprintf(STDERR_FILENO, "type:%s, ", type[node->type]);
-	if (node->file)
-		ft_dprintf(STDERR_FILENO, "file:%s", node->file);
-	else
-		ft_dprintf(STDERR_FILENO, "heredoc:%s", node->heredoc_eof);
-	ft_dprintf(STDERR_FILENO, "\n");
 }
 
 void	debug_print_token_word(t_list_bdi *head, char *str)

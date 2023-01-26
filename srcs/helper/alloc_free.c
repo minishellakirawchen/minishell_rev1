@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:07:40 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 14:47:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	clear_exec_list(t_exec_list **exec_list)
 	{
 		next = (*exec_list)->next;
 		ft_lstclear_bdi(&(*exec_list)->token_list_head, free_token_elem);
-		ft_lstclear_bdi(&(*exec_list)->pipeline_commands, free_command_list_elem);
+		ft_lstclear_bdi(&(*exec_list)->pipeline_commands, free_command_info);
 		free(*exec_list);
 		*exec_list = next;
 	}
@@ -93,10 +93,9 @@ void	free_env_elem(void *content)
 	free_1d_alloc(elem);
 }
 
-void	free_command_list_elem(void *content)
+void	free_command_info(void *content)
 {
-	t_command_list	*elem;
-	t_redirect_list	*redirect_list;
+	t_command_info	*elem;
 
 	if (!content)
 		return ;
@@ -104,14 +103,20 @@ void	free_command_list_elem(void *content)
 	elem->commands = (char **)free_2d_alloc((void **)elem->commands);
 	ft_lstclear_bdi(&(elem->pipeline_token_list), free_token_elem);
 	ft_lstclear_bdi(&(elem->subshell_token_list), free_token_elem);
-	redirect_list = elem->redirect_list;
-	if (redirect_list)
-	{
-		free_1d_alloc(redirect_list->file);
-		free_1d_alloc(redirect_list->heredoc_eof);
-		free_1d_alloc(redirect_list);
-	}
+	ft_lstclear_bdi(&(elem->redirect_list), free_redirect_info);
 	free_1d_alloc(elem);
+}
+
+void	free_redirect_info(void *content)
+{
+	t_redirect_info	*redirect_info;
+
+	if (!content)
+		return ;
+	redirect_info = content;
+	free_1d_alloc(redirect_info->file);
+	free_1d_alloc(redirect_info->heredoc_eof);
+	free_1d_alloc(redirect_info);
 }
 
 void	free_token_elem(void *content)

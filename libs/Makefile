@@ -60,10 +60,10 @@ LIBFT_SRC	= string/str/ft_strlen.c \
 			  std/ft_atoi.c \
 			  std/ft_itoa.c \
 			  std/ft_strtoll.c \
-			  io/ft_putchar_fd.c \
-			  io/ft_putstr_fd.c \
-			  io/ft_putendl_fd.c \
-			  io/ft_putnbr_fd.c \
+			  put/ft_putchar_fd.c \
+			  put/ft_putstr_fd.c \
+			  put/ft_putendl_fd.c \
+			  put/ft_putnbr_fd.c \
 			  math/ft_math.c \
 			  list/ft_lstnew.c \
 			  list/ft_lstadd_front.c \

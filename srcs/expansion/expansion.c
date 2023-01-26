@@ -38,21 +38,12 @@
 //  t_list pipeline_commands = command_list1->command_list2->.. (command_list1 | command_list2 | ....)
 
 //  commant_list assign content of t_list
-//    t_command_list command_list
+//    t_command_info command_list
 //      t_list pipeline_token_list  : token list, echo(word)->hello(word)->world(word)->NULL
 //      char **commands             : expanded commands {"echo" "hello", "world", NULL} <-create this by token_list, and clear tokens
 
 // input pipeline is type=pipeline
 // type=subshell is expanded in execution->parsing process
-
-int	create_commands_from_pipeline_tokens(t_command_list **cmd_list, t_info *info)
-{
-	if (!cmd_list || !*cmd_list || !info)
-		return (FAILURE);
-
-
-	return (SUCCESS);
-}
 
 int	expansion(t_info *info)
 {
@@ -74,7 +65,7 @@ int	expansion(t_info *info)
 int	expand_variable(t_exec_list **pipeline, t_info *info)
 {
 	t_list_bdi		*command_list_node;
-	t_command_list	*command_list;
+	t_command_info	*command_list;
 
 	if (!pipeline || !info)
 		return (FAILURE);
