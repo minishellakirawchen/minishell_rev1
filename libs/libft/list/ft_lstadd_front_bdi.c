@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../include/libft.h"
+#include "../../include/ft_list.h"
 
 void	ft_lstadd_front_bdi(t_list_bdi **lst, t_list_bdi *new)
 {

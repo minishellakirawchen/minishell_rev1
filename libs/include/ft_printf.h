@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:06:34 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:18:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <string.h>
 # include <stdarg.h>
 # include <errno.h>
+# include <limits.h>
+
+# include "ft_math.h"
 
 # define PASS 1
 # define FAIL 0

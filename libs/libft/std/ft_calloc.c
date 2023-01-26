@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:33:05 by takira            #+#    #+#             */
-/*   Updated: 2022/10/17 10:33:07 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:25:07 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_std.h"
 
 void	*ft_calloc(size_t count, size_t size)
 {

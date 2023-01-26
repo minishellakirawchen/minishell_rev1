@@ -6,11 +6,11 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 19:09:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:35:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:16:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_gnl.h"
 
 size_t	ft_strlen_gnl(const char *str)
 {

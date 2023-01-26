@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 10:13:26 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 21:04:17 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:29:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 static char	**free_array(char **array)
 {

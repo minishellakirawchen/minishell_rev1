@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:36:57 by takira            #+#    #+#             */
-/*   Updated: 2022/11/13 19:01:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:20:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_put.h"
 
 static void	recursion_put_nbr(int num, int fd)
 {

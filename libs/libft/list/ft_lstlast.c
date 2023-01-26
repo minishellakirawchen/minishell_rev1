@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:40:57 by takira            #+#    #+#             */
-/*   Updated: 2022/10/17 10:40:59 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:24:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_list.h"
 
 t_list	*ft_lstlast(t_list *lst)
 {

@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:31:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/09 09:09:41 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:25:10 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_std.h"
 
 static bool	is_under_long(long long before_x10_val, long long add_val, int sign)
 {

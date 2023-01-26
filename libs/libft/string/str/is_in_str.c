@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 13:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 16:38:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:27:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 bool	is_chr_in_str(char chr, const char *str)
 {

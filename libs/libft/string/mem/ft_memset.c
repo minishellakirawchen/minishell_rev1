@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:36:19 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:39:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:26:46 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 void	*ft_memset(void *s, int c, size_t n)
 {

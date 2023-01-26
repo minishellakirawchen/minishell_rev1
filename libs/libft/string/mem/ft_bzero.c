@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:32:05 by takira            #+#    #+#             */
-/*   Updated: 2023/01/18 09:54:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:27:03 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 void	ft_bzero(void *s, size_t n)
 {

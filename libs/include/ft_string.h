@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:02:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:32:31 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include <stdlib.h>
 # include <stdbool.h>
+
+# include "ft_math.h"
+# include "ft_std.h"
 
 /* is */
 int			ft_isupper(int c);
@@ -66,6 +69,5 @@ void		*ft_memset_ns(void *s, int c, size_t n);
 void		*ft_memchr(const void *s, int c, size_t n);
 void		*ft_memcpy(void *dst, const void *src, size_t n);
 void		*ft_memmove(void *dst, const void *src, size_t len);
-void		*ft_calloc(size_t count, size_t size);
 
 #endif //FT_STRING_H

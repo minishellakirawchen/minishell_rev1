@@ -112,7 +112,40 @@ hello > testfile
 
 * redirect_listはre tokenizeしない, quote removalのみ
 * 
+```shell
 
+bash-3.2$ export a2="cho hello        world"
+bash-3.2$ echo $a2
+cho hello world
+bash-3.2$ e$a2
+hello world
+bash-3.2$
+
+e$key = echo
+
+bash-3.2$ e"cho" hello	//hello				-> {"echo", "hello"}
+bash-3.2$ e"cho hoge"	//bash: echo hoge: command not found				-> {"echo hoge"}
+
+bash-3.2$ echo $a1		//hoge huga			-> {"echo", "[hoge huga]"}
+bash-3.2$ e"cho $a1"		//bash: echo hoge    huga : command not found	-> "e[cho $a1]={"echo hoge   huga"}
+
+bash-3.2$ export a2="cho hello        world"
+bash-3.2$ echo $a2		//cho hello world	-> {"echo", "[cho hello        world]"}
+
+bash-3.2$ export a3="echo hello world"
+bash-3.2$ $a3				//hello world		-> {"echo", "hello", "world"}
+
+bash-3.2$ export a3="echo hello world"
+bash-3.2$ echo $a3		//hello world
+bash-3.2$ echo "$a3"		//hello      world
+
+bash-3.2$ $a3				//bash: hello: command not found
+bash-3.2$ "$a3"			//bash: hello      world: command not found
+
+$key  :not split
+"$key":split
+
+```
 
 
 exportもどこかのタイミングでexpansionが必要か？

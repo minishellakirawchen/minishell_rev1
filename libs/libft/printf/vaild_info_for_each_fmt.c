@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:42:16 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:36:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:19:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_printf.h"
 
 static int	is_valid_strs(t_printf_info info, char type)
 {

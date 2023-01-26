@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:38:31 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:38:56 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:29:10 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {

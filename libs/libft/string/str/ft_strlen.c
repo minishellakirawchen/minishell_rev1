@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:39:12 by takira            #+#    #+#             */
-/*   Updated: 2022/11/07 14:00:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:29:03 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 size_t	ft_strlen(const char *s)
 {

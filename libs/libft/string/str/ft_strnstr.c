@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:39:38 by takira            #+#    #+#             */
-/*   Updated: 2022/11/07 14:00:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:28:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {

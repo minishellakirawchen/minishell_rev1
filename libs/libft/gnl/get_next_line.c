@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 19:09:17 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:35:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:17:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_gnl.h"
 
 static char	*create_newline_frm_save(char *save, bool is_include_nl)
 {

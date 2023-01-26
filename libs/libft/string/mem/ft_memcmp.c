@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:36:02 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:40:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:26:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {

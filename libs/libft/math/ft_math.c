@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 21:34:59 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:40:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:16:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_math.h"
 
 int	max_int(int a, int b)
 {

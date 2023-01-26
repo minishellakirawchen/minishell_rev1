@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 16:17:23 by takira            #+#    #+#             */
-/*   Updated: 2023/01/15 19:00:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:18:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_printf.h"
 
 ssize_t	print_c(char chr, t_printf_info info)
 {

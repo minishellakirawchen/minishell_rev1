@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:38:13 by takira            #+#    #+#             */
-/*   Updated: 2022/11/07 14:00:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:29:06 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {

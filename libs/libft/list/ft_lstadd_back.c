@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:33:52 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 22:30:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:22:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_list.h"
 
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {

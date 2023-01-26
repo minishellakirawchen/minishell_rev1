@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:36:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 21:47:38 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:21:03 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_put.h"
 
 void	ft_putendl_fd(char *s, int fd)
 {

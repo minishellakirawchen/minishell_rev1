@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 09:41:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:27:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:23:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../include/libft.h"
+#include "../../include/ft_list.h"
 
 t_list_bdi	*ft_lstnew_bdi(void *content)
 {

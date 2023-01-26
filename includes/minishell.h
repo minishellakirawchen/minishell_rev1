@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 14:35:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 15:58:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ struct s_redirect_info
 	t_token_type	io_type;
 	char			*file;			// malloc
 	char			*heredoc_eof;	// malloc
+	bool			is_expansion;	// "eof"->not expand
 };
 
 /* ************************** */

@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:39:48 by takira            #+#    #+#             */
-/*   Updated: 2022/11/14 22:28:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:28:31 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 char	*ft_strtrim(char const *s1, char const *set)
 {

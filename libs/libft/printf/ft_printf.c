@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_printf.h"
 
 static t_printf_info	*init_info(int fd)
 {

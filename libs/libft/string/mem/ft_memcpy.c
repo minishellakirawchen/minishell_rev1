@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:41:06 by takira            #+#    #+#             */
-/*   Updated: 2023/01/22 13:39:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:26:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {

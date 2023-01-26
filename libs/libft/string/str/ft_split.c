@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:37:16 by takira            #+#    #+#             */
-/*   Updated: 2022/11/09 19:42:38 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:29:49 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../include/libft.h"
+#include "../../../include/ft_string.h"
 
 static size_t	count_words(char const *src, char delim)
 {

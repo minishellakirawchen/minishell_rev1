@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 21:11:40 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 11:08:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:25:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_std.h"
 
 static bool	is_less_than_ll(long long before_x10, long long add, long long sign)
 {

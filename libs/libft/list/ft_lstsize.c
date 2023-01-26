@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:35:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 16:49:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:23:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_list.h"
 
 size_t	ft_lstsize(t_list *lst)
 {

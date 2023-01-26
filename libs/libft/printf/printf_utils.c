@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 21:13:05 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:36:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:19:06 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_printf.h"
 
 int	ft_isdigit_pf(int c)
 {

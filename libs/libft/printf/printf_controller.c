@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 14:52:04 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 13:09:04 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:18:55 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_printf.h"
 
 static void	init_info_for_fmt(t_printf_info *info)
 {

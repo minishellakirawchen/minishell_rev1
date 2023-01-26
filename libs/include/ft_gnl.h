@@ -6,16 +6,20 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:04:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:20:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_GNL_H
 # define FT_GNL_H
 
+# include <unistd.h>
 # include <stdlib.h>
+# include <stdio.h>
 # include <stdbool.h>
 # include <errno.h>
+# include <limits.h>
+# include <fcntl.h>
 
 # define BUFFER_SIZE 256
 

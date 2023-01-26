@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 22:06:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/16 10:47:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:18:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "../../include/ft_printf.h"
 
 void	get_flag(char *fmt, t_printf_info *info)
 {
