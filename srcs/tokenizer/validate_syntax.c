@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:20:42 by takira            #+#    #+#             */
-/*   Updated: 2023/01/21 14:53:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:13:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 
 static int	validate_context(t_token_elem *now_token, t_token_elem *next_token, bool is_head);
 
-int validate_syntax_parenthesis_pairs(t_list *tokenlist_head)
+int validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
 {
-	t_list			*node;
+	t_list_bdi		*node;
 	t_token_elem	*token;
 	int				cnt;
 
@@ -57,9 +57,9 @@ int validate_syntax_parenthesis_pairs(t_list *tokenlist_head)
 // OK echo hello; < infile
 // OK echo hello; > outfile
 // validate relationship now and next
-int validate_syntax_operators(t_list *tokenlist_head)
+int validate_syntax_operators(t_list_bdi *tokenlist_head)
 {
-	t_list			*node;
+	t_list_bdi		*node;
 	t_token_elem	*token;
 	t_token_elem	*next_token;
 	bool			is_head;

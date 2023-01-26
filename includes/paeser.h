@@ -51,7 +51,7 @@ int	create_operator_list(t_info *info);
 int	create_command_list(t_exec_list **exec_list_head);
 
 /* move_tokens_to_command_list.c */
-void	move_tokens_to_command_list(t_list **token_list, t_command_list **command_list, t_list *popped_token);
+void	move_tokens_to_command_list(t_list_bdi **token_list, t_command_list **command_list, t_list_bdi *popped_token);
 
 void	add_top_of_tree(t_exec_list **tree, t_exec_list *add_elem);
 void	add_bottom_of_tree(t_exec_list **tree, t_exec_list *add_elem);

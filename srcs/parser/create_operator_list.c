@@ -6,13 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:06:20 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 19:26:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:09:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "paeser.h"
 
-static t_exec_list *create_execlist_node(t_node_kind kind, t_list *token_head, t_exec_list **prev, t_exec_list **next);
+static t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_exec_list **prev, t_exec_list **next);
 
 // echo hello | echo world && cat Makefile | grep a || (cd /bin && ls) > out; cat <infile;
 // A && B || C ; D
@@ -34,7 +34,7 @@ static bool	is_pipeline_token(t_token_elem *token_elem, ssize_t	subshell_depth)
 	return (false);
 }
 
-t_exec_list	*create_execlist_operator_node(t_exec_list **prev_pipeline, t_list **popped_node, t_token_elem *token_elem)
+t_exec_list	*create_execlist_operator_node(t_exec_list **prev_pipeline, t_list_bdi **popped_node, t_token_elem *token_elem)
 {
 	t_exec_list		*operator_node;
 
@@ -48,24 +48,24 @@ t_exec_list	*create_execlist_operator_node(t_exec_list **prev_pipeline, t_list *
 }
 
 
-void	delete_operator_token(t_list **operator_token)
+void	delete_operator_token(t_list_bdi **operator_token)
 {
 	if (!operator_token || !*operator_token)
 		return ;
-	ft_lstdelone(*operator_token, free_token_elem);
+	ft_lstdelone_bdi(operator_token, free_token_elem);
 	*operator_token = NULL;
 }
 
-int handle_each_token(t_list **tokenlist, t_exec_list *pipeline_node, t_exec_list **operator_node, ssize_t subshell_depth)
+int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec_list **operator_node, ssize_t subshell_depth)
 {
-	t_list			*popped_node;
+	t_list_bdi			*popped_node;
 	t_token_elem	*token_elem;
 
-	popped_node = ft_lstpop(tokenlist);
+	popped_node = ft_lstpop_bdi(tokenlist);
 	token_elem = popped_node->content;
 	if (is_pipeline_token(token_elem, subshell_depth))
 	{
-		ft_lstadd_back(&(pipeline_node->token_list_head), popped_node);
+		ft_lstadd_back_bdi(&(pipeline_node->token_list_head), popped_node);
 		return (CONTINUE) ;
 	}
 	if (!operator_node)
@@ -112,7 +112,7 @@ int	create_operator_list(t_info *info)
 	return (SUCCESS);
 }
 
-t_exec_list *create_execlist_node(t_node_kind kind, t_list *token_head, t_exec_list **prev, t_exec_list **next)
+t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_exec_list **prev, t_exec_list **next)
 {
 	t_exec_list	*new_node;
 	t_exec_list	*set_prev;

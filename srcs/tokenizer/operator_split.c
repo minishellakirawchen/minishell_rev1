@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 17:03:12 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:15:17 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,15 @@
 //                               split         split
 // connect_to_nextなので、last elemにフラグを立てる
 
-t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quote)
+t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char *quote)
 {
 	size_t			head_idx;
 	size_t			word_len;
 	char		 	*splittd_word;
 	char			watching_chr;
 	t_token_elem	*token_elem;
-	t_list			*new_list;
-	t_list			*splitted_list_head;
+	t_list_bdi		*new_list;
+	t_list_bdi		*splitted_list_head;
 	bool			is_connect_to_next;
 	char			quote_chr;
 	bool			is_quoted;
@@ -121,14 +121,14 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 		token_elem->is_connect_to_next_word = is_connect_to_next;
 		token_elem->quote_chr = quote_chr;
 		token_elem->is_quoted = is_quoted;
-		new_list = ft_lstnew(token_elem);
+		new_list = ft_lstnew_bdi(token_elem);
 		if (!new_list)
 		{
 			splittd_word = free_1d_alloc(splittd_word);
 			free_token_elem(token_elem);
 			return (perror_ret_nullptr("malloc"));
 		}
-		ft_lstadd_back(&splitted_list_head, new_list);
+		ft_lstadd_back_bdi(&splitted_list_head, new_list);
 
 		head_idx += word_len;
 	}
@@ -148,13 +148,13 @@ t_list	*get_split_before_after_opes(const char *src, const char *opes, char *quo
 // new1 ->..-> new2
 //
 // どうやって間に入れれば良いんだ...?->dekita
-int	split_by_operators(t_list **token_head)
+int	split_by_operators(t_list_bdi **token_head)
 {
-	t_list			*now_node;
-	t_list			*prev;
-	t_list			*last_node;
+	t_list_bdi		*now_node;
+	t_list_bdi		*prev;
+	t_list_bdi		*last_node;
 	t_token_elem	*token_elem;
-	t_list			*splitted_list_head;
+	t_list_bdi		*splitted_list_head;
 
 	if (!token_head || !*token_head)
 		return (FAILURE);
@@ -168,7 +168,7 @@ int	split_by_operators(t_list **token_head)
 			splitted_list_head = get_split_before_after_opes(token_elem->word, STR_OPERATOR, STR_SPACE);
 			if (!splitted_list_head)
 			{
-				ft_lstclear(token_head, free_token_elem);
+				ft_lstclear_bdi(token_head, free_token_elem);
 				return (FAILURE);
 			}
 //			debug_print_token_word(splitted_list_head, "split head");
@@ -177,10 +177,10 @@ int	split_by_operators(t_list **token_head)
 			else
 				*token_head = splitted_list_head;
 
-			last_node = ft_lstlast(splitted_list_head);
+			last_node = ft_lstlast_bdi(splitted_list_head);
 			last_node->next = now_node->next;
 
-			ft_lstdelone(now_node, free_token_elem);
+			ft_lstdelone_bdi(&now_node, free_token_elem);
 			now_node = last_node;
 		}
 		prev = now_node;

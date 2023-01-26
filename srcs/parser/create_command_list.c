@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:02:36 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 17:15:51 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:17:35 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int				create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node);
 static t_command_list	*create_command_list_node(void);
-int						connect_command_list_to_execlist(t_list **connect_to, t_command_list *command_list);
+int						connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_list *command_list);
 
 // operatorなら飛ばす
 // そうでなければlist=create_command_list(node->tokenlist)でpipeをnextとする線形リストを作成
@@ -70,7 +70,7 @@ int	create_command_list(t_exec_list **exec_list_head)
 int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 {
 	t_token_elem	*token_elem;
-	t_list			*popped_token;
+	t_list_bdi		*popped_token;
 	t_command_list	*command_list;
 
 	if (!exec_pipeline_node || !*exec_pipeline_node || !(*exec_pipeline_node)->token_list_head)
@@ -80,7 +80,7 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 		return (FAILURE);
 	while ((*exec_pipeline_node)->token_list_head)
 	{
-		popped_token = ft_lstpop(&(*exec_pipeline_node)->token_list_head);
+		popped_token = ft_lstpop_bdi(&(*exec_pipeline_node)->token_list_head);
 		token_elem = popped_token->content;
 		/* subshell or commands */
 		if (token_elem->type != e_ope_pipe)
@@ -91,7 +91,7 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 		/* pipe */
 		if (connect_command_list_to_execlist(&(*exec_pipeline_node)->pipeline_commands, command_list) == FAILURE)
 			return (FAILURE);
-		ft_lstdelone(popped_token, free_token_elem); // delete '|'
+		ft_lstdelone_bdi(&popped_token, free_token_elem); // delete '|'
 		command_list = create_command_list_node();
 		if (!command_list)
 			return (FAILURE);
@@ -118,13 +118,13 @@ t_command_list	*create_command_list_node(void)
 	return (command_list);
 }
 
-int	connect_command_list_to_execlist(t_list **connect_to, t_command_list *command_list)
+int	connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_list *command_list)
 {
-	t_list	*new_pipeline;
+	t_list_bdi	*new_pipeline;
 
-	new_pipeline = ft_lstnew(command_list);
+	new_pipeline = ft_lstnew_bdi(command_list);
 	if (!new_pipeline)
 		return (FAILURE); //TODO
-	ft_lstadd_back(connect_to, new_pipeline);
+	ft_lstadd_back_bdi(connect_to, new_pipeline);
 	return (SUCCESS);
 }

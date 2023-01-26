@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_lstdelone_bdi.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 10:31:27 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 19:26:26 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 09:49:14 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 09:56:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "./../../include/libft.h"
 
-t_list	*ft_lstnew(void *content)
+void	ft_lstdelone_bdi(t_list_bdi **lst, void (*del)(void *))
 {
-	t_list	*new;
-
-	new = (t_list *)malloc(sizeof(t_list));
-	if (new == NULL)
-		return (NULL);
-	new->content = content;
-	new->next = NULL;
-	return (new);
+	if (!lst || !*lst)
+		return ;
+	if (del != NULL)
+		(*del)((*lst)->content);
+	free(*lst);
+	*lst = NULL;
 }

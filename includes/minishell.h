@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 21:31:12 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:08:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ enum e_node_kind
 struct s_info
 {
 	t_list		*envlist_head;
-	t_list		*tokenlist_head;
+	t_list_bdi	*tokenlist_head;
 	t_exec_list	*execlist_head;
 	char 		*readline_input;
 	int			exit_status;
@@ -124,8 +124,8 @@ struct s_exec_list
 	t_exec_list				*next;
 
 	// create_command_list
-	t_list				*token_list_head;	// content=command_list, tmp_save
-	t_list				*pipeline_commands;			//content=command_list
+	t_list_bdi			*token_list_head;	// content=command_list, tmp_save
+	t_list_bdi			*pipeline_commands;			//content=command_list
 };
 
 
@@ -166,8 +166,8 @@ struct s_command_list
 	char 			**commands;		// argument of execve()
 	t_redirect_list	*redirect_list;	// set fd before execute commands
 
-	t_list			*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する
-	t_list			*subshell_token_list; //parsing create_operator_listから実行できる
+	t_list_bdi		*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する
+	t_list_bdi		*subshell_token_list; //parsing create_operator_listから実行できる
 };
 
 struct s_redirect_list
@@ -214,7 +214,7 @@ int		perror_ret_int(char *err, int retno);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
-void	debug_print_token_word(t_list *head, char *str);
+void	debug_print_token_word(t_list_bdi *head, char *str);
 void	debug_print_tree(t_exec_list *root, char *str);
 void	debug_print_exec_list(t_exec_list *head, char *str);
 void	debug_print_redirect_list(t_redirect_list *node, char *str);

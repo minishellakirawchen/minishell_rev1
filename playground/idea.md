@@ -109,6 +109,12 @@ hello > testfile
 
 
 ```
+
+* redirect_listはre tokenizeしない, quote removalのみ
+* 
+
+
+
 exportもどこかのタイミングでexpansionが必要か？
 
 <br>

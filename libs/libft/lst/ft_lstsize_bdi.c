@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_lstsize_bdi.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 10:31:27 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 19:26:26 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 10:04:59 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 10:05:40 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "./../../include/libft.h"
 
-t_list	*ft_lstnew(void *content)
+size_t	ft_lstsize_bdi(t_list_bdi *lst)
 {
-	t_list	*new;
+	size_t	size;
 
-	new = (t_list *)malloc(sizeof(t_list));
-	if (new == NULL)
-		return (NULL);
-	new->content = content;
-	new->next = NULL;
-	return (new);
+	size = 0;
+	while (lst != NULL)
+	{
+		lst = lst->next;
+		size++;
+	}
+	return (size);
 }

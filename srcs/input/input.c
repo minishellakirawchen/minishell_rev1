@@ -16,7 +16,7 @@ void	clear_input_info(t_info **info)
 {
 	if (!info || !*info)
 		return ;
-	ft_lstclear(&(*info)->tokenlist_head, free_token_elem);
+	ft_lstclear_bdi(&(*info)->tokenlist_head, free_token_elem);
 	clear_exec_list(&(*info)->execlist_head);
 	(*info)->readline_input = free_1d_alloc((*info)->readline_input);
 }

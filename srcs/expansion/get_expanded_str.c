@@ -1,0 +1,170 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_expanded_str.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 10:58:55 by takira           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "expansion.h"
+
+// expandable_src is string start with $name or $?
+// $
+
+// "" removal
+char	*get_expanded_str(char *src, t_info *info)
+{
+	size_t	idx;
+	size_t	skip;
+	char	*expanded_str;
+	char	*key;
+	char	*value;
+	char	*skip_str;
+
+	if (!src || !info)
+		return (FAILURE);
+	expanded_str = ft_strdup("");
+	idx = 0;
+	while (src[idx])
+	{
+		// $? or $nameまでidx++
+		printf("1 idx:%zu, src:%s\n", idx, &src[idx]);
+		skip = 0;
+		while (src[idx + skip] && !is_expandable(&src[idx + skip], '\0'))
+			skip++;
+		printf("2 skip:%zu\n", skip);
+
+		if (skip)
+		{
+			printf("3\n");
+
+			// idx++した分をexpanded_strへ結合
+			skip_str = ft_substr(src, idx + 1, skip - 1);
+			expanded_str = concat_dst_to_src(&expanded_str, &skip_str);
+			if (!skip_str || !expanded_str)
+				return (perror_ret_nullptr("malloc"));
+			skip_str = free_1d_alloc(skip_str);
+			idx += skip;
+		}
+		if (!src[idx])
+			break ;
+		printf("4\n");
+
+		// $? or $name のvalueをexpanded_strへ結合子、$? or $name分idx++
+		if (is_expandable_exit_status(&src[idx]))
+		{
+			printf("5\n");
+
+			if (expand_exit_status(&expanded_str, info->exit_status) == FAILURE)
+				return (NULL);
+			idx += 2; // $?
+		}
+		else
+		{
+			printf("6 src[idx]:%s\n", &src[idx]);
+
+			key = get_name_str(&src[idx]);
+			value = get_env_value(key, info->envlist_head);
+			printf("7 key:%s, value:%s\n", key, value);
+
+			if (!key | !value)
+				return (perror_ret_nullptr("malloc"));
+			printf("8 expanded:%s\n", expanded_str);
+
+			expanded_str = concat_dst_to_src(&expanded_str, &value);
+			printf("9 expanded:%s\n", expanded_str);
+
+			idx += ft_strlen_ns(key); // $key
+			key = free_1d_alloc(key);
+		}
+		idx++;
+		printf("7\n");
+
+	}
+	free(src);
+	printf("expanded_str:%s\n", expanded_str);
+	return (expanded_str);
+}
+
+char	*get_name_str(const char *str_start_with_dollar)
+{
+	const char	*src = str_start_with_dollar;
+	char		*name_str;
+	size_t		idx;
+
+	idx = 0;
+	if (!src || src[idx] != CHR_DOLLAR)
+		return (NULL);
+	idx++;
+	if (!src[idx])
+		return (NULL);
+	while (src[idx] && (src[idx] == '_' || ft_isalnum(src[idx])))
+		idx++;
+	printf("get_name idx:%zu\n", idx);
+	name_str = ft_substr(src, 1, idx - 1);
+	if (!name_str)
+		return (perror_ret_nullptr("malloc"));
+	printf("name :%s\n", name_str);
+
+	return (name_str);
+}
+
+char *get_env_value(const char *search_key, t_list *env_list_head)
+{
+	const size_t	search_key_len = ft_strlen_ns(search_key);
+	t_env_elem		*elem;
+
+	if (search_key_len == 0)
+		return ("");
+	while (env_list_head)
+	{
+		elem = env_list_head->content;
+		if ((ft_strlen_ns(elem->key) == search_key_len) \
+		&& (ft_strncmp_ns(elem->key, search_key, search_key_len) == 0))
+			return (elem->value);
+		env_list_head = env_list_head->next;
+	}
+	return ("");
+}
+
+
+
+/* free dest */
+char	*concat_dst_to_src(char **dst, char **src)
+{
+	size_t	dstlen;
+	size_t	srclen;
+	char	*concat_str;
+
+	if (!dst || !src)
+		return (NULL);
+	dstlen = ft_strlen_ns(*dst);
+	srclen = ft_strlen_ns(*src);
+	concat_str = (char *)ft_calloc(sizeof(char), dstlen + srclen + 1);
+	if (!concat_str)
+		return (perror_ret_nullptr("malloc"));
+	ft_strlcat(concat_str, *dst, dstlen + 1);
+	ft_strlcat(concat_str, *src, dstlen + srclen + 1);
+	free(*dst);
+	*dst = NULL;
+	return (concat_str);
+}
+
+int	expand_exit_status(char **expanded_str, int exit_status)
+{
+	char	*var;
+
+	if (!expanded_str)
+		return (FAILURE);
+	var = ft_itoa(exit_status);
+	if (!var)
+		return (perror_ret_int("malloc", FAILURE));
+	*expanded_str = concat_dst_to_src(expanded_str, &var);
+	if (*expanded_str)
+		return (FAILURE);
+	return (SUCCESS);
+}

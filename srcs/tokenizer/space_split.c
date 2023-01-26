@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:36:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/19 16:15:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:15:46 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static char			*get_trimmed_word(const char *src, const char *delim, const char *
 // !delim  -> return (src)
 // !setchars -> just split by delim
 // 切り取るwordのhead, sizeをget, listにappendする
-t_list	*get_delim_splitted_tokenlist(const char *src, const char *delim, const char *setchars)
+t_list_bdi	*get_delim_splitted_tokenlist(const char *src, const char *delim, const char *setchars)
 {
-	t_list			*tokenlist_head;
-	t_list			*new_list;
+	t_list_bdi		*tokenlist_head;
+	t_list_bdi		*new_list;
 	t_token_elem	*new_token;
 	t_split_info	s_info;
 
@@ -33,13 +33,13 @@ t_list	*get_delim_splitted_tokenlist(const char *src, const char *delim, const c
 	while (src[s_info.head_idx])
 	{
 		new_token = create_word_token_from_src(&s_info);
-		new_list = ft_lstnew((void *)new_token);
+		new_list = ft_lstnew_bdi((void *)new_token);
 		if (!new_token || !new_list)
 		{
-			ft_lstclear(&tokenlist_head, free_token_elem);
+			ft_lstclear_bdi(&tokenlist_head, free_token_elem);
 			return (perror_ret_nullptr("malloc"));
 		}
-		ft_lstadd_back(&tokenlist_head, new_list);
+		ft_lstadd_back_bdi(&tokenlist_head, new_list);
 	}
 	return (tokenlist_head);
 }

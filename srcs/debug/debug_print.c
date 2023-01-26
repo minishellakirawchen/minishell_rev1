@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 22:19:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:08:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 {
 	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
 	t_command_list	*command_list;
-	t_list			*pipeline;
+	t_list_bdi		*pipeline;
 
 	ft_dprintf(STDERR_FILENO, "\n[#DEBUG print] %s %s", str ? str : "", "\n");
 	if (!node)
@@ -151,9 +151,9 @@ void	debug_print_redirect_list(t_redirect_list *node, char *str)
 	ft_dprintf(STDERR_FILENO, "\n");
 }
 
-void	debug_print_token_word(t_list *head, char *str)
+void	debug_print_token_word(t_list_bdi *head, char *str)
 {
-	t_list			*node;
+	t_list_bdi		*node;
 	t_token_elem	*token;
 	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "f", "e", "w", "i", NULL};
 

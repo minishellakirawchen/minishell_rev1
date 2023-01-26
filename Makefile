@@ -27,6 +27,10 @@ SRC		= main.c \
 		  parser/tree_operation.c \
 		  parser/tree_helper.c \
 		  expansion/expansion.c \
+		  expansion/create_redirect_list.c \
+		  expansion/expand_var.c \
+		  expansion/is_expand.c \
+		  expansion/get_expanded_str.c \
 		  command_execution/command_execution.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \

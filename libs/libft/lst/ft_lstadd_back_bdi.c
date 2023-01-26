@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_lstadd_back_bdi.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 10:31:27 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 19:26:26 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 09:49:03 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 09:54:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "./../../include/libft.h"
 
-t_list	*ft_lstnew(void *content)
+void	ft_lstadd_back_bdi(t_list_bdi **lst, t_list_bdi *new)
 {
-	t_list	*new;
+	t_list_bdi	*last;
 
-	new = (t_list *)malloc(sizeof(t_list));
-	if (new == NULL)
-		return (NULL);
-	new->content = content;
+	if (lst == NULL || new == NULL)
+		return ;
 	new->next = NULL;
-	return (new);
+	if (*lst == NULL)
+		*lst = new;
+	else
+	{
+		last = ft_lstlast_bdi(*lst);
+		last->next = new;
+		new->prev = last;
+	}
 }

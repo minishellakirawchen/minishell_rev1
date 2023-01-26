@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_lstnew_bdi.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 10:31:27 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 19:26:26 by takira           ###   ########.fr       */
+/*   Created: 2023/01/26 09:41:33 by takira            #+#    #+#             */
+/*   Updated: 2023/01/26 10:27:31 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "./../../include/libft.h"
 
-t_list	*ft_lstnew(void *content)
+t_list_bdi	*ft_lstnew_bdi(void *content)
 {
-	t_list	*new;
+	t_list_bdi	*new;
 
-	new = (t_list *)malloc(sizeof(t_list));
-	if (new == NULL)
+	new = (t_list_bdi *)malloc(sizeof(t_list_bdi));
+	if (!new)
 		return (NULL);
 	new->content = content;
+	new->prev = NULL;
 	new->next = NULL;
 	return (new);
 }

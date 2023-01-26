@@ -6,15 +6,15 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 10:09:06 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 16:38:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 10:13:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
 
-int	validate_quote(t_list *tokenlist_head)
+int	validate_quote(t_list_bdi *tokenlist_head)
 {
-	t_list			*node;
+	t_list_bdi		*node;
 	t_token_elem	*now_token;
 	size_t			word_len;
 	char 			*word;

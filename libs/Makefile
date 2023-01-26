@@ -70,11 +70,20 @@ LIBFT_SRC	= ft_strlen.c \
 			  ft_lstclear.c \
 			  ft_lstiter.c \
 			  ft_lstmap.c \
-			  ft_lstpop.c \
 			  ft_math.c \
 			  ft_strtoll.c \
 			  is_in_str.c \
 			  ft_ispunct.c \
+			  lst/ft_lstnew_bdi.c \
+			  lst/ft_lstadd_back_bdi.c \
+			  lst/ft_lstadd_front_bdi.c \
+			  lst/ft_lstclear_bdi.c \
+			  lst/ft_lstdelone_bdi.c \
+			  lst/ft_lstiter_bdi.c \
+			  lst/ft_lstlast_bdi.c \
+			  lst/ft_lstsize_bdi.c \
+			  lst/ft_lstnew_bdi.c \
+			  lst/ft_lstpop_bdi.c
 
 GNL_SRC		= get_next_line.c \
               get_next_line_utils.c
