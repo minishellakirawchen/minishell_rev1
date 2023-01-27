@@ -75,8 +75,6 @@ int	prompt_loop(t_info *info)
 		exit_status = expansion(info);
 //		exit_status = execute_execlist(info);
 
-		ft_dprintf(STDERR_FILENO, "after expansion\n");
-
 		/* clear input */
 		add_history(info->readline_input);
 		clear_input_info(&info);

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 12:48:24 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 16:22:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,14 +173,18 @@ void	debug_print_token_word(t_list_bdi *head, char *str)
 
 		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
 		ft_dprintf(STDERR_FILENO, "%s", type[token->type]);
+		if (token->quote_chr == CHR_DOUBLE_QUOTE)
+			ft_dprintf(STDERR_FILENO, "\"");
+		if (token->quote_chr == CHR_SINGLE_QUOTE)
+			ft_dprintf(STDERR_FILENO, "\'");
+//		ft_dprintf(STDERR_FILENO, "%c", token->quote_chr);
 		if (token->depth >= 0)
 			ft_dprintf(STDERR_FILENO, "%zd", token->depth);
-		ft_dprintf(STDERR_FILENO, "%c", token->is_quoted ? 'q' : '\0');
 
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
 		if (!token->is_connect_to_next_word && node->next)
-			ft_dprintf(STDERR_FILENO, ",");
+			ft_dprintf(STDERR_FILENO, ", ");
 		node= node->next;
 	}
 	ft_dprintf(STDERR_FILENO, "\n");

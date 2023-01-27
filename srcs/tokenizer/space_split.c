@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:36:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:15:46 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 16:18:40 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ static t_token_elem	*create_word_token_from_src(t_split_info *split)
 	new_token->type = e_init;
 	new_token->is_connect_to_next_word = split->is_connect_to_next_word;
 	new_token->is_quoted = is_quoted;
+	new_token->quote_chr = '\0';
+	if (is_quoted && new_token->word)
+		new_token->quote_chr = new_token->word[0];
 	new_token->depth = -1;
 	return (new_token);
 }

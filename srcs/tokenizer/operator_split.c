@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:15:17 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 16:19:38 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@
 //                               split         split
 // connect_to_nextなので、last elemにフラグを立てる
 
+//TODO: quote is space? unused isquoted??
 t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char *quote)
 {
 	size_t			head_idx;
@@ -82,8 +83,9 @@ t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char 
 //		printf("%s\n", &src[head_idx + word_len]);
 		if (is_chr_in_str(src[head_idx + word_len], quote))
 		{
-			watching_chr = ft_strchr(quote, src[ + word_len])[0];
+			watching_chr = ft_strchr(quote, src[head_idx + word_len])[0];
 			quote_chr = watching_chr;
+			printf("\n$$ debug split in quote :: word:%s, quote:%c\n\n", &src[head_idx + word_len], quote_chr);
 			is_quoted = true;
 			word_len++;
 			while (src[head_idx + word_len] && src[head_idx + word_len] != watching_chr)
