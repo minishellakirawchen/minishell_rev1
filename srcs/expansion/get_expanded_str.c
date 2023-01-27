@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 11:44:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 23:34:55 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ char *get_env_value(const char *search_key, t_list *env_list_head)
 	return ("");
 }
 
-
-.
 /* free dest */
 char	*concat_dst_to_src(char **dst, char **src)
 {

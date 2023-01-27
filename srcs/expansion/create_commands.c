@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 17:52:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/26 23:52:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,35 +47,80 @@
 //bash-3.2$ e$a4			//hello world
 //bash-3.2$ e"$a4"			//bash: echo     hello       world: command not found
 
+
+//bash-3.2$ echo abc$b1"ABC   DEF"$b2	//abc123ABC   DEFtest test
+//
+//abc$b1 ABC   DEF $b2
+
 //$key  :not split
 //"$key":split
 
 int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info)
 {
-	t_list_bdi	*expanded_token_list;
-	t_list_bdi	*popped_node;
-	char		*commands;
+//	t_list_bdi		*expanded_token_list;
+//	t_list_bdi		*popped_node;
+//	t_token_elem	*token_elem;
+	char			*commands;
 
 	if (!cmd_list || !*cmd_list || !info)
 		return (FAILURE);
 	commands = NULL;
 
+	/*
 	// expand -> quote removal -> space split -> add expanded_token_list;
-	expanded_token_list = NULL;
+//	expanded_token_list = NULL;
 	while ((*cmd_list)->pipeline_token_list)
 	{
 		popped_node = ft_lstpop_bdi(&(*cmd_list)->pipeline_token_list);
+		token_elem = popped_node->content;
 
-		//if is_expandable
-		//	expand var
-		//if is_quoted
-		//  quote removal
-		//if !is_quoted
-		//  re tokenize -> append expanded_token_list
+		//if is_expandable	-> expand vare
+		if (is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
+		{
+			token_elem->word = get_expanded_str(token_elem->word, info);
+			if (!token_elem->word)
+				return (FAILURE);
+		}
+		//if is_quoted		-> quote removal
+		if (token_elem->is_quoted)
+		{
+			if (remove_quotes(&token_elem->word) == FAILURE)
+				return (FAILURE);
+		}
+		else
+		{
+			//if !is_quoted		-> re tokenize -> append expanded_token_list
+
+		}
 
 	}
-	// expanded_token_list -> char **commands
 
+	// expanded_token_list -> char **commands
+*/
 	(*cmd_list)->commands = (char **)commands;
 	return (SUCCESS);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

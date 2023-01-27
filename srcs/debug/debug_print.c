@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 16:07:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 10:42:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 	{
 		if (node->node_kind == e_node_head)
 			ft_dprintf(STDERR_FILENO, "  [head]\n    v\n");
-		if (node->node_kind == e_node_operator)
+		if (node->node_kind == e_node_semicolon || node->node_kind == e_node_and || node->node_kind == e_node_or)
 			ft_dprintf(STDERR_FILENO, "    %s operator\n", type[node->token_type]);
 		else
 		{
@@ -71,7 +71,7 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 		}
 		node = node->next;
 	}
-	ft_dprintf(STDERR_FILENO, "    v\n  [tail]\n");
+	ft_dprintf(STDERR_FILENO, "    v\n  [end]\n");
 }
 
 

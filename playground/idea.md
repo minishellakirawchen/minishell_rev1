@@ -147,6 +147,103 @@ $key  :not split
 
 ```
 
+```shell
+
+test here_doc1 <<end<<"end" <<'end' &&
+test here_doc2 <<"end  "hello <<'end  'hello << "hello "world'  good''morning'  &&
+test here_doc3 <<$key <<"$key" <<'$key' &&
+test here_doc4 << "$key  "end  << "$key"'  $key'$key$key ;
+
+[#DEBUG print] expansion 
+  [pipeline] subshell  :
+             commands  :[test]w ,[here_doc1]w 
+             redirect  :<<[heredoc:end], <<[heredoc:end], <<[heredoc:end]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[here_doc2]w 
+             redirect  :<<[heredoc:end  hello], <<[heredoc:end  hello], <<[heredoc:hello world  goodmorning]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[here_doc3]w 
+             redirect  :<<[heredoc:$key], <<[heredoc:$key], <<[heredoc:$key]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[here_doc4]w 
+             redirect  :<<[heredoc:$key  end], <<[heredoc:$key  $key$key$key]
+
+
+test in1 <end<"end" <'end' &&
+test in2 <"end  "hello <'end  'hello < "hello "world'  good''morning'  &&
+test in3 <$key <"$key" <'$key' &&
+test in4 < "$key  "end  < "$key"'  $key'$key$key ;
+
+[#DEBUG print] expansion 
+  [pipeline] subshell  :
+             commands  :[test]w ,[in1]w 
+             redirect  :<[file:end], <[file:end], <[file:end]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[in2]w 
+             redirect  :<[file:end  hello], <[file:end  hello], <[file:hello world  goodmorning]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[in3]w 
+             redirect  :<[file:$key], <[file:$key], <[file:$key]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[in4]w 
+             redirect  :<[file:$key  end], <[file:$key  $key$key$key]
+
+
+test out1 >end>"end" >'end' &&
+test out2 >"end  "hello >'end  'hello > "hello "world'  good''morning'  &&
+test out3 >$key >"$key" >'$key' &&
+test out4 > "$key  "end  > "$key"'  $key'$key$key ;
+
+[#DEBUG print] expansion 
+  [pipeline] subshell  :
+             commands  :[test]w ,[out1]w 
+             redirect  :>[file:end], >[file:end], >[file:end]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[out2]w 
+             redirect  :>[file:end  hello], >[file:end  hello], >[file:hello world  goodmorning]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[out3]w 
+             redirect  :>[file:$key], >[file:$key], >[file:$key]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[out4]w 
+             redirect  :>[file:$key  end], >[file:$key  $key$key$key]
+
+
+test append1 >>end>>"end" >>'end' &&
+test append2 >>"end  "hello >>'end  'hello >> "hello "world'  good''morning'  &&
+test append3 >>$key >>"$key" >>'$key' &&
+test append4 >> "$key  "end  >> "$key"'  $key'$key$key ;
+
+[#DEBUG print] expansion 
+  [pipeline] subshell  :
+             commands  :[test]w ,[append1]w 
+             redirect  :>>[file:end], >>[file:end], >>[file:end]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[append2]w 
+             redirect  :>>[file:end  hello], >>[file:end  hello], >>[file:hello world  goodmorning]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[append3]w 
+             redirect  :>>[file:$key], >>[file:$key], >>[file:$key]
+    && operator
+  [pipeline] subshell  :
+             commands  :[test]w ,[append4]w 
+             redirect  :>>[file:$key  end], >>[file:$key  $key$key$key]
+
+
+
+
+```
 
 exportもどこかのタイミングでexpansionが必要か？
 

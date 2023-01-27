@@ -96,6 +96,10 @@ enum e_token_type
 enum e_node_kind
 {
 	e_node_head,			//root
+	e_node_semicolon,
+	e_node_and,
+	e_node_or,
+
 	e_node_operator,
 	e_node_subshell,
 	e_node_pipeline,

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 16:11:43 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 11:00:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,7 @@ int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list, t_info 
 		token_elem = popped_node->content;
 		if (is_tokentype_redirection(token_elem->type))
 		{
-//			type = token_elem->type;
 			io_type = token_elem->type;
-//			printf("\n%s,type:%s\n", token_elem->word, token_elem->type == e_file ? "file" : "heredoc");
 			ft_lstdelone_bdi(&popped_node, free_token_elem);
 
 			filename_or_heredoc_eof = get_filename_or_heredoc_eof(&(*cmd_list)->pipeline_token_list, info, &str_type, &is_expand);
@@ -100,69 +98,33 @@ static t_redirect_info	*create_redirect_list(t_token_type io_type, t_token_type 
 static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *info, t_token_type *type, bool *is_expand)
 {
 	char			*str_concatted_token;
-	t_list_bdi		*tmp_list;
-	t_list_bdi		*popped_list;
+	t_list_bdi		*token_list;
+	t_list_bdi		*popped_token_node;
 	t_token_elem	*token_elem;
 
 	*type = e_init;
 	*is_expand = false;
 	if (!token_get_from || !*token_get_from || !info)
 		return (NULL);
-	tmp_list = NULL;
+	token_list = NULL;
 	while (*token_get_from)
 	{
-		popped_list = ft_lstpop_bdi(token_get_from);
-		ft_lstadd_back_bdi(&tmp_list, popped_list);
-		token_elem = popped_list->content;
+		popped_token_node = ft_lstpop_bdi(token_get_from);
+		token_elem = popped_token_node->content;
+		ft_lstadd_back_bdi(&token_list, popped_token_node);
 		if (*type == e_init)
-		{
 			*type = token_elem->type;
-			*is_expand = token_elem->is_quoted;
-		}
+		*is_expand &= token_elem->is_quoted;
 		if (!token_elem->is_connect_to_next_word)
 			break ;
 	}
-	if (expand_var_in_tokens(&tmp_list, info) == FAILURE)
+	if (remove_quote_in_tokens(&token_list) == FAILURE)
 		return (NULL);
-	str_concatted_token = concat_tokens(tmp_list);
+	str_concatted_token = concat_tokens(token_list);
 	if (!str_concatted_token)
 		return (NULL);
-	ft_lstclear_bdi(&tmp_list, free_token_elem);
+	ft_lstclear_bdi(&token_list, free_token_elem);
 	return (str_concatted_token);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -6,18 +6,34 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 17:39:43 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 12:02:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "paeser.h"
+
+void	delete_last_semicolon_node(t_exec_list **exec_list_head)
+{
+	t_exec_list	*exec_list;
+
+	if (!exec_list_head || !*exec_list_head)
+		return ;
+	exec_list = *exec_list_head;
+	while (exec_list->next)
+		exec_list = exec_list->next;
+	if (exec_list->node_kind != e_node_semicolon)
+		return ;
+	if (!exec_list->prev)
+		return ;
+	exec_list->prev->next = NULL;
+	clear_exec_list(&exec_list);
+}
 
 int	parsing_token_list(t_info *info)
 {
 	if (!info || !info->tokenlist_head)
 		return (FAILURE);
 	/* operator list */
-//	info->execlist_head = create_operator_list(&(info->tokenlist_head));
 	if (create_operator_list(info) == FAILURE)
 	{
 		ft_dprintf(STDERR_FILENO, "fail to create_operator_list\n");
@@ -25,13 +41,17 @@ int	parsing_token_list(t_info *info)
 	}
 //	debug_print_exec_list(info->execlist_head, "operator_list");
 
+	delete_last_semicolon_node(&info->execlist_head);
+
+//	debug_print_exec_list(info->execlist_head, "delete last ;");
+
 	if (create_command_list(&info->execlist_head) == FAILURE)
 	{
 		ft_dprintf(STDERR_FILENO, "fail to create_command_list\n");
 		return (FAILURE);
 	}
 
-	debug_print_exec_list(info->execlist_head, "command_list");
+//	debug_print_exec_list(info->execlist_head, "command_list");
 
 	return (SUCCESS);
 }
