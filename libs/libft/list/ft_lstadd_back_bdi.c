@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 09:49:03 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:22:59 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 18:27:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	ft_lstadd_back_bdi(t_list_bdi **lst, t_list_bdi *new)
 
 	if (lst == NULL || new == NULL)
 		return ;
-	new->next = NULL;
 	if (*lst == NULL)
 		*lst = new;
 	else
