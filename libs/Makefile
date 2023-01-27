@@ -30,12 +30,6 @@ LIBFT_SRC	= string/str/ft_strlen.c \
 			  string/str/ft_strrchr.c \
 			  string/str/ft_strnstr.c \
 			  string/str/ft_strncmp.c \
-			  string/mem/ft_bzero.c \
-			  string/mem/ft_memset.c \
-			  string/mem/ft_memcpy.c \
-			  string/mem/ft_memchr.c \
-			  string/mem/ft_memmove.c \
-			  string/mem/ft_memcmp.c \
 			  string/str/ft_isalpha.c \
 			  string/str/ft_isdigit.c \
 		  	  string/str/ft_isalnum.c \
@@ -56,6 +50,13 @@ LIBFT_SRC	= string/str/ft_strlen.c \
 			  string/str/ft_striteri.c\
 			  string/str/ft_ispunct.c \
 			  string/str/is_in_str.c \
+			  string/str/is_same_str.c \
+			  string/mem/ft_bzero.c \
+			  string/mem/ft_memset.c \
+			  string/mem/ft_memcpy.c \
+			  string/mem/ft_memchr.c \
+			  string/mem/ft_memmove.c \
+			  string/mem/ft_memcmp.c \
 			  std/ft_calloc.c \
 			  std/ft_atoi.c \
 			  std/ft_itoa.c \
