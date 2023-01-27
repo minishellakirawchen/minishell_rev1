@@ -149,6 +149,9 @@ $key  :not split
 
 ```shell
 
+
+
+
 test here_doc1 <<end<<"end" <<'end' &&
 test here_doc2 <<"end  "hello <<'end  'hello << "hello "world'  good''morning'  &&
 test here_doc3 <<$key <<"$key" <<'$key' &&

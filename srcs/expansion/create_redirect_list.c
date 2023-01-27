@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 11:00:56 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 12:24:07 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *in
 		ft_lstadd_back_bdi(&token_list, popped_token_node);
 		if (*type == e_init)
 			*type = token_elem->type;
-		*is_expand &= token_elem->is_quoted;
+		*is_expand |= token_elem->is_quoted;
 		if (!token_elem->is_connect_to_next_word)
 			break ;
 	}
