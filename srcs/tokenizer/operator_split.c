@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 16:19:38 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 21:04:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char 
 		{
 			watching_chr = ft_strchr(quote, src[head_idx + word_len])[0];
 			quote_chr = watching_chr;
-			printf("\n$$ debug split in quote :: word:%s, quote:%c\n\n", &src[head_idx + word_len], quote_chr);
+//			printf("\n$$ debug split in quote :: word:%s, quote:%c\n\n", &src[head_idx + word_len], quote_chr);
 			is_quoted = true;
 			word_len++;
 			while (src[head_idx + word_len] && src[head_idx + word_len] != watching_chr)
@@ -157,6 +157,7 @@ int	split_by_operators(t_list_bdi **token_head)
 	t_list_bdi		*last_node;
 	t_token_elem	*token_elem;
 	t_list_bdi		*splitted_list_head;
+	t_token_elem	*last_token;
 
 	if (!token_head || !*token_head)
 		return (FAILURE);
@@ -173,13 +174,17 @@ int	split_by_operators(t_list_bdi **token_head)
 				ft_lstclear_bdi(token_head, free_token_elem);
 				return (FAILURE);
 			}
-//			debug_print_token_word(splitted_list_head, "split head");
+
+			debug_print_token_word(splitted_list_head, "split head");
 			if (prev)
 				prev->next = splitted_list_head;
 			else
 				*token_head = splitted_list_head;
 
 			last_node = ft_lstlast_bdi(splitted_list_head);
+			last_token = last_node->content;
+			last_token->is_connect_to_next_word = token_elem->is_connect_to_next_word;
+
 			last_node->next = now_node->next;
 
 			ft_lstdelone_bdi(&now_node, free_token_elem);
