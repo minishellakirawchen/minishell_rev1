@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 14:47:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 17:04:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,9 @@ void	free_command_info(void *content)
 		return ;
 	elem = content;
 	elem->commands = (char **)free_2d_alloc((void **)elem->commands);
+	ft_lstclear_bdi(&(elem->redirect_list), free_redirect_info);
 	ft_lstclear_bdi(&(elem->pipeline_token_list), free_token_elem);
 	ft_lstclear_bdi(&(elem->subshell_token_list), free_token_elem);
-	ft_lstclear_bdi(&(elem->redirect_list), free_redirect_info);
 	free_1d_alloc(elem);
 }
 

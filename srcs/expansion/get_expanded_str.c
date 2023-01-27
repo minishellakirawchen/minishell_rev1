@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 23:34:55 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 17:17:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,8 @@ char	*concat_dst_to_src(char **dst, char **src)
 	concat_str = (char *)ft_calloc(sizeof(char), dstlen + srclen + 1);
 	if (!concat_str)
 		return (perror_ret_nullptr("malloc"));
-	ft_strlcat(concat_str, *dst, dstlen + 1);
-	ft_strlcat(concat_str, *src, dstlen + srclen + 1);
+	ft_strlcat_ns(concat_str, *dst, dstlen + 1);
+	ft_strlcat_ns(concat_str, *src, dstlen + srclen + 1);
 	free(*dst);
 	*dst = NULL;
 	return (concat_str);

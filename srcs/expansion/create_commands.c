@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 16:10:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 17:18:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,69 @@
 //$key  :not split
 //"$key":split
 
+// hoge=huga, piyo <-2
+size_t	get_commands_size(t_list_bdi *list)
+{
+	size_t			size;
+	t_token_elem	*token_elem;
+
+	size = 0;
+	while (list)
+	{
+		token_elem = list->content;
+		while (list && token_elem->is_connect_to_next_word)
+		{
+			list = list->next;
+			if (list)
+				token_elem = list->content;
+		}
+		size++;
+		list = list->next;
+	}
+	return (size);
+}
+
+char	**create_commands_from_token_list(t_list_bdi **token_list)
+{
+	t_list_bdi		*popped_list;
+	t_token_elem	*token_elem;
+	char			**commands;
+	size_t			size;
+	size_t			idx;
+
+	if (!token_list || !*token_list)
+		return (NULL);
+
+	// get_size
+	size = get_commands_size(*token_list);
+	commands = (char **)ft_calloc(sizeof(char *), size + 1);
+	if (!commands)
+		return (perror_ret_nullptr("malloc"));
+	idx = 0;
+	while (*token_list)
+	{
+		popped_list = ft_lstpop_bdi(token_list);
+		token_elem = popped_list->content;
+		commands[idx] = concat_dst_to_src(&commands[idx], &token_elem->word);
+		if (!commands[idx])
+			return (perror_ret_nullptr("malloc")); // TODO: free
+		if(!token_elem->is_connect_to_next_word)
+			idx++;
+		ft_lstdelone_bdi(&popped_list, free_token_elem);
+	}
+	return (commands);
+}
+
 int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info)
 {
 	t_list_bdi		*expanded_token_list;
 	t_list_bdi		*popped_node;
 	t_token_elem	*token_elem;
-	char			*commands;
+	char			**commands;
 	t_list_bdi		*space_splitted_list;
 
 	if (!cmd_list || !*cmd_list || !info)
 		return (FAILURE);
-	commands = NULL;
-
 	debug_print_token_word((*cmd_list)->pipeline_token_list, "before expanded token");
 
 	// expand -> quote removal -> space split -> add expanded_token_list;
@@ -102,10 +153,13 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 	}
 	debug_print_token_word(expanded_token_list, "expanded token");
 
-
 	// expanded_token_list -> char **commands
 
-	(*cmd_list)->commands = (char **)commands;
+	//input   : echo "hello"world good 'bye  '
+	//expand  : [ehco]i, [hello]w"=[world]w, [good]w, [bye]w'
+	//commands: {"echo", "helloworld", "good", "bye", NULL}
+	commands = create_commands_from_token_list(&expanded_token_list);
+	(*cmd_list)->commands = commands;
 	return (SUCCESS);
 }
 

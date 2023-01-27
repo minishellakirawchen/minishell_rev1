@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 16:22:54 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 17:07:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,33 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 				command_list = pipeline->content;
 				ft_dprintf(STDERR_FILENO, "  [pipeline] ");
 				/* subshell */
-				ft_dprintf(STDERR_FILENO, "%-10s:", "subshell");
+				ft_dprintf(STDERR_FILENO, "%-15s:", "subshell(token)");
 				if (command_list && command_list->subshell_token_list)
 					debug_print_token_word(command_list->subshell_token_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
 
 				/* commands */
-				ft_dprintf(STDERR_FILENO, "             %-10s:", "commands");
+				ft_dprintf(STDERR_FILENO, "             %-15s:", "commands(token)");
 				if (command_list && command_list->pipeline_token_list)
 					debug_print_token_word(command_list->pipeline_token_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
 
+				ft_dprintf(STDERR_FILENO, "             %-15s:", "commands(char**)");
+				if (command_list && command_list->commands)
+					debug_print_2d_arr(command_list->commands, NULL);
+				else
+					ft_dprintf(STDERR_FILENO, "\n");
+
 				/* redirection */
-				ft_dprintf(STDERR_FILENO, "             %-10s:", "redirect");
+				ft_dprintf(STDERR_FILENO, "             %-15s:", "redirect(token)");
 				if (command_list && command_list->redirect_list)
 					debug_print_redirect_list(command_list->redirect_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
+
+
 
 				pipeline = pipeline->next;
 				if (pipeline)
