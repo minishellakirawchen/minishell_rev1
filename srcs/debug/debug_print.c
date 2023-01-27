@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 17:07:36 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 17:26:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,27 +44,27 @@ void	debug_print_exec_list(t_exec_list *node, char *str)
 				command_list = pipeline->content;
 				ft_dprintf(STDERR_FILENO, "  [pipeline] ");
 				/* subshell */
-				ft_dprintf(STDERR_FILENO, "%-15s:", "subshell(token)");
+				ft_dprintf(STDERR_FILENO, "%-18s:", "subshell(token)");
 				if (command_list && command_list->subshell_token_list)
 					debug_print_token_word(command_list->subshell_token_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
 
 				/* commands */
-				ft_dprintf(STDERR_FILENO, "             %-15s:", "commands(token)");
+				ft_dprintf(STDERR_FILENO, "             %-18s:", "commands(token)");
 				if (command_list && command_list->pipeline_token_list)
 					debug_print_token_word(command_list->pipeline_token_list, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
 
-				ft_dprintf(STDERR_FILENO, "             %-15s:", "commands(char**)");
+				ft_dprintf(STDERR_FILENO, "             %-18s:", "commands(char**)");
 				if (command_list && command_list->commands)
 					debug_print_2d_arr(command_list->commands, NULL);
 				else
 					ft_dprintf(STDERR_FILENO, "\n");
 
 				/* redirection */
-				ft_dprintf(STDERR_FILENO, "             %-15s:", "redirect(token)");
+				ft_dprintf(STDERR_FILENO, "             %-18s:", "redirect(token)");
 				if (command_list && command_list->redirect_list)
 					debug_print_redirect_list(command_list->redirect_list, NULL);
 				else
@@ -136,8 +136,13 @@ void debug_print_2d_arr(char **arr, char *str)
 		ft_dprintf(STDERR_FILENO, "\"%s\"", arr[i++]);
 		if (arr[i])
 			ft_dprintf(STDERR_FILENO, ", ");
+		else
+		{
+			if (i > 0)
+				ft_dprintf(STDERR_FILENO, ", ");
+			ft_dprintf(STDERR_FILENO, "NULL}\n");
+		}
 	}
-	ft_dprintf(STDERR_FILENO, "}\n");
 }
 
 void	debug_print_redirect_list(t_list_bdi *head, char *str)
