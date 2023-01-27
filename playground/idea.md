@@ -145,34 +145,95 @@ bash-3.2$ "$a3"			//bash: hello      world: command not found
 $key  :not split
 "$key":split
 
+
+
+<< include quote('")  heredoc is not expanded
+<< $key   -> eofは$key, heredoc $key is expanded
+<< "$key" -> eofは$key, heredoc is not expanded
+
+bash 0$ export key=hoge
+bash 0$ <<end"end"
+> $key
+> "$key"
+> hoge
+> endend
+
+bash 0$ cat <<end""
+> $key
+> "$key"
+> end
+$key
+"$key"
+
+bash 0$ cat <<$key
+> "$key"
+> '$key'
+> $key
+"hoge"
+'hoge'
+
+bash 0$ cat << "$key"
+> "$key"
+> '$key'
+> $key
+"$key"
+'$key'
+
+bash 0$ cat << '$key'
+> "$key"
+> '$key'
+> $key
+"$key"
+'$key'
+
+bash 0$ 
+bash 0$ 
+bash 0$ cat << ""
+> $key
+> "$key"
+> '$key'
+> 
+$key
+"$key"
+'$key'
+
+bash 0$ cat << ''
+> $key
+> '$key'
+> "$key"
+> 
+$key
+'$key'
+"$key"
+
+
 ```
 
 ```shell
-
-
-
 
 test here_doc1 <<end<<"end" <<'end' &&
 test here_doc2 <<"end  "hello <<'end  'hello << "hello "world'  good''morning'  &&
 test here_doc3 <<$key <<"$key" <<'$key' &&
 test here_doc4 << "$key  "end  << "$key"'  $key'$key$key ;
+ 
+test here_doc1 <<end<<"end" <<'end' &&test here_doc2 <<"end  "hello <<'end  'hello << "hello "world'  good''morning'  &&test here_doc3 <<$key <<"$key" <<'$key' &&test here_doc4 << "$key  "end  << "$key"'  $key'$key$key ;
 
 [#DEBUG print] expansion 
   [pipeline] subshell  :
              commands  :[test]w ,[here_doc1]w 
-             redirect  :<<[heredoc:end], <<[heredoc:end], <<[heredoc:end]
+             redirect  :<<[heredoc:end]y, <<[heredoc:end]n, <<[heredoc:end]n
     && operator
   [pipeline] subshell  :
              commands  :[test]w ,[here_doc2]w 
-             redirect  :<<[heredoc:end  hello], <<[heredoc:end  hello], <<[heredoc:hello world  goodmorning]
+             redirect  :<<[heredoc:end  hello]n, <<[heredoc:end  hello]n, <<[heredoc:hello world  goodmorning]n
     && operator
   [pipeline] subshell  :
              commands  :[test]w ,[here_doc3]w 
-             redirect  :<<[heredoc:$key], <<[heredoc:$key], <<[heredoc:$key]
+             redirect  :<<[heredoc:$key]y, <<[heredoc:$key]n, <<[heredoc:$key]n
     && operator
   [pipeline] subshell  :
              commands  :[test]w ,[here_doc4]w 
-             redirect  :<<[heredoc:$key  end], <<[heredoc:$key  $key$key$key]
+             redirect  :<<[heredoc:$key  end]n, <<[heredoc:$key  $key$key$key]n
 
 
 test in1 <end<"end" <'end' &&
@@ -180,68 +241,18 @@ test in2 <"end  "hello <'end  'hello < "hello "world'  good''morning'  &&
 test in3 <$key <"$key" <'$key' &&
 test in4 < "$key  "end  < "$key"'  $key'$key$key ;
 
-[#DEBUG print] expansion 
-  [pipeline] subshell  :
-             commands  :[test]w ,[in1]w 
-             redirect  :<[file:end], <[file:end], <[file:end]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[in2]w 
-             redirect  :<[file:end  hello], <[file:end  hello], <[file:hello world  goodmorning]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[in3]w 
-             redirect  :<[file:$key], <[file:$key], <[file:$key]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[in4]w 
-             redirect  :<[file:$key  end], <[file:$key  $key$key$key]
-
 
 test out1 >end>"end" >'end' &&
 test out2 >"end  "hello >'end  'hello > "hello "world'  good''morning'  &&
 test out3 >$key >"$key" >'$key' &&
 test out4 > "$key  "end  > "$key"'  $key'$key$key ;
 
-[#DEBUG print] expansion 
-  [pipeline] subshell  :
-             commands  :[test]w ,[out1]w 
-             redirect  :>[file:end], >[file:end], >[file:end]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[out2]w 
-             redirect  :>[file:end  hello], >[file:end  hello], >[file:hello world  goodmorning]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[out3]w 
-             redirect  :>[file:$key], >[file:$key], >[file:$key]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[out4]w 
-             redirect  :>[file:$key  end], >[file:$key  $key$key$key]
 
 
 test append1 >>end>>"end" >>'end' &&
 test append2 >>"end  "hello >>'end  'hello >> "hello "world'  good''morning'  &&
 test append3 >>$key >>"$key" >>'$key' &&
 test append4 >> "$key  "end  >> "$key"'  $key'$key$key ;
-
-[#DEBUG print] expansion 
-  [pipeline] subshell  :
-             commands  :[test]w ,[append1]w 
-             redirect  :>>[file:end], >>[file:end], >>[file:end]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[append2]w 
-             redirect  :>>[file:end  hello], >>[file:end  hello], >>[file:hello world  goodmorning]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[append3]w 
-             redirect  :>>[file:$key], >>[file:$key], >>[file:$key]
-    && operator
-  [pipeline] subshell  :
-             commands  :[test]w ,[append4]w 
-             redirect  :>>[file:$key  end], >>[file:$key  $key$key$key]
 
 
 

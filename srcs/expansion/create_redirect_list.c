@@ -6,14 +6,14 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 12:24:07 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 12:50:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
 static t_redirect_info	*create_redirect_list(t_token_type io_type, t_token_type str_type, char *str, bool is_expansion);
-static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *info, t_token_type *type, bool *is_expand);
+static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *info, t_token_type *type, bool *is_quoted);
 
 // pipeline_token_list		->	expand				->	split					->	char **commands
 // ------------------------------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list, t_info 
 	t_token_type	str_type;
 	char			*filename_or_heredoc_eof;
 	t_list_bdi		*command_save;
-	bool			is_expand;
+	bool			is_quoted;
 
 	if (!cmd_list || !*cmd_list || !info)
 		return (FAILURE);
@@ -58,10 +58,10 @@ int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list, t_info 
 			io_type = token_elem->type;
 			ft_lstdelone_bdi(&popped_node, free_token_elem);
 
-			filename_or_heredoc_eof = get_filename_or_heredoc_eof(&(*cmd_list)->pipeline_token_list, info, &str_type, &is_expand);
+			filename_or_heredoc_eof = get_filename_or_heredoc_eof(&(*cmd_list)->pipeline_token_list, info, &str_type, &is_quoted);
 //			printf("filename or eof:%s\n", filename_or_heredoc_eof);
 
-			redirect_info = create_redirect_list(io_type, str_type, filename_or_heredoc_eof, is_expand);
+			redirect_info = create_redirect_list(io_type, str_type, filename_or_heredoc_eof, is_quoted);
 			new_redirect_list = ft_lstnew_bdi(redirect_info);
 			if (!filename_or_heredoc_eof || !redirect_info || !new_redirect_list)
 				return (FAILURE);
@@ -75,7 +75,7 @@ int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list, t_info 
 }
 
 // redirect_list: do not split(re tokenize)
-static t_redirect_info	*create_redirect_list(t_token_type io_type, t_token_type str_type, char *str, bool is_expansion)
+static t_redirect_info	*create_redirect_list(t_token_type io_type, t_token_type str_type, char *str, bool is_quoted)
 {
 	t_redirect_info	*redirect_info;
 
@@ -86,7 +86,9 @@ static t_redirect_info	*create_redirect_list(t_token_type io_type, t_token_type 
 	redirect_info->io_type = io_type;
 	redirect_info->file = NULL;
 	redirect_info->heredoc_eof = NULL;
-	redirect_info->is_expansion = is_expansion;
+	redirect_info->is_expansion = true;
+	if (is_quoted)
+		redirect_info->is_expansion = false;
 	if (str_type == e_file)
 		redirect_info->file = str;
 	else
@@ -95,7 +97,7 @@ static t_redirect_info	*create_redirect_list(t_token_type io_type, t_token_type 
 }
 
 /* token node filename or heredoc eof is cleared in function */
-static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *info, t_token_type *type, bool *is_expand)
+static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *info, t_token_type *type, bool *is_quoted)
 {
 	char			*str_concatted_token;
 	t_list_bdi		*token_list;
@@ -103,7 +105,7 @@ static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *in
 	t_token_elem	*token_elem;
 
 	*type = e_init;
-	*is_expand = false;
+	*is_quoted = false;
 	if (!token_get_from || !*token_get_from || !info)
 		return (NULL);
 	token_list = NULL;
@@ -114,7 +116,7 @@ static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *in
 		ft_lstadd_back_bdi(&token_list, popped_token_node);
 		if (*type == e_init)
 			*type = token_elem->type;
-		*is_expand |= token_elem->is_quoted;
+		*is_quoted |= token_elem->is_quoted;
 		if (!token_elem->is_connect_to_next_word)
 			break ;
 	}
@@ -126,5 +128,3 @@ static char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, t_info *in
 	ft_lstclear_bdi(&token_list, free_token_elem);
 	return (str_concatted_token);
 }
-
-
