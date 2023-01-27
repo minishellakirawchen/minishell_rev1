@@ -1,6 +1,21 @@
 *
 
+!**/
 !.gitignore
 !Makefile
+
+!srcs
+!includes
+!playground
+!libs
 !*.c
 !*.h
+!srcs/parser/*.bnf
+!playground/*.md
+
+/objs/
+/.idea/
+#cmake-build-*
+#cmake-build-debug/*
+#cmake-build-debug/**
+/cmake-build-debug/

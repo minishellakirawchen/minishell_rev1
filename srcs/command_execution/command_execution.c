@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 22:43:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 22:51:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,10 @@ int	execute_execlist(t_info *info)
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands);
 		exec_node = exec_node->next;
 		move_to_next_exec_node(&exec_node, exit_status);
+
+		if (expand_variable(&exec_node, info) == FAILURE)
+			return (FAILURE);
+		exec_node = exec_node->next;
 	}
 	debug_print_exec_list(info->execlist_head, "expansion");
 
