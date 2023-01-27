@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 18:32:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 21:09:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 
 	if (!cmd_list || !*cmd_list || !info)
 		return (FAILURE);
-	debug_print_token_word((*cmd_list)->pipeline_token_list, "before expanded token");
+//	debug_print_token_word((*cmd_list)->pipeline_token_list, "before expanded token");
 
 	// expand -> quote removal -> space split -> add expanded_token_list;
 	expanded_token_list = NULL;
@@ -156,15 +156,15 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 			ft_lstdelone_bdi(&popped_node, free_token_elem);
 		}
 	}
-	debug_print_token_word(expanded_token_list, "expanded token");
+//	debug_print_token_word(expanded_token_list, "expanded token");
 
-	// expanded_token_list -> char **commands
-
+	/* expanded_token_list -> char **commands */
 	//input   : echo "hello"world good 'bye  '
 	//expand  : [ehco]i, [hello]w"=[world]w, [good]w, [bye]w'
 	//commands: {"echo", "helloworld", "good", "bye", NULL}
 	commands = create_commands_from_token_list(&expanded_token_list);
 	(*cmd_list)->commands = commands;
+	
 	return (SUCCESS);
 }
 

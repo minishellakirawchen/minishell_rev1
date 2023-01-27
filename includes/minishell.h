@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 15:58:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 21:07:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,14 @@ struct s_info
 struct s_exec_list
 {
 	// create_operator_list
-	t_node_kind			node_kind;
-	t_token_type		token_type; // tmp for print debug
-	t_exec_list				*prev;
-	t_exec_list				*next;
+	t_node_kind		node_kind;
+	t_token_type	token_type; // tmp for print debug
+	t_exec_list		*prev;
+	t_exec_list		*next;
 
 	// create_command_list
-	t_list_bdi			*token_list_head;	// content=command_list, tmp_save
-	t_list_bdi			*pipeline_commands;			//content=command_list
+	t_list_bdi		*token_list_head;	// content=command_list, tmp_save
+	t_list_bdi		*pipeline_commands;	//content=command_list
 };
 
 
@@ -165,7 +165,7 @@ struct s_split_info
 	size_t			word_len;
 };
 
-//
+// exec_list->pipeline_commands->content
 struct s_command_info
 {
 	t_node_kind		type;			// command or subshell
