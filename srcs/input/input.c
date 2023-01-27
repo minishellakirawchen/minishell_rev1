@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 23:06:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 21:46:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ int	prompt_loop(t_info *info)
 			info->readline_input = free_1d_alloc(info->readline_input);
 			continue ;
 		}
-
 		ft_dprintf(STDERR_FILENO, "#%-15s:[%s]\n", "input", info->readline_input);
 
 		/* tokenize */
@@ -72,8 +71,7 @@ int	prompt_loop(t_info *info)
 		}
 
 		/* expansion & command_execution */
-		exit_status = expansion(info);
-//		exit_status = execute_execlist(info);
+		exit_status = execute_execlist(info);
 
 		/* clear input */
 		add_history(info->readline_input);

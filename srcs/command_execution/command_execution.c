@@ -15,19 +15,20 @@
 int	execute_execlist(t_info *info)
 {
 	int			exit_status;
-//	t_exec_list	*exec_node;
+	t_exec_list	*exec_node;
 
 	if (!info || !info->execlist_head)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 
-	/*
+	exec_node = info->execlist_head;
 	while (exec_node)
 	{
-
+		if (expand_variable(&exec_node, info) == FAILURE)
+			return (FAILURE);
 		exec_node = exec_node->next;
 	}
-	 */
+	debug_print_exec_list(info->execlist_head, "expansion");
 
 	return (exit_status);
 }

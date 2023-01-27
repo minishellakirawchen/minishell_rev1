@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:35:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 21:46:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@
 // input pipeline is type=pipeline
 // type=subshell is expanded in execution->parsing process
 
+//*
 int	expansion(t_info *info)
 {
 	t_exec_list		*exec_node;
@@ -61,6 +62,7 @@ int	expansion(t_info *info)
 	debug_print_exec_list(info->execlist_head, "expansion");
 	return (SUCCESS);
 }
+*/
 
 int	expand_variable(t_exec_list **pipeline, t_info *info)
 {
