@@ -53,6 +53,11 @@ int	execute_execlist(t_info *info)
 	printf("\n***** execute *****\n");
 	printf("\nvvvvvvvvvvvvvvvvvvv\n");
 	exec_node = info->execlist_head;
+
+	//TODO:exec_heredoc
+	//先にheredocの""結合が必要
+	//
+
 	while (exec_node)
 	{
 		pipeline_node = exec_node;

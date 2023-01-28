@@ -19,11 +19,11 @@ int	execute_redirect(t_command_info *command_info, t_list *envlist)
 	if (!command_info->redirect_list)
 		return (SUCCESS);
 
-	// heredocが先
+	// heredocがredirect in/outより優先される
 	if (execute_heredoc(command_info, envlist) == FAILURE)
 		return (FAILURE);
 
-	// openfileが後
+	// openfileはheredocの後
 	if (open_file_for_redirect(command_info) == FAILURE)
 		return (FAILURE);
 

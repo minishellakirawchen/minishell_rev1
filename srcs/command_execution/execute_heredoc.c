@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 22:23:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 22:26:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ bool	is_delimiter(const char *input_line, const char *delimiter)
 		return (false);
 	input_len = ft_strlen_ns(input_line);
 	delim_len = ft_strlen_ns(delimiter);
-	if ((input_len == delim_len + 1) \
+	if ((input_len == delim_len + 1)
 	&& ft_strncmp_ns(input_line, delimiter, delim_len) == 0)
 		return (true);
 	return (false);

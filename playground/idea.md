@@ -214,7 +214,8 @@ $key
 test here_doc1 <<end<<"end" <<'end' &&
 test here_doc2 <<"end  "hello <<'end  'hello << "hello "world'  good''morning'  &&
 test here_doc3 <<$key <<"$key" <<'$key' &&
-test here_doc4 << "$key  "end  << "$key"'  $key'$key$key ;
+test here_doc4 << "$key  "end  << "
+$key"'  $key'$key$key ;
  
 test here_doc1 <<end<<"end" <<'end' &&test here_doc2 <<"end  "hello <<'end  'hello << "hello "world'  good''morning'  &&test here_doc3 <<$key <<"$key" <<'$key' &&test here_doc4 << "$key  "end  << "$key"'  $key'$key$key ;
 
@@ -258,6 +259,73 @@ test append4 >> "$key  "end  >> "$key"'  $key'$key$key ;
 
 
 ```
+
+
+
+### heredocのexpansion
+実行順は最優先, ;も貫通される
+expansionの変数はどこの条件が使われる？
+```shell
+bash3.2 1 $ cat <<a; (cat <<b ; export a1=a2dayo && cat << c && export a1=a3dayo) ; cat <<d ;export a1=a4 && cat <<e
+
+> this is a
+> $a1 
+> a
+
+> this is b
+> $a1
+> b
+
+> thisis c
+> $a1
+> c
+
+> this is d
+> $a1
+> d
+
+> thisis e
+> $a1
+> e
+
+this is a
+a4
+
+this is b
+a4
+
+thisis c
+a2dayo
+
+this is d
+a4
+
+thisis e
+a4
+
+やばいやろこれ...
+
+bash3.2 0 $ echo $a1;(echo $a1; export a1=a2dayo && echo $a1&& export a1=a3dayo); echo $a1;export a1=a4dayo&&echo $a1
+a1
+a1
+a2dayo
+a1
+a4dayo
+
+```
+
+cat << a ;  (cat <<b  ; export a1=a2dayo &&   cat << c && export a1=a3dayo) ; cat <<d ;   export a1=a4      && cat <<e
+       a4          a4                               a2dayo                          a4                              a4
+
+echo $a1 ;  (echo $a1 ; export a1=a2dayo &&   echo $a1 && export a1=a3dayo) ; echo $a1 ;  export a1=a4dayo  && echo $a1
+      a1           a1                              a2dayo                           a1                               a4dayo
+
+
+
+
+
+
+
 
 exportもどこかのタイミングでexpansionが必要か？
 
