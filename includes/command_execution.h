@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 22:55:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 20:17:13 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,18 @@ typedef enum e_node_kind		t_node_kind;
 /* ************************** */
 
 int		execute_execlist(t_info *info);
-void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status);
 int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head);
 
-
+/* ft_exec.c */
 int		ft_execve(char **commands, char **minishell_envp, t_list *envlist);
 
+/* pipe_helper.c */
+void	init_pipefd(int prev_pipefd[2], int now_pipefd[2]);
+void	copy_prevfd_to_newfd(int prev_pipefd[2], const int now_pipefd[2]);
+int		dup2_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
+int		close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
+
+/* create_envp.c */
+char	**create_minishell_envp(t_list *envlist_head);
 
 #endif //COMMAND_EXECUTION_H

@@ -32,7 +32,10 @@ SRC		= main.c \
 		  expansion/is_expand.c \
 		  expansion/get_expanded_str.c \
 		  expansion/create_commands.c \
-		  command_execution/command_execution.c \
+		  command_execution/execute_execlist.c \
+		  command_execution/execute_pipeline.c \
+		  command_execution/create_envp.c \
+		  command_execution/pipe_helper.c \
 		  command_execution/ft_exec.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \
