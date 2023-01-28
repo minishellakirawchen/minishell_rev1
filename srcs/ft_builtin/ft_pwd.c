@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_handler.c                                    :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 18:19:53 by wchen            ###   ########.fr       */
+/*   Created: 2023/01/27 22:13:40 by wchen             #+#    #+#             */
+/*   Updated: 2023/01/27 22:49:38 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	perror_and_return_int(char *err, int exit_status)
+int	ft_pwd(t_info *info)
 {
-	perror(err);
-	return (exit_status);
+	char	**path;
+
+	if (!info)
+		return (EXIT_FAILURE);
+	path = get_elem(info, "PWD");
+	ft_printf("%s\n", *path);
+	return (EXIT_SUCCESS);
 }

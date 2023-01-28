@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*   builtin_free.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 10:39:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 16:42:41 by wchen            ###   ########.fr       */
+/*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
+/*   Updated: 2023/01/28 21:16:20 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/libft.h"
+#include "minishell.h"
 
-char	*ft_strtrim(char const *s1, char const *set)
+int	perror_and_return_int(char *err, int exit_status)
 {
-	char		*res;
-	size_t		len;
+	perror(err);
+	return (exit_status);
+}
 
-	if (!s1 || !set)
-		return (NULL);
-	while (*s1 && ft_strchr(set, *s1))
-		s1++;
-	len = ft_strlen(s1);
-	while (len && ft_strchr(set, *(s1 + len - 1)))
-		len--;
-	res = ft_substr(s1, 0, len);
-	return (res);
+int free_cdinfo_ret_status(t_cd_info *cd_info, int exit_status)
+{
+	if (cd_info->env_pwd != NULL)
+		free(cd_info->env_pwd);
+	if (cd_info->pwd != NULL)
+		free(cd_info->pwd);
+	if (cd_info->newpwd != NULL)
+		free (cd_info->newpwd);
+	free(cd_info);
+	return (exit_status);
 }

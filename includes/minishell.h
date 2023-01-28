@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 23:37:17 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 21:16:24 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <stdbool.h>
+# include <dirent.h>
 
 # include "./../libs/include/libft.h"
 
@@ -48,7 +49,7 @@ typedef struct s_env_elem		t_env_elem;
 typedef struct s_token_elem		t_token_elem;
 typedef struct s_split_info		t_split_info;
 typedef struct s_export_info	t_export_info;
-
+typedef struct s_cd_info		t_cd_info;
 typedef enum e_token_type	t_token_type;
 typedef enum e_syntax_err	t_syntax_err;
 typedef enum e_key_type		t_key_type;
@@ -80,6 +81,17 @@ enum e_syntax_err
 {
 	e_unexpected_token,
 	e_newline,
+};
+
+enum e_cd_cmd_type
+{
+	e_home,
+	e_absolute,
+	e_relative,
+	e_oldpwd,
+	e_cdpath,
+	e_opt_error,
+	e_cd_init,
 };
 
 enum e_key_type
@@ -137,6 +149,17 @@ struct s_export_info
 	t_key_type		key_type;
 };
 
+// ft_cd
+struct s_cd_info
+{
+	int cd_type;
+	char **home;
+	char **cdpath;
+	char *env_pwd;
+	char *pwd;
+	char **oldpwd;
+	char *newpwd;
+};
 
 /* ************************** */
 /*          parsing           */
@@ -166,6 +189,8 @@ t_key_type	judge_info_key(t_export_info *e_info);
 t_key_type	judge_value(t_export_info *e_info);
 int			ft_unset(t_info *info, char **cmds);
 int			ft_echo(char **cmds);
+int			ft_pwd(t_info *info);
+int			ft_cd(t_info *info, char **cmds);
 
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);
@@ -181,6 +206,7 @@ char	**get_elem(t_info *info, char *key);
 int		set_elem(t_info *info, char *key, char *value);
 int		append_env(t_info *info, char *key, char *value);
 int		add_env(t_info *info, char *key, char *value);
+int 	free_cdinfo_ret_status(t_cd_info *cd_info, int exit_status);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);

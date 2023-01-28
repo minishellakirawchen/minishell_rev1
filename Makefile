@@ -30,10 +30,12 @@ SRC		= main.c \
 		  ft_builtin/ft_export.c \
 		  ft_builtin/judge_key_value.c \
 		  ft_builtin/ft_unset.c \
+		  ft_builtin/ft_pwd.c \
+		  ft_builtin/ft_cd.c \
 		  helper/alloc_free.c \
 		  helper/get_envlist.c \
 		  helper/print_key_value.c \
-		  helper/error_handler.c \
+		  helper/builtin_free.c \
 		  helper/get_set_elem.c \
 		  debug/debug_print.c \
 
