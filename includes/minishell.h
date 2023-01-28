@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 09:46:21 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 17:39:59 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@
 # define SUCCESS	1
 # define CONTINUE	2
 # define BREAK		3
+
+# define READ		0
+# define WRITE		1
 
 # define DEBUG		1
 
@@ -173,6 +176,9 @@ struct s_command_info
 	char 			**commands;		// argument of execve()
 	t_list_bdi		*redirect_list;	// set fd before execute commands
 
+	int				redirect_fd[3];	// in, out, here_doc;
+	pid_t			pid;
+
 	t_list_bdi		*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する
 	t_list_bdi		*subshell_token_list; //parsing create_operator_listから実行できる
 };
@@ -208,6 +214,7 @@ struct s_redirect_info
 
 /*         helper.c           */
 void	*free_1d_alloc(void *alloc);
+void	**free_2d_alloc(void **alloc);
 void	*free_info(t_info **info);
 t_list	*get_envlist(void);
 void	free_env_elem(void *content);
