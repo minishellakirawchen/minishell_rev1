@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:06:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 21:29:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,16 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head)
 		return (FAILURE);
 
 	if (execute_pipeline_iter(&pipeline_cmds_head, minishell_envp, envlist_head) == FAILURE)
+	{
+		minishell_envp = (char **)free_2d_alloc((void **)minishell_envp);
 		return (FAILURE);
+	}
 
 	exit_status = get_last_status_and_wait_children(pipeline_cmds_head);
 
 	minishell_envp = (char **)free_2d_alloc((void **)minishell_envp);
 	return (exit_status);
 }
-
 
 int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_list *envlist)
 {
@@ -78,7 +80,7 @@ int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_list *
 				return (FAILURE);
 			if (close_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
 				return (FAILURE);
-			exit (ft_execve(command_info->commands, envp, envlist));
+			exit (ft_execve(command_info, envp, envlist));
 		}
 		if (is_parent_process(command_info->pid))
 		{

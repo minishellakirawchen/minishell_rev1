@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 20:37:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 21:45:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,25 +50,6 @@
 # define SUCCESS	1
 # define CONTINUE	2
 # define BREAK		3
-
-/* fd */
-# define READ			0
-# define WRITE			1
-# define R_FD_INFILE	0
-# define R_FD_OUTFILE	1
-# define R_FD_HEREDOC	2
-
-/* exit_status */
-# define CHDIR_FAILURE				1
-# define EXIT_TOO_MANY_ARGS			1
-# define FILE_OPEN_ERROR			1
-# define CMD_NOT_FOUND				1
-# define EXIT_SIGQUIT				131
-# define EXIT_NUMERIC_ARGS_REQUIRED	255
-# define SYNTAX_ERROR				258
-
-/* string */
-# define PATH	"PATH"
 
 
 /* ************************** */
@@ -202,9 +183,10 @@ struct s_command_info
 struct s_redirect_info
 {
 	t_token_type	io_type;
-	char			*file;			// malloc
+	char			*file;			// malloc, in/out/heredoc
 	char			*heredoc_eof;	// malloc
 	bool			is_expansion;	// "eof"->not expand
+
 };
 
 /* ************************** */

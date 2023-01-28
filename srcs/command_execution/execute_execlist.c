@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 20:21:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 21:10:06 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	execute_execlist(t_info *info)
 	return (exit_status);
 }
 
-// operator -> pipeline ->..
+// operator -> pipeline -> operator -> ..
 static void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status)
 {
 	t_exec_list	*next_operator_node;

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 19:54:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 21:27:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,23 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist);
 static bool	is_path(const char *commands_head);
 static char	*get_execute_path(char *path, char *file);
 
-int	ft_execve(char **commands, char **minishell_envp, t_list *envlist)
+int	ft_execve(t_command_info *command_info, char **minishell_envp, t_list *envlist)
 {
-	if (!commands || !*commands || !minishell_envp || !envlist)
+	if (!command_info || !minishell_envp || !envlist)
 		return (FAILURE);
 
-	// connect_redirect_fd()
+	// execute_redirect()
+	// TODO
 
 	// is_builtin
+	// TODO
 
-	// execute commands
-
-	if (is_path(commands[0]))
-		execve(commands[0], commands, minishell_envp);
+	// execute commands (other than builtin)
+	if (is_path(command_info->commands[0]))
+		execve(command_info->commands[0], command_info->commands, minishell_envp);
 	else
-		ft_execvp(commands, minishell_envp, envlist);
-	ft_dprintf(STDERR_FILENO, "command not found: %s\n", commands[0]);
+		ft_execvp(command_info->commands, minishell_envp, envlist);
+	ft_dprintf(STDERR_FILENO, "command not found: %s\n", command_info->commands[0]);
 	return (CMD_NOT_FOUND);
 }
 
@@ -75,23 +76,20 @@ static char	*get_execute_path(char *path, char *file)
 	len = path_len + file_len;
 	if (path_len > 0 && path[path_len - 1] != '/')
 		len++;
-	len++;
-	execute_path = (char *)ft_calloc(sizeof(char), len);
+	execute_path = (char *)ft_calloc(sizeof(char), len + 1);
 	if (!execute_path)
 		return (perror_ret_nullptr("malloc"));
-	ft_strlcat(execute_path, path, len);
+	ft_strlcat(execute_path, path, len + 1);
 	if (path_len > 0 && path[path_len - 1] != '/')
-		ft_strlcat(execute_path, "/", len);
-	ft_strlcat(execute_path, file, len);
+		ft_strlcat(execute_path, "/", len + 1);
+	ft_strlcat(execute_path, file, len + 1);
 //	printf("create path:[%s]\n", execute_path); // check
 	return (execute_path);
 }
 
 static bool	is_path(const char *commands_head)
 {
-	if (!commands_head)
-		return (false);
-	if (commands_head[0] == '/' || commands_head[0] == '.')
+	if (commands_head && (commands_head[0] == '/' || commands_head[0] == '.'))
 		return (true);
 	return (false);
 }

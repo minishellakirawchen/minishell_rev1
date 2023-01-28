@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 20:10:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 21:08:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,14 +121,14 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 		return (FAILURE);
 //	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
 
-	// expand -> quote removal -> space split -> add expanded_token_list;
+	/* expand -> quote removal -> space split -> add expanded_token_list; */
 	expanded_token_list = NULL;
 	while ((*cmd_list)->pipeline_token_list)
 	{
 		popped_node = ft_lstpop_bdi(&(*cmd_list)->pipeline_token_list);
 		token_elem = popped_node->content;
 
-		//if is_expandable	-> expand vare
+		/* if is_expandable, expand vare */
 		if (is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
 		{
 //			printf("word:%s, quote_chr:%c, is_quoted:%d\n", token_elem->word, token_elem->quote_chr, token_elem->is_quoted);
@@ -136,7 +136,7 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 			if (!token_elem->word)
 				return (FAILURE);
 		}
-		//if is_quoted		-> quote removal
+		/* if is_quoted, quote removal */
 		if (token_elem->is_quoted)
 		{
 			if (remove_quotes(&token_elem->word) == FAILURE)
@@ -145,7 +145,7 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 		}
 		else
 		{
-			// is_connect_to_next
+			/* is_connect_to_next */
 			space_splitted_list = get_delim_splitted_tokenlist(token_elem->word, STR_SPACE, STR_QUOTE);
 			if (!space_splitted_list)
 				return (FAILURE); //TODO:free

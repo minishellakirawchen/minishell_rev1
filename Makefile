@@ -34,6 +34,8 @@ SRC		= main.c \
 		  expansion/create_commands.c \
 		  command_execution/execute_execlist.c \
 		  command_execution/execute_pipeline.c \
+		  command_execution/execute_redirect.c \
+		  command_execution/execute_heredoc.c \
 		  command_execution/create_envp.c \
 		  command_execution/pipefd_handler.c \
 		  command_execution/judge_fork_process.c \
