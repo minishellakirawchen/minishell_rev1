@@ -6,22 +6,22 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:04 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 21:18:42 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 22:43:26 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int judge_n_option(char *cmd)
+static int	judge_n_option(char *cmd)
 {
 	if (*cmd != '-')
 		return (FAILURE);
-	cmd ++;
+	cmd++;
 	while (*cmd != '\0')
 	{
 		if (*cmd != 'n')
 			return (FAILURE);
-		cmd ++;
+		cmd++;
 	}
 	return (SUCCESS);
 }
@@ -33,12 +33,12 @@ static void	printf_cmds(char **cmds)
 	i = 0;
 	while (*cmds != NULL)
 	{
-		if(i == 0)
+		if (i == 0)
 			ft_printf("%s", *cmds);
 		else
 			ft_printf(" %s", *cmds);
-		cmds ++;
-		i ++;
+		cmds++;
+		i++;
 	}
 }
 
@@ -49,18 +49,18 @@ int	ft_echo(char **cmds)
 	n_flag = 0;
 	if (!cmds)
 		return (EXIT_FAILURE);
-	cmds ++;
+	cmds++;
 	while (*cmds != NULL)
 	{
 		if (judge_n_option(*cmds) == SUCCESS)
 		{
 			n_flag = 1;
-			cmds ++;
+			cmds++;
 		}
 		else
 		{
 			printf_cmds(cmds);
-			break;
+			break ;
 		}
 	}
 	if (n_flag != 1)

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 22:02:04 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 22:44:37 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	set_elem(t_info *info, char *key, char *value)
 	new_elem = malloc(sizeof(t_env_elem));
 	if (!new_elem)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
-	new_elem -> key = key;
-	new_elem -> value = value;
+	new_elem->key = key;
+	new_elem->value = value;
 	new_env_node = ft_lstnew(new_elem);
 	if (!new_env_node)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
@@ -58,13 +58,13 @@ int	append_env(t_info *info, char *key, char *value)
 {
 	char	**elem_value;
 	ssize_t	key_len;
-	char 	*elem_key;
+	char	*elem_key;
 	char	*temp_ptr;
 
 	key_len = ft_strlen(key);
 	elem_key = malloc(sizeof(char) * (key_len));
 	if (!elem_key)
-		return(perror_and_return_int("malloc", EXIT_FAILURE));
+		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	elem_key = ft_memmove(elem_key, key, key_len - 1);
 	key = free_1d_alloc(key);
 	elem_value = get_elem(info, elem_key);
@@ -74,8 +74,8 @@ int	append_env(t_info *info, char *key, char *value)
 	{
 		temp_ptr = *elem_value;
 		*elem_value = ft_strjoin(*elem_value, value);
-		if(!elem_value)
-			return(perror_and_return_int("malloc", EXIT_FAILURE));
+		if (!elem_value)
+			return (perror_and_return_int("malloc", EXIT_FAILURE));
 		elem_key = free_1d_alloc(elem_key);
 		value = free_1d_alloc(value);
 		temp_ptr = free_1d_alloc(temp_ptr);
@@ -83,7 +83,7 @@ int	append_env(t_info *info, char *key, char *value)
 	return (EXIT_SUCCESS);
 }
 
-int add_env(t_info *info, char *key, char *value)
+int	add_env(t_info *info, char *key, char *value)
 {
 	int		exit_status;
 	char	**elem_value;
@@ -100,5 +100,5 @@ int add_env(t_info *info, char *key, char *value)
 	}
 	else
 		exit_status = set_elem(info, key, value);
-	return(exit_status);
+	return (exit_status);
 }

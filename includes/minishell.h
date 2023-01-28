@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:16:24 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 22:38:04 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,29 +184,33 @@ int		execute_builtin(t_info *info, char **cmds);
 /* ************************** */
 int			ft_env(t_info *info);
 int			ft_export(t_info *info, char **cmds);
-int			judge_chr_key(char *key);
-t_key_type	judge_info_key(t_export_info *e_info);
-t_key_type	judge_value(t_export_info *e_info);
 int			ft_unset(t_info *info, char **cmds);
 int			ft_echo(char **cmds);
 int			ft_pwd(t_info *info);
 int			ft_cd(t_info *info, char **cmds);
 
 /*         helper.c           */
-void	*free_1d_alloc(void *alloc);
-void	*free_info(t_info *info);
-t_list	*get_envlist(void);
-void	*perror_ret_nullptr(char *err);
-void	free_env_elem(void *content);
-void	free_token_elem(void *content);
-void	print_key_value(void *content);
-int		perror_and_return_int(char *err, int exit_status);
-char	**get_value_from_key(t_env_elem *elem, char *key);
-char	**get_elem(t_info *info, char *key);
-int		set_elem(t_info *info, char *key, char *value);
-int		append_env(t_info *info, char *key, char *value);
-int		add_env(t_info *info, char *key, char *value);
-int 	free_cdinfo_ret_status(t_cd_info *cd_info, int exit_status);
+void		*free_1d_alloc(void *alloc);
+void		*free_info(t_info *info);
+t_list		*get_envlist(void);
+void		*perror_ret_nullptr(char *err);
+void		free_env_elem(void *content);
+void		free_token_elem(void *content);
+void		print_key_value(void *content);
+int			perror_and_return_int(char *err, int exit_status);
+char		**get_value_from_key(t_env_elem *elem, char *key);
+char		**get_elem(t_info *info, char *key);
+int			set_elem(t_info *info, char *key, char *value);
+int			append_env(t_info *info, char *key, char *value);
+int			add_env(t_info *info, char *key, char *value);
+int 		free_cdinfo_ret_status(t_cd_info *cd_info, int exit_status);
+int			cd_error_handler(t_cd_info *cd_info, char **cmds);
+int			judge_chr_key(char *key);
+t_key_type	judge_info_key(t_export_info *e_info);
+t_key_type	judge_value(t_export_info *e_info);
+int 		judge_opt(char *cmd);
+int			judge_cmd(char *cmd);
+int			check_dir_exist(char *tdir);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);

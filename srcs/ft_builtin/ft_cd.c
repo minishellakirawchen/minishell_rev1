@@ -6,38 +6,18 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/28 21:49:28 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 22:44:01 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int judge_opt(char *cmd)
+static char	*init_tdir(char *ref, char *cmd)
 {
-	if (*(++cmd) != '\0')
-		return (e_opt_error);
-	return (e_oldpwd);
-}
-
-int	judge_cmd(char *cmd)
-{
-	if (cmd == NULL)
-		return (e_home);
-	else if (cmd[0] == '-')
-		return (judge_opt(cmd));
-	else if (cmd[0] == '/')
-		return (e_absolute);
-	else if (cmd[0] == '.')
-		return (e_relative);
-	return (e_cdpath);
-}
-
-char *init_tdir(char *ref, char *cmd)
-{
-	ssize_t		ref_len;
-	ssize_t		cmd_len;
-	char		*trimed_cmd;
-	char		*tdir;
+	ssize_t	ref_len;
+	ssize_t	cmd_len;
+	char	*trimed_cmd;
+	char	*tdir;
 
 	if (ref == NULL)
 		return (ft_strdup_ns(cmd));
@@ -56,50 +36,38 @@ char *init_tdir(char *ref, char *cmd)
 	return (tdir);
 }
 
-int	check_dir_exist(char *tdir)
-{
-	DIR		*dir;
-
-	dir = opendir(tdir);
-	if (ENOENT == errno)
-		return (FAILURE);
-	if (dir)
-		closedir(dir);
-	return (SUCCESS);
-}
-
-char *define_new_path(t_cd_info *cd_info, char *cmd)
+static char	*define_new_path(t_cd_info *cd_info, char *cmd)
 {
 	char	*tdir;
 	char	**cdpaths;
 
 	if (cd_info->cd_type == e_home)
-		return (*(cd_info->home));
+		return (ft_strdup_ns(*(cd_info->home)));
 	else if (cd_info->cd_type == e_absolute)
-		return (cmd);
+		return (ft_strdup_ns(cmd));
 	else if (cd_info->cd_type == e_oldpwd)
-		return (*(cd_info->oldpwd));
+		return (ft_strdup_ns(*(cd_info->oldpwd)));
 	else if (cd_info->cd_type == e_relative)
 		return (init_tdir(cd_info->pwd, cmd));
 	else if (cd_info->cdpath != NULL)
 	{
 		cdpaths = ft_split(*(cd_info->cdpath), ':');
-		while(*cdpaths != NULL)
+		while (*cdpaths != NULL)
 		{
 			tdir = init_tdir(*cdpaths, cmd);
 			if (check_dir_exist(tdir) == SUCCESS)
 				return (tdir);
-			cdpaths ++;
+			cdpaths++;
 		}
 	}
 	return (init_tdir(cd_info->pwd, cmd));
 }
 
-t_cd_info *init_cd_info(t_info *info)
+static t_cd_info	*init_cd_info(t_info *info)
 {
 	t_cd_info	*cd_info;
-	errno = 0;
 
+	errno = 0;
 	cd_info = malloc(sizeof(t_cd_info));
 	if (!cd_info)
 		return (NULL);
@@ -118,46 +86,28 @@ t_cd_info *init_cd_info(t_info *info)
 	return (cd_info);
 }
 
-int	error_handler(t_cd_info *cd_info, char **cmds)
-{
-	if (cd_info->cd_type == e_opt_error)
-	{
-		ft_printf("minishell: cd: %c%c: invalid option\n", (*cmds)[0], (*cmds)[1]);
-		return (EXIT_FAILURE);
-	}
-	else if (cd_info->cd_type == e_oldpwd && cd_info->oldpwd == NULL)
-	{
-		ft_printf("minishell: cd: OLDPWD not set\n");
-		return (EXIT_FAILURE);
-	}
-	else if (cd_info->cd_type == e_home && cd_info->home == NULL)
-	{
-		ft_printf("minishell: cd: HOME not set\n");
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
-int set_path(t_info *info, t_cd_info *cd_info)
+static int	set_path(t_info *info, t_cd_info *cd_info)
 {
 	int	exit_status;
 
 	exit_status = 0;
 	if (*cd_info->newpwd == '.')
 	{
-		exit_status += append_env(info, ft_strdup("PWD="), ft_strdup(cd_info->newpwd));
-		exit_status += add_env(info, ft_strdup("OLDPWD"), ft_strdup(cd_info->env_pwd));
+		exit_status += append_env(info, ft_strdup("PWD="),
+				ft_strdup(cd_info->newpwd));
+		exit_status += add_env(info, ft_strdup("OLDPWD"),
+				ft_strdup(cd_info->env_pwd));
 	}
 	else
 	{
 		exit_status += add_env(info, ft_strdup("PWD"), getcwd(NULL, 0));
-		exit_status += add_env(info, ft_strdup("OLDPWD"), ft_strdup(cd_info->env_pwd));
+		exit_status += add_env(info, ft_strdup("OLDPWD"),
+				ft_strdup(cd_info->env_pwd));
 	}
 	if (exit_status > 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
-
 
 int	ft_cd(t_info *info, char **cmds)
 {
@@ -172,7 +122,7 @@ int	ft_cd(t_info *info, char **cmds)
 	if (!cd_info)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	cd_info->cd_type = judge_cmd(*(++cmds));
-	if (error_handler(cd_info, cmds) == EXIT_FAILURE)
+	if (cd_error_handler(cd_info, cmds) == EXIT_FAILURE)
 		return (free_cdinfo_ret_status(cd_info, EXIT_FAILURE));
 	cd_info->newpwd = define_new_path(cd_info, *cmds);
 	if (!cd_info->newpwd)

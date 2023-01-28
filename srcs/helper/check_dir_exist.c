@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   check_dir_exist.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/27 22:13:40 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/28 22:09:58 by wchen            ###   ########.fr       */
+/*   Created: 2023/01/28 22:37:33 by wchen             #+#    #+#             */
+/*   Updated: 2023/01/28 22:39:36 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(t_info *info)
+int	check_dir_exist(char *tdir)
 {
-	char	**env_pwd;
-	char	*cwd_pwd;
+	DIR		*dir;
 
-	if (!info)
-		return (EXIT_FAILURE);
-	env_pwd = get_elem(info, "PWD");
-	if (env_pwd != NULL)
-		ft_printf("%s\n", *env_pwd);
-	else
-	{
-		cwd_pwd = getcwd(NULL, 0);
-		if (!cwd_pwd)
-			return (perror_and_return_int("getcwd", EXIT_FAILURE));
-		else
-			ft_printf("%s\n", cwd_pwd);
-		free (cwd_pwd);
-	}
-	return (EXIT_SUCCESS);
+	dir = opendir(tdir);
+	if (ENOENT == errno)
+		return (FAILURE);
+	if (dir)
+		closedir(dir);
+	return (SUCCESS);
 }

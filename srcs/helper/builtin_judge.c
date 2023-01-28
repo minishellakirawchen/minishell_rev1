@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   judge_key_value.c                                  :+:      :+:    :+:   */
+/*   builtin_judge.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 22:26:30 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 21:16:00 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 22:45:21 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	judge_chr_key(char *key)
 	{
 		if (!ft_isalnum(*key) && *key != '_')
 			return (FAILURE);
-		key ++;
+		key++;
 	}
 	return (SUCCESS);
 }
@@ -64,4 +64,24 @@ t_key_type	judge_value(t_export_info *e_info)
 		c_ptr++;
 	}
 	return (e_info->key_type);
+}
+
+int	judge_opt(char *cmd)
+{
+	if (*(++cmd) != '\0')
+		return (e_opt_error);
+	return (e_oldpwd);
+}
+
+int	judge_cmd(char *cmd)
+{
+	if (cmd == NULL)
+		return (e_home);
+	else if (cmd[0] == '-')
+		return (judge_opt(cmd));
+	else if (cmd[0] == '/')
+		return (e_absolute);
+	else if (cmd[0] == '.')
+		return (e_relative);
+	return (e_cdpath);
 }

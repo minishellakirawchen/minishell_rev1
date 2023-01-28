@@ -6,12 +6,11 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 23:47:15 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/22 21:02:36 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 22:45:39 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	print_key_value(void *content)
 {
