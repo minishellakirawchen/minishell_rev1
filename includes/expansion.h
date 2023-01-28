@@ -63,7 +63,7 @@ char	*get_expanded_str(char *src, t_info *info);
 
 /* get_expanded_str.c */
 char	*get_expanded_str(char *src, t_info *info);
-char	*concat_dst_to_src(char **dst, char **src);
+char	*concat_dst_to_src(char **dst, char *src);
 char	*get_name_str(const char *str_start_with_dollar);
 char	*get_env_value(const char *search_key, t_list *env_list_head);
 int		expand_exit_status(char **expanded_str, int exit_status);

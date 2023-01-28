@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 19:55:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 20:10:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,35 @@ void	copy_prevfd_to_newfd(int prev_pipefd[2], const int now_pipefd[2])
 	prev_pipefd[WRITE] = now_pipefd[WRITE];
 }
 
-char **create_minishell_envp(t_info *info)
+char **create_minishell_envp(t_list *envlist_head)
 {
-	char	**minishell_envp;
+	char		**minishell_envp;
+	size_t		array_size;
+	size_t		idx;
+	t_env_elem	*env_elem;
+	t_list		*node;
 
-
+	array_size = ft_lstsize(envlist_head);
+	minishell_envp = (char **) ft_calloc(sizeof(char *), array_size + 1);
+	if (!minishell_envp)
+		return (perror_ret_nullptr("malloc"));
+	node = envlist_head;
+	idx = 0;
+	while (node)
+	{
+		env_elem = node->content;
+		minishell_envp[idx] = concat_dst_to_src(&minishell_envp[idx], env_elem->key);
+		if (!minishell_envp[idx])
+			return (NULL); //TODO: all free
+		minishell_envp[idx] = concat_dst_to_src(&minishell_envp[idx], "=");
+		if (!minishell_envp[idx])
+			return (NULL); //TODO: all free
+		minishell_envp[idx] = concat_dst_to_src(&minishell_envp[idx], env_elem->value);
+		if (!minishell_envp[idx])
+			return (NULL); //TODO: all free
+		node = node->next;
+		idx++;
+	}
 	return (minishell_envp);
 }
 
@@ -87,7 +111,7 @@ int	close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next)
 }
 
 // pipelien_commands cmd1 | cmd2 | cmd3
-int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
+int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head)
 {
 	int				exit_status;
 	t_command_info	*command_info;
@@ -114,7 +138,7 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 	/* ^^^^^ debug mode: print command_info ^^^^^ */
 
 	/* execute pipeline commands */
-	minishell_envp = create_minishell_envp(info);
+	minishell_envp = create_minishell_envp(envlist_head);
 	if (!minishell_envp)
 		return (FAILURE);
 
@@ -137,7 +161,7 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 				return (FAILURE);
 			if (close_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
 				return (FAILURE);
-			exit (ft_execve(command_info->commands, minishell_envp, info->envlist_head));
+			exit (ft_execve(command_info->commands, minishell_envp, envlist_head));
 		}
 		/* parent */
 		if (close_fds(NULL, prev_pipefd, NULL) < 0)
@@ -217,10 +241,9 @@ int	execute_execlist(t_info *info)
 			return (FAILURE);
 
 		/* execution */
-		exit_status = execute_pipeline(pipeline_node->pipeline_commands);
+		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info->envlist_head);
 		exec_node = exec_node->next;
 		move_to_next_exec_node(&exec_node, exit_status);
-
 	}
 	printf("^^^^^^^^^^^^^^^^^^^\n");
 

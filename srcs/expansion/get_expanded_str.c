@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 17:17:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 20:08:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_expanded_str(char *src, t_info *info)
 		{
 			// idx++した分をexpanded_strへ結合
 			skip_str = ft_substr(src, idx, skip);
-			expanded_str = concat_dst_to_src(&expanded_str, &skip_str);
+			expanded_str = concat_dst_to_src(&expanded_str, skip_str);
 			if (!skip_str || !expanded_str)
 			{
 //				printf("error 1\n");
@@ -69,7 +69,7 @@ char	*get_expanded_str(char *src, t_info *info)
 //				printf("error 2\n");
 				return (perror_ret_nullptr("malloc"));
 			}
-			expanded_str = concat_dst_to_src(&expanded_str, &value);
+			expanded_str = concat_dst_to_src(&expanded_str, value);
 			idx += ft_strlen_ns(key); // $key
 			key = free_1d_alloc(key);
 		}
@@ -119,8 +119,9 @@ char *get_env_value(const char *search_key, t_list *env_list_head)
 	return ("");
 }
 
-/* free dest */
-char	*concat_dst_to_src(char **dst, char **src)
+/* free dest and assign nullptr in this function to overwrite dst */
+/* ex) dst = concat_dst_to_sec(&dst, src) */
+char	*concat_dst_to_src(char **dst, char *src)
 {
 	size_t	dstlen;
 	size_t	srclen;
@@ -129,12 +130,12 @@ char	*concat_dst_to_src(char **dst, char **src)
 	if (!dst || !src)
 		return (NULL);
 	dstlen = ft_strlen_ns(*dst);
-	srclen = ft_strlen_ns(*src);
+	srclen = ft_strlen_ns(src);
 	concat_str = (char *)ft_calloc(sizeof(char), dstlen + srclen + 1);
 	if (!concat_str)
 		return (perror_ret_nullptr("malloc"));
 	ft_strlcat_ns(concat_str, *dst, dstlen + 1);
-	ft_strlcat_ns(concat_str, *src, dstlen + srclen + 1);
+	ft_strlcat_ns(concat_str, src, dstlen + srclen + 1);
 	free(*dst);
 	*dst = NULL;
 	return (concat_str);
@@ -149,7 +150,7 @@ int	expand_exit_status(char **expanded_str, int exit_status)
 	var = ft_itoa(exit_status);
 	if (!var)
 		return (perror_ret_int("malloc", FAILURE));
-	*expanded_str = concat_dst_to_src(expanded_str, &var);
+	*expanded_str = concat_dst_to_src(expanded_str, var);
 	if (*expanded_str)
 		return (FAILURE);
 	return (SUCCESS);

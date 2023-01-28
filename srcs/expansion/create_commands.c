@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 21:09:09 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 20:10:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	**create_commands_from_token_list(t_list_bdi **token_list)
 	{
 		popped_list = ft_lstpop_bdi(token_list);
 		token_elem = popped_list->content;
-		commands[idx] = concat_dst_to_src(&commands[idx], &token_elem->word);
+		commands[idx] = concat_dst_to_src(&commands[idx], token_elem->word);
 		if (!commands[idx])
 			return (perror_ret_nullptr("malloc")); // TODO: free
 		if(!token_elem->is_connect_to_next_word)

@@ -44,7 +44,7 @@ typedef enum e_node_kind		t_node_kind;
 
 int		execute_execlist(t_info *info);
 void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status);
-int		execute_pipeline(t_list_bdi *pipeline_commands_head, t_info *info);
+int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head);
 
 
 int		ft_execve(char **commands, char **minishell_envp, t_list *envlist);
