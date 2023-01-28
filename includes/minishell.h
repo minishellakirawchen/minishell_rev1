@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 19:53:40 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 20:37:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,6 @@
 # define R_FD_INFILE	0
 # define R_FD_OUTFILE	1
 # define R_FD_HEREDOC	2
-
-/* pid */
-# define CHILD_PROCESS	0
 
 /* exit_status */
 # define CHDIR_FAILURE				1

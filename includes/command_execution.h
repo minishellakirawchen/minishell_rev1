@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 20:17:13 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 20:44:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head);
 
 /* ft_exec.c */
 int		ft_execve(char **commands, char **minishell_envp, t_list *envlist);
+
+/* judge_fork_process */
+bool	is_child_process(pid_t pid);
+bool	is_parent_process(pid_t pid);
 
 /* pipe_helper.c */
 void	init_pipefd(int prev_pipefd[2], int now_pipefd[2]);

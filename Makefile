@@ -35,7 +35,8 @@ SRC		= main.c \
 		  command_execution/execute_execlist.c \
 		  command_execution/execute_pipeline.c \
 		  command_execution/create_envp.c \
-		  command_execution/pipe_helper.c \
+		  command_execution/pipefd_handler.c \
+		  command_execution/judge_fork_process.c \
 		  command_execution/ft_exec.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \
