@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:52:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 22:15:58 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 /* fd */
 # define READ			0
 # define WRITE			1
-# define R_FD_INFILE	0
-# define R_FD_OUTFILE	1
-# define R_FD_HEREDOC	2
+# define FD_INFILE		0
+# define FD_OUTFILE		1
+# define FD_HEREDOC		2
 
 /* exit_status */
 # define CHDIR_FAILURE				1
@@ -52,11 +52,20 @@ typedef enum e_token_type		t_token_type;
 typedef enum e_syntax_err		t_syntax_err;
 typedef enum e_node_kind		t_node_kind;
 
+typedef enum e_fopen_type		t_fopen_type;
 
 
 /* ************************** */
 /*           enum             */
 /* ************************** */
+
+enum e_fopen_type
+{
+	e_read,
+	e_overwrite,
+	e_append,
+};
+
 
 /* ************************** */
 /*          struct            */
@@ -85,8 +94,10 @@ int		close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
 /* create_envp.c */
 char	**create_minishell_envp(t_list *envlist_head);
 
+/* execute_redirect.c */
+int	execute_redirect(t_command_info *command_info, t_list *envlist);
 
-/* execute_heredoc */
-int execute_heredoc(t_command_info *command_info);
+/* execute_heredoc.c */
+int execute_heredoc(t_command_info *command_info, t_list *envlist);
 
 #endif //COMMAND_EXECUTION_H

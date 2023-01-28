@@ -12,7 +12,7 @@
 
 #include "command_execution.h"
 
-int	execute_redirect(t_command_info *command_info)
+int	execute_redirect(t_command_info *command_info, t_list *envlist)
 {
 	if (!command_info)
 		return (FAILURE);
@@ -20,7 +20,7 @@ int	execute_redirect(t_command_info *command_info)
 		return (SUCCESS);
 
 	// heredocが先
-	if (execute_heredoc(command_info) == FAILURE)
+	if (execute_heredoc(command_info, envlist) == FAILURE)
 		return (FAILURE);
 
 	// openfileが後

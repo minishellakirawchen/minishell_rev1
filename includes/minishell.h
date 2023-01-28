@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:45:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 22:02:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ struct s_command_info
 	char 			**commands;		// argument of execve()
 	t_list_bdi		*redirect_list;	// set fd before execute commands
 
-	int				redirect_fd[3];	// in, out, here_doc;
+	int				redirect_fd[3];	// in, out, here_doc; //TODO:init
 	pid_t			pid;
 
 	t_list_bdi		*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する

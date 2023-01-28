@@ -6,16 +6,26 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:54:51 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 22:23:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
 
-static int	create_heredoc_file(t_command_info **command_info, t_redirect_info **redirect_info, int cnt);
+static int	create_heredoc_file(t_command_info **command_info, t_redirect_info **redirect_info, int cnt, t_list *envlist);
 static char	*get_heredoc_tmp_filename(int cnt);
+static int	do_heredoc(int fd, t_redirect_info *redirect_info, t_list *envlist);
 
-int execute_heredoc(t_command_info *command_info)
+int	get_fd_and_open_file(const char *filename, t_fopen_type fopen_type)
+{
+	if (fopen_type == e_read)
+		return (open(filename, O_RDONLY));
+	if (fopen_type == e_overwrite)
+		return (open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644));
+	return (open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644));
+}
+
+int execute_heredoc(t_command_info *command_info, t_list *envlist)
 {
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*redirect_info;
@@ -30,7 +40,7 @@ int execute_heredoc(t_command_info *command_info)
 		redirect_info = redirect_list->content;
 		if (redirect_info->io_type == e_heredoc)
 		{
-			if (create_heredoc_file(&command_info, &redirect_info, heredoc_cnt) == FAILURE)
+			if (create_heredoc_file(&command_info, &redirect_info, heredoc_cnt, envlist) == FAILURE)
 				return (FILE_OPEN_ERROR);
 			heredoc_cnt++;
 		}
@@ -39,39 +49,87 @@ int execute_heredoc(t_command_info *command_info)
 	return (SUCCESS);
 }
 
-static int	create_heredoc_file(t_command_info **command_info, t_redirect_info **redirect_info, int cnt)
+// input: hogehoge\n
+// delim: hogehoge
+bool	is_delimiter(const char *input_line, const char *delimiter)
 {
-	size_t			idx;
+	size_t	input_len;
+	size_t	delim_len;
+
+	if (!input_line || !delimiter)
+		return (false);
+	input_len = ft_strlen_ns(input_line);
+	delim_len = ft_strlen_ns(delimiter);
+	if ((input_len == delim_len + 1) \
+	&& ft_strncmp_ns(input_line, delimiter, delim_len) == 0)
+		return (true);
+	return (false);
+}
+
+bool	is_eof(char *line)
+{
+	return (!line);
+}
+
+// is_expand, env
+
+//bash3.2 0 $ cat <<eof
+//> $a
+//> "$a"
+//> eof
+//eof
+//"eof"
+
+//bash3.2 0 $ cat << $eof
+//> hoge
+//> $eof
+//hoge
+
+static int	do_heredoc(int fd, t_redirect_info *redirect_info, t_list *envlist)
+{
+	char	*line;
+
+	if (fd < 0 || !redirect_info || !redirect_info->heredoc_eof)
+		return (FAILURE);
+	while (true)
+	{
+		ft_dprintf(STDERR_FILENO, "> ");
+		line = get_next_line(STDIN_FILENO, true);
+		if (is_eof(line))
+			return (SUCCESS);
+		if (is_delimiter(line, redirect_info->heredoc_eof))
+		{
+			free_1d_alloc(line);
+			break ;
+		}
+		//TODO:expansion
+
+		ft_dprintf(fd, line);
+		line = free_1d_alloc(line);
+	}
+	return (SUCCESS);
+}
+
+static int	create_heredoc_file(t_command_info **cmd_info, t_redirect_info **redirect_info, int cnt, t_list *envlist)
+{
 	t_list_bdi		*redirect_list;
 
 	errno = 0;
-	if (!command_info || !*command_info
+	if (!cmd_info || !*cmd_info
 		|| !redirect_info || !*redirect_info || !(*redirect_info)->heredoc_eof)
 		return (FAILURE);
+
 	(*redirect_info)->file = get_heredoc_tmp_filename(cnt);
 	if (!(*redirect_info)->file)
 		return (FAILURE);
-	idx = 0;
 
-
-	while ((*r_info)->heredoc_delims[idx])
-	{
-		(*r_info)->r_fd[R_FD_HEREDOC] = get_fd_and_open_file((*r_info)->heredoc_file, e_overwrite);
-		if ((*r_info)->r_fd[R_FD_HEREDOC] < 0)
-			return (perror_and_return_int("open", FAILURE));
-		if (execute_heredoc((*r_info)->r_fd[R_FD_HEREDOC], (*r_info)->heredoc_delims[idx]) == FAILURE)
-			return (EXIT_FAILURE);
-		if (close((*r_info)->r_fd[R_FD_HEREDOC]) < 0)
-			return (perror_and_return_int("close", FAILURE));
-		idx++;
-	}
-	if ((*r_info)->input_from == E_HERE_DOC)
-	{
-		(*r_info)->r_fd[R_FD_HEREDOC] = get_fd_and_open_file((*r_info)->heredoc_file, e_read);
-		if ((*r_info)->r_fd[R_FD_HEREDOC] < 0)
-			return (perror_and_return_int("open", FAILURE));
-		//	ft_printf("file:%s, fd:%d\n", *heredoc_file, *fd);
-	}
+	if ((*cmd_info)->redirect_fd[FD_HEREDOC] != -1 && close((*cmd_info)->redirect_fd[FD_HEREDOC]) < 0)
+		return (perror_ret_int("close", FAILURE));
+	(*cmd_info)->redirect_fd[FD_HEREDOC] = get_fd_and_open_file((*redirect_info)->file, e_overwrite);
+	if ((*cmd_info)->redirect_fd[FD_HEREDOC] < 0)
+		return (perror_ret_int("open", FAILURE));
+	if (do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], *redirect_info, envlist) == FAILURE)
+		return (EXIT_FAILURE);
 	return (SUCCESS);
 }
 
