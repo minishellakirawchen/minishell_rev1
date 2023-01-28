@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 15:35:04 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/28 17:58:05 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 02:44:59 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@ int	execute_builtin(t_info *info, char **cmds)
 		return (ft_pwd(info));
 	if (is_same_str("cd", cmds[0]))
 		return (ft_cd(info, cmds));
+	if (is_same_str("exit", cmds[0]))
+		return (ft_exit(info, cmds));
 	return (EXIT_FAILURE);
 }

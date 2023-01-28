@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 01:24:55 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 02:46:32 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@
 # define SUCCESS	1
 
 # define DEBUG		1
+
+# define EXIT_TOO_MANY_ARGS			1
+# define EXIT_NUMERIC_ARGS_REQUIRED	255
+# define SYNTAX_ERROR				258
 
 /* ************************** */
 /*          typedef           */
@@ -189,6 +193,7 @@ int			ft_unset(t_info *info, char **cmds);
 int			ft_echo(char **cmds);
 int			ft_pwd(t_info *info);
 int			ft_cd(t_info *info, char **cmds);
+int			ft_exit(t_info *info, char **cmds);
 
 /*         helper.c           */
 void		*free_1d_alloc(void *alloc);

@@ -31,6 +31,7 @@ SRC		= main.c \
 		  ft_builtin/ft_unset.c \
 		  ft_builtin/ft_pwd.c \
 		  ft_builtin/ft_cd.c \
+		  ft_builtin/ft_exit.c \
 		  helper/alloc_free.c \
 		  helper/get_envlist.c \
 		  helper/print_key_value.c \
