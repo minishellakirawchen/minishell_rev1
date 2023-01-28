@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 23:39:03 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 01:24:55 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ t_key_type	judge_value(t_export_info *e_info);
 int 		judge_opt(char *cmd);
 int			judge_cmd(char *cmd);
 int			check_dir_exist(char *tdir);
+void		ft_lst_ascsort(t_list **headRef);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);

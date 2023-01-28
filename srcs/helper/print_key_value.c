@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 23:47:15 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 00:40:45 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 02:07:27 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	print_key_value(void *content)
 
 void	print_export_key_value(void *content)
 {
-	t_env_elem *elem;
+	t_env_elem	*elem;
 
 	elem = content;
 	if (elem->value != NULL)

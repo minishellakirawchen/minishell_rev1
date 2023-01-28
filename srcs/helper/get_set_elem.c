@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 00:57:18 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 02:07:52 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	add_env(t_info *info, char *key, char *value)
 		temp_ptr = free_1d_alloc(temp_ptr);
 		key = free_1d_alloc(key);
 	}
-	else if(elem_value == NULL)
+	else if (elem_value == NULL)
 		exit_status = set_elem(info, key, value);
 	else
 		free(key);
