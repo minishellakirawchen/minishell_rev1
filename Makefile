@@ -33,6 +33,7 @@ SRC		= main.c \
 		  expansion/get_expanded_str.c \
 		  expansion/create_commands.c \
 		  command_execution/command_execution.c \
+		  command_execution/ft_exec.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \
 		  helper/alloc_free.c \

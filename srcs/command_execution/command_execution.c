@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 18:18:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 19:55:14 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	init_pipefd(int prev_pipefd[2], int now_pipefd[2])
 	now_pipefd[WRITE] = -1;
 }
 
-void	copy_fd_new_to_prev(int prev_pipefd[2], const int now_pipefd[2])
+void	copy_prevfd_to_newfd(int prev_pipefd[2], const int now_pipefd[2])
 {
 	if (!prev_pipefd || !now_pipefd)
 		return ;
@@ -62,34 +62,53 @@ char **create_minishell_envp(t_info *info)
 	return (minishell_envp);
 }
 
-int	execute_commands(char **commands, char **minishell_envp)
+int	dup2_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next)
 {
+	errno = 0;
+	if (prev_fd && prev_fd[WRITE] != -1)
+		if (dup2(prev_fd[READ], STDIN_FILENO) < 0)
+			return (perror_ret_int("dup2", FAILURE));
+	if (next && now_fd)
+		if (dup2(now_fd[WRITE], STDOUT_FILENO) < 0)
+			return (perror_ret_int("dup2", FAILURE));
+	return (SUCCESS);
+}
 
+int	close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next)
+{
+	errno = 0;
+	if (prev_fd && prev_fd[WRITE] != -1)
+		if (close(prev_fd[READ]) < 0 || close(prev_fd[WRITE]) < 0)
+			return (perror_ret_int("close", FAILURE));
+	if (next && now_fd)
+		if (close(now_fd[READ]) < 0 || close(now_fd[WRITE]) < 0)
+			return (perror_ret_int("close", FAILURE));
+	return (SUCCESS);
 }
 
 // pipelien_commands cmd1 | cmd2 | cmd3
-int	execute_pipeline(t_list_bdi *pipeline_commands_head, t_info *info)
+int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 {
 	int				exit_status;
 	t_command_info	*command_info;
-	t_list_bdi		*pipeline_commands_node;
+	t_list_bdi		*pipeline_cmds_node;
 	t_list_bdi		*last_node;
 	int				now_pipefd[2];
 	int				prev_pipefd[2];
 	char			**minishell_envp;
 
-	if (!pipeline_commands_head)
+	if (!pipeline_cmds_head)
 		return (FAILURE);
 
 	/* vvvvv debug mode: print command_info vvvvv */
-	pipeline_commands_node = pipeline_commands_head;
-	while (pipeline_commands_node)
+	pipeline_cmds_node = pipeline_cmds_head;
+	while (pipeline_cmds_node)
 	{
-		command_info = pipeline_commands_node->content;
+		command_info = pipeline_cmds_node->content;
 		// tmp print
 		debug_print_command_info(command_info);
-		pipeline_commands_node = pipeline_commands_node->next;
-		if (pipeline_commands_node)
+		pipeline_cmds_node = pipeline_cmds_node->next;
+		if (pipeline_cmds_node)
 			ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
 	}
 	/* ^^^^^ debug mode: print command_info ^^^^^ */
@@ -100,41 +119,45 @@ int	execute_pipeline(t_list_bdi *pipeline_commands_head, t_info *info)
 		return (FAILURE);
 
 	init_pipefd(prev_pipefd, now_pipefd);
-	pipeline_commands_node = pipeline_commands_head;
-	while (pipeline_commands_node)
+	pipeline_cmds_node = pipeline_cmds_head;
+	while (pipeline_cmds_node)
 	{
 		if (pipe(now_pipefd) < 0)
 			return (perror_ret_int("pipe", FAILURE));
 
-		command_info = pipeline_commands_node->content;
+		command_info = pipeline_cmds_node->content;
 		command_info->pid = fork();
 		if (command_info->pid < 0)
 			return (perror_ret_int("fork", FAILURE));
 
 		/* child */
 		if (command_info->pid == 0)
-			exit (execute_commands(command_info->commands, minishell_envp));
-
+		{
+			if (dup2_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
+				return (FAILURE);
+			if (close_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
+				return (FAILURE);
+			exit (ft_execve(command_info->commands, minishell_envp, info->envlist_head));
+		}
 		/* parent */
-		if (prev_pipefd[WRITE] != -1)
-			if (close(prev_pipefd[READ]) < 0 || close(prev_pipefd[WRITE] < 0))
-				return (perror_ret_int("close", FAILURE));
-		copy_fd_new_to_prev(prev_pipefd, now_pipefd);
+		if (close_fds(NULL, prev_pipefd, NULL) < 0)
+			return (FAILURE);
+		copy_prevfd_to_newfd(prev_pipefd, now_pipefd);
 
-		pipeline_commands_node = pipeline_commands_node->next;
+		pipeline_cmds_node = pipeline_cmds_node->next;
 	}
 
 	/* wait */
-	last_node = ft_lstlast_bdi(pipeline_commands_head);
+	last_node = ft_lstlast_bdi(pipeline_cmds_head);
 	command_info = last_node->content;
 	exit_status = waitpid(command_info->pid, &exit_status, 0);
 
-	pipeline_commands_node = pipeline_commands_head;
-	while (pipeline_commands_node)
+	pipeline_cmds_node = pipeline_cmds_head;
+	while (pipeline_cmds_node)
 	{
-		command_info = pipeline_commands_node->content;
+		command_info = pipeline_cmds_node->content;
 		waitpid(command_info->pid, NULL, 0);
-		pipeline_commands_node = pipeline_commands_node->next;
+		pipeline_cmds_node = pipeline_cmds_node->next;
 	}
 
 	minishell_envp = (char **)free_2d_alloc((void **)minishell_envp);
