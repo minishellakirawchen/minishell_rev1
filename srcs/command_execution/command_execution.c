@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 22:51:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 10:04:17 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,17 @@ int	execute_pipeline(t_list_bdi *pipeline_commands)
 
 	if (!pipeline_commands)
 		return (FAILURE);
-	command_info = pipeline_commands->content;
+
+	exit_status = 0;
+	while (pipeline_commands)
+	{
+		command_info = pipeline_commands->content;
+		// tmp print
+		debug_print_command_info(command_info);
+		pipeline_commands = pipeline_commands->next;
+		if (pipeline_commands)
+			ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
+	}
 
 	// exec redirect
 	// if subshell
@@ -49,7 +59,15 @@ void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status)
 
 	if (!exec_list || !*exec_list)
 		return ;
+
 	next_operator_node = *exec_list;
+
+	/* debug mode: execute all node */
+	debug_print_exec_nodetype(next_operator_node);
+	(*exec_list) = (*exec_list)->next;
+	exit_status++;
+
+	/*
 	if ((next_operator_node->node_kind == e_node_semicolon)
 	|| (next_operator_node->node_kind == e_node_and && exit_status == 0)
 	|| (next_operator_node->node_kind == e_node_or && exit_status != 0))
@@ -59,6 +77,7 @@ void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status)
 	}
 	while (*exec_list && (*exec_list)->node_kind != e_node_semicolon)
 		(*exec_list) = (*exec_list)->next;
+	 */
 }
 
 int	execute_execlist(t_info *info)
@@ -71,6 +90,8 @@ int	execute_execlist(t_info *info)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 
+	printf("\n***** execute *****\n");
+	printf("\nvvvvvvvvvvvvvvvvvvv\n");
 	exec_node = info->execlist_head;
 	while (exec_node)
 	{
@@ -81,11 +102,10 @@ int	execute_execlist(t_info *info)
 		exec_node = exec_node->next;
 		move_to_next_exec_node(&exec_node, exit_status);
 
-		if (expand_variable(&exec_node, info) == FAILURE)
-			return (FAILURE);
-		exec_node = exec_node->next;
 	}
-	debug_print_exec_list(info->execlist_head, "expansion");
+	printf("^^^^^^^^^^^^^^^^^^^\n");
+
+//	debug_print_exec_list(info->execlist_head, "expansion");
 
 	return (exit_status);
 }

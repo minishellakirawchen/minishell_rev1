@@ -175,7 +175,7 @@ int	split_by_operators(t_list_bdi **token_head)
 				return (FAILURE);
 			}
 
-			debug_print_token_word(splitted_list_head, "split head");
+			debug_print_tokens(splitted_list_head, "split head");
 			if (prev)
 				prev->next = splitted_list_head;
 			else

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/25 21:21:55 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/27 22:55:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ typedef enum e_node_kind		t_node_kind;
 /*         function           */
 /* ************************** */
 
-int	execute_execlist(t_info *info);
+int		execute_execlist(t_info *info);
+void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status);
+int		execute_pipeline(t_list_bdi *pipeline_commands);
 
 
 #endif //COMMAND_EXECUTION_H

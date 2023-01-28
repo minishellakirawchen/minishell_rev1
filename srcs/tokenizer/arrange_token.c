@@ -24,7 +24,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
 
-//	debug_print_token_word(*tokenlist_head, "before arrange");
+//	debug_print_tokens(*tokenlist_head, "before arrange");
 
 	if (valid_control_operator(tokenlist_head) == FAILURE)
 		return (FAILURE);
@@ -36,25 +36,25 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 
 	set_parenthesis_no(tokenlist_head);
 
-//	debug_print_token_word(*tokenlist_head, "set parenthesis no");
+//	debug_print_tokens(*tokenlist_head, "set parenthesis no");
 
-//	debug_print_token_word(*tokenlist_head, "set opes");
+//	debug_print_tokens(*tokenlist_head, "set opes");
 
 //	delete_empty_elem(tokenlist_head);
 
-//	debug_print_token_word(*tokenlist_head, "delete empty");
+//	debug_print_tokens(*tokenlist_head, "delete empty");
 
 	if (validate_syntax_operators(*tokenlist_head) == FAILURE)
 		return (FAILURE);
 
-//	debug_print_token_word(*tokenlist_head, "validated");
+//	debug_print_tokens(*tokenlist_head, "validated");
 
 	set_elem_type_if_word(tokenlist_head);
 
 	if (ft_lstsize_bdi(*tokenlist_head) == 0)
 		return (FAILURE);
 
-//	debug_print_token_word(*tokenlist_head, "set word type");
+//	debug_print_tokens(*tokenlist_head, "set word type");
 
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 22:49:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 09:46:21 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,9 +223,12 @@ int		perror_ret_int(char *err, int retno);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
-void	debug_print_token_word(t_list_bdi *head, char *str);
+void	debug_print_tokens(t_list_bdi *head, char *str);
 void	debug_print_tree(t_exec_list *root, char *str);
 void	debug_print_exec_list(t_exec_list *head, char *str);
-void	debug_print_redirect_list(t_list_bdi *head, char *str);
+void	debug_print_exec_nodetype(t_exec_list *node);
+void	debug_print_redirect_info(t_list_bdi *head, char *str);
+void	debug_print_command_info(t_command_info *command_info);
+//void	debug_print_command_info(t_command_info *command_info, bool subshell, bool token_cmds, bool cmds, bool redirect)
 
 #endif //MINISHELL_H

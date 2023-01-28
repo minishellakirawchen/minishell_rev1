@@ -119,7 +119,7 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 
 	if (!cmd_list || !*cmd_list || !info)
 		return (FAILURE);
-//	debug_print_token_word((*cmd_list)->pipeline_token_list, "before expanded token");
+//	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
 
 	// expand -> quote removal -> space split -> add expanded_token_list;
 	expanded_token_list = NULL;
@@ -156,7 +156,7 @@ int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info
 			ft_lstdelone_bdi(&popped_node, free_token_elem);
 		}
 	}
-//	debug_print_token_word(expanded_token_list, "expanded token");
+//	debug_print_tokens(expanded_token_list, "expanded token");
 
 	/* expanded_token_list -> char **commands */
 	//input   : echo "hello"world good 'bye  '

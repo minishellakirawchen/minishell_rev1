@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 21:46:08 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/28 09:13:14 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	prompt_loop(t_info *info)
 		if (arrange_and_validate_token_list(&info->tokenlist_head) == FAILURE)
 			is_return_input = true;//add_history & free(line)
 
-		debug_print_token_word(info->tokenlist_head, "arranged");
+		debug_print_tokens(info->tokenlist_head, "arranged");
 
 		/* parsing (Mandatory/Bonus) */
 		if (!is_return_input && parsing_token_list(info) == FAILURE)

@@ -45,14 +45,14 @@ int	tokenize_input_line(t_info *info, const char *readline_input)
 	if (!info->tokenlist_head)
 		return (FAILURE);
 
-	debug_print_token_word(info->tokenlist_head, "split space");
+	debug_print_tokens(info->tokenlist_head, "split space");
 
 	/* split by control operation and redirection */
 	/* prev->before_list->next  ->  prev->split1->split2...->next */
 	if (split_by_operators(&info->tokenlist_head) == FAILURE)
 		return (FAILURE);
 
-	debug_print_token_word(info->tokenlist_head, "split opes");
+	debug_print_tokens(info->tokenlist_head, "split opes");
 
 	return (SUCCESS);
 }
