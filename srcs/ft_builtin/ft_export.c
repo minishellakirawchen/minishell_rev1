@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/24 22:33:12 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 00:54:59 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@ static int	define_key_value(char *cmd, t_export_info *e_info)
 	exit_status = EXIT_SUCCESS;
 	equal_index = 0;
 	key_sign = ft_strchr(cmd, '=');
-	//'='を見つからないときに、cmdをkeyとして認識、return(0) and (key_type == e_novalue)を返す
+	//'='を見つからないときに、cmdをft_strdupでkeyに代入、return(0) and (key_type == e_novalue)を返す
 	if (key_sign == NULL)
 	{
 		e_info->key_type = e_novalue;
-		e_info->key = cmd;
+		e_info->key = ft_strdup_ns(cmd);
 		return (exit_status);
 	}
 	cmd_len = ft_strlen(cmd);
 	while (cmd[equal_index] != '=')
 		equal_index++;
 	e_info->key = ft_substr(cmd, 0, equal_index);
-	e_info->value = ft_substr(cmd, equal_index + 1, (cmd_len - (equal_index
-					+ 1)));
+	e_info->value = ft_substr(cmd, equal_index + 1,
+		(cmd_len - (equal_index + 1)));
 	if (!e_info->key || !e_info->value)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	return (exit_status);
@@ -64,7 +64,7 @@ int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 	if (e_info->key_type == e_error)
 	{
 		ft_dprintf(STDERR_FILENO,
-			"minishell: export: `%s': not a valid identifier\n",*cmds);
+			"minishell: export: `%s': not a valid identifier\n", *cmds);
 		exit_status = EXIT_FAILURE;
 		if (e_info->value != NULL)
 		{
@@ -74,7 +74,7 @@ int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 	}
 	if (e_info->key_type == e_append)
 		exit_status = append_env(info, e_info->key, e_info->value);
-	if (e_info->key_type == e_add)
+	if (e_info->key_type == e_add | e_info->key_type == e_novalue)
 		exit_status = add_env(info, e_info->key, e_info->value);
 	return (exit_status);
 }
@@ -91,11 +91,10 @@ int	ft_export(t_info *info, char **cmds)
 	if (!e_info)
 		return (EXIT_FAILURE);
 	cmds ++;
-	//export NULL の挙動は未定義（shell変数を表示するが、実装しない！？なんのエラーを表示する？）
 	if (*cmds == NULL)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: export: invalid variable\n");
-		exit_status = EXIT_FAILURE;
+		ft_sort_env(info);
+		exit_status = EXIT_SUCCESS;
 	}
 	while (*cmds != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 22:38:04 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/28 23:39:03 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ int		execute_builtin(t_info *info, char **cmds);
 /* ************************** */
 int			ft_env(t_info *info);
 int			ft_export(t_info *info, char **cmds);
+int 		ft_sort_env(t_info *info);
 int			ft_unset(t_info *info, char **cmds);
 int			ft_echo(char **cmds);
 int			ft_pwd(t_info *info);
@@ -197,6 +198,7 @@ void		*perror_ret_nullptr(char *err);
 void		free_env_elem(void *content);
 void		free_token_elem(void *content);
 void		print_key_value(void *content);
+void		print_export_key_value(void *content);
 int			perror_and_return_int(char *err, int exit_status);
 char		**get_value_from_key(t_env_elem *elem, char *key);
 char		**get_elem(t_info *info, char *key);
