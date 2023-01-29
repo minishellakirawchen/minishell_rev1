@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 12:55:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 14:15:43 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef enum e_node_kind		t_node_kind;
 
 /* expansion.c */
 int		expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *info);
-int		create_redirect_list(t_exec_list **execlist_head);
 
 
 /* expand_var.c */

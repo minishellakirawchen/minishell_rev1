@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 12:34:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 13:53:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,10 @@ int	execute_execlist(t_info *info)
 	exec_node = info->execlist_head;
 
 	/* exec heredoc */
-	exec_node = info->execlist_head;
-	while (exec_node)
-	{
-		pipeline_node = exec_node;
-		execute_heredoc(&pipeline_node);
-		exec_node = exec_node->next;
-		if (exec_node)
-			exec_node = exec_node->next;//skip operator node
-	}
+	if (execute_heredoc(&info->execlist_head) == FAILURE)
+		return (FAILURE);
 
-	/* expand var and execute commands */
+	/* expand_var and execute_commands in pipeline_node unit */
 	exec_node = info->execlist_head;
 	while (exec_node)
 	{
@@ -73,8 +66,11 @@ int	execute_execlist(t_info *info)
 		/* expansion */
 		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
 			return (FAILURE);
+
 		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info->envlist_head);
+
+		/* get next pipeline node */
 		exec_node = exec_node->next;
 		move_to_next_exec_node(&exec_node, exit_status);
 	}

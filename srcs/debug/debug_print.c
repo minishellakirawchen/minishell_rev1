@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 10:05:24 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 13:42:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,8 +143,8 @@ void	debug_print_redirect_info(t_list_bdi *head, char *str)
 	{
 		info = node->content;
 		ft_dprintf(STDERR_FILENO, "%s[", type[info->io_type]);
-		if (info->file)
-			ft_dprintf(STDERR_FILENO, "file:%s]", info->file);
+		if (info->filename)
+			ft_dprintf(STDERR_FILENO, "filename:%s]", info->filename);
 		else
 			ft_dprintf(STDERR_FILENO, "heredoc:%s]%s", info->heredoc_eof, info->is_expansion ? "y" : "n");
 		node = node->next;

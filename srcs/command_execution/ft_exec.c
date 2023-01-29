@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:27:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 13:47:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_list *envli
 	if (!command_info || !minishell_envp || !envlist)
 		return (FAILURE);
 
-	// execute_redirect()
+	// connect_redirect_fd() && expand_var_in_heredoc()
 	// TODO
 
-	// is_builtin
+	// is_builtin -> execute_builtin
 	// TODO
 
 	// execute commands (other than builtin)
@@ -58,10 +58,10 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 			return (perror_ret_int("malloc", FAILURE));
 //		dprintf(STDERR_FILENO, "debug: cmdpath:%s\n", path);
 		execve(path, commands, minishell_envp);
-		path = free_1d_alloc(path);
+		free_1d_alloc(path);
 		idx++;
 	}
-	splitted_paths = (char **)free_2d_alloc((void **)splitted_paths);
+	free_2d_alloc((void **)splitted_paths);
 	return (CMD_NOT_FOUND);
 }
 
@@ -83,7 +83,6 @@ static char	*get_execute_path(char *path, char *file)
 	if (path_len > 0 && path[path_len - 1] != '/')
 		ft_strlcat(execute_path, "/", len + 1);
 	ft_strlcat(execute_path, file, len + 1);
-//	printf("create path:[%s]\n", execute_path); // check
 	return (execute_path);
 }
 

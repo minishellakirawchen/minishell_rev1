@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 22:15:58 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 14:40:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,12 @@ int		close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
 char	**create_minishell_envp(t_list *envlist_head);
 
 /* execute_redirect.c */
-int	execute_redirect(t_command_info *command_info, t_list *envlist);
+//int	execute_redirect(t_command_info *command_info, t_list *envlist);
 int	execute_heredoc(t_exec_list **pipeline);
+
+/* open_file.c */
+int	get_fd_and_open_file(const char *filename, t_fopen_type fopen_type);
+
 
 /* execute_heredoc.c */
 //int execute_heredoc(t_command_info *command_info, t_list *envlist);

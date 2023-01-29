@@ -6,11 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 12:58:42 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 14:14:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
+
+static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *info);
 
 // operator && || ;のように、区切りまでのexpansionにしなければならない
 // && || ;がexpandにより生成されることはあるか？
@@ -45,25 +47,6 @@
 // input pipeline is type=pipeline
 // type=subshell is expanded in execution->parsing process
 
-/*
-int	expansion(t_info *info)
-{
-	t_exec_list		*exec_node;
-
-	if (!info)
-		return (FAILURE);
-	exec_node = info->execlist_head;
-	while (exec_node)
-	{
-		if (expand_var_and_create_commands_from_tokens(&exec_node, info) == FAILURE)
-			return (FAILURE);
-		exec_node = exec_node->next;
-	}
-	debug_print_exec_list(info->execlist_head, "expansion");
-	return (SUCCESS);
-}
-*/
-
 int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *info)
 {
 	t_list_bdi		*command_list_node;
@@ -84,22 +67,67 @@ int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *i
 	return (SUCCESS);
 }
 
-int	create_redirect_list(t_exec_list **exexlist_head)
-{
-	t_list_bdi		*command_list_node;
-	t_command_info	*command_list;
 
-	if (!exexlist_head || !*exexlist_head)
+//bash3.2 0 $ echo "$a1"	//hoge    hoge
+//bash3.2 0 $ echo $a1		//hoge hoge
+
+//bash3.2 0 $ echo hello>$a1
+//bash: $a1: ambiguous redirect
+
+//bash3.2 1 $ echo hello>"$a1"
+//bash3.2 0 $ ls
+//hoge    hoge
+
+//bash3.2 0 $ echo hello >'$a1'
+//bash3.2 0 $ ls
+//$a1
+
+// command_list->redirect_list = heredoc->io->io->heredoc->...
+// if type=io, expand and create filename from redirect_list->content=redirect_info->token_list
+static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *info)
+{
+	t_list_bdi		*redirect_list;
+	t_redirect_info	*redirect_info;
+
+	if (!cmd_list || !*cmd_list)
 		return (FAILURE);
-	command_list_node = (*exexlist_head)->pipeline_commands;
-	while (command_list_node)
+	redirect_list = (*cmd_list)->redirect_list;
+	while (redirect_list)
 	{
-		command_list = command_list_node->content;
-		if (create_redirect_list_from_pipeline_tokens(&command_list) == FAILURE)
-			return (FAILURE);
-		if (create_heredoc_eof_from_tokens(&command_list) == FAILURE)
-			return (FAILURE);
-		command_list_node = command_list_node->next;
+		redirect_info = redirect_list->content;
+		if (redirect_info->io_type == e_redirect_in
+		|| redirect_info->io_type == e_redirect_out
+		|| redirect_info->io_type == e_redirect_append)
+		{
+			// expand var in command list
+			redirect_info->filename = get_filename_or_heredoc_eof(&redirect_info->token_list, NULL, true, info);
+			if (!redirect_info->filename)
+				return (FAILURE); //TODO;free
+		}
+		redirect_list = redirect_list->next;
 	}
 	return (SUCCESS);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

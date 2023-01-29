@@ -6,14 +6,14 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:29:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 13:43:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
 
 static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head);
-int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_list *envlist);
+int			execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_list *envlist);
 
 int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head)
 {
