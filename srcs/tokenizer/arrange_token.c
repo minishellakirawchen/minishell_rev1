@@ -24,7 +24,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
 
-	debug_print_tokens(*tokenlist_head, "before arrange");
+//	debug_print_tokens(*tokenlist_head, "before arrange");
 
 	if (valid_control_operator(tokenlist_head) == FAILURE)
 		return (FAILURE);
@@ -38,7 +38,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 
 //	debug_print_tokens(*tokenlist_head, "set parenthesis no");
 
-	debug_print_tokens(*tokenlist_head, "set opes");
+//	debug_print_tokens(*tokenlist_head, "set opes");
 
 //	delete_empty_elem(tokenlist_head);
 
