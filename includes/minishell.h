@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 02:46:32 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 12:49:50 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ enum e_key_type
 	e_error,
 	e_add,
 	e_novalue,
+	e_nokey,
 };
 
 /* ************************** */
@@ -219,6 +220,7 @@ int 		judge_opt(char *cmd);
 int			judge_cmd(char *cmd);
 int			check_dir_exist(char *tdir);
 void		ft_lst_ascsort(t_list **headRef);
+int			chdir_setpath(t_info *info, t_cd_info *cd_info, char **cmds);
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);

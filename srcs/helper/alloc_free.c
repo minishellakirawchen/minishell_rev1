@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 00:38:55 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 12:08:35 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void	*free_1d_alloc(void *alloc)
 {
-	if (alloc != NULL)
-		free(alloc);
+	free(alloc);
 	return (NULL);
 }
 

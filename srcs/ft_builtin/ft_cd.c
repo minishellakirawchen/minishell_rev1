@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/28 22:44:01 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 12:43:05 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,34 +86,10 @@ static t_cd_info	*init_cd_info(t_info *info)
 	return (cd_info);
 }
 
-static int	set_path(t_info *info, t_cd_info *cd_info)
-{
-	int	exit_status;
-
-	exit_status = 0;
-	if (*cd_info->newpwd == '.')
-	{
-		exit_status += append_env(info, ft_strdup("PWD="),
-				ft_strdup(cd_info->newpwd));
-		exit_status += add_env(info, ft_strdup("OLDPWD"),
-				ft_strdup(cd_info->env_pwd));
-	}
-	else
-	{
-		exit_status += add_env(info, ft_strdup("PWD"), getcwd(NULL, 0));
-		exit_status += add_env(info, ft_strdup("OLDPWD"),
-				ft_strdup(cd_info->env_pwd));
-	}
-	if (exit_status > 0)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
-}
-
 int	ft_cd(t_info *info, char **cmds)
 {
 	int			exit_status;
 	t_cd_info	*cd_info;
-	int			ret_chdir;
 
 	exit_status = EXIT_SUCCESS;
 	if (!info || !cmds)
@@ -127,13 +103,6 @@ int	ft_cd(t_info *info, char **cmds)
 	cd_info->newpwd = define_new_path(cd_info, *cmds);
 	if (!cd_info->newpwd)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
-	ret_chdir = chdir(cd_info->newpwd);
-	if (ret_chdir < 0)
-	{
-		ft_printf("bash: cd: %s: No such file or directory\n", *cmds);
-		exit_status = EXIT_FAILURE;
-	}
-	else
-		set_path(info, cd_info);
+	exit_status = chdir_setpath(info, cd_info, cmds);
 	return (free_cdinfo_ret_status(cd_info, exit_status));
 }

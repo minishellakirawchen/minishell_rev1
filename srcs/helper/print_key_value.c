@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 23:47:15 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 02:07:27 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 12:45:52 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_key_value(void *content)
 
 	elem = content;
 	if (elem->value != NULL)
-		ft_printf("%s = %s\n", elem->key, elem->value);
+		ft_printf("%s=%s\n", elem->key, elem->value);
 }
 
 void	print_export_key_value(void *content)

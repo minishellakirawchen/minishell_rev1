@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:31:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 02:46:41 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 10:48:47 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int count_cmds(char **cmds)
 	int	count;
 
 	count = 0;
-	while(cmds != NULL)
+	while(*cmds != NULL)
 	{
 		count ++;
 		cmds ++;
@@ -67,13 +67,13 @@ int	ft_exit(t_info *info, char **cmds)
 		return (FAILURE);
 	ft_dprintf(STDERR_FILENO, "exit");
 	cmds_count = count_cmds(&cmds[1]);
-	if (cmds_count > 2)
+	if (cmds_count > 1)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments");
 		return (EXIT_TOO_MANY_ARGS);
 	}
 	exit_status = EXIT_SUCCESS;
-	if (cmds_count == 2)
+	if (cmds_count == 1)
 	{
 		exit_status = (int)(ft_strtoll((char *)cmds[1], &is_strtoll_success) % 256);
 		if (!is_strtoll_success)

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 02:44:28 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 12:57:02 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,12 @@ int command_execution(t_info *info)
 	exit_status = execute_builtin(info, cmds7);
 	char	*cmds8[20] = {"env", NULL};
 	exit_status = execute_builtin(info, cmds8);
-	char	*cmds9[20] = {"exit", "255",NULL};
-	exit_status = execute_builtin(info, cmds9);
+	// char	*cmds9[20] = {"exit", "255",NULL};
+	// exit_status = execute_builtin(info, cmds9);
+	char	*cmds10[20] = {"cd", "test_dir",NULL};
+	exit_status = execute_builtin(info, cmds10);
+	char	*cmds11[20] = {"export", NULL};
+	exit_status = execute_builtin(info, cmds11);
 	// ft_env(info);
 	printf("----------after-------------\n");
 	//ft_execve();
