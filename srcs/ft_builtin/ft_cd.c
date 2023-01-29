@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 13:23:24 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 17:37:16 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ static t_cd_info	*init_cd_info(t_info *info)
 {
 	t_cd_info	*cd_info;
 
-	errno = 0;
 	cd_info = malloc(sizeof(t_cd_info));
 	if (!cd_info)
 		return (NULL);
