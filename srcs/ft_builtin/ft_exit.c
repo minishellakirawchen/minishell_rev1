@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:31:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 10:48:47 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 14:06:38 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_exit(t_info *info, char **cmds)
 	int				cmds_count;
 
 	if (!info || !cmds)
-		return (FAILURE);
+		return (EXIT_FAILURE);
 	ft_dprintf(STDERR_FILENO, "exit");
 	cmds_count = count_cmds(&cmds[1]);
 	if (cmds_count > 1)
@@ -82,7 +82,6 @@ int	ft_exit(t_info *info, char **cmds)
 			exit (EXIT_NUMERIC_ARGS_REQUIRED);
 		}
 	}
-	//info->is_exit = true;
 	exit_status %= 256;
 	exit(exit_status);
 }
