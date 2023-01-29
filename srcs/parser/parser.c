@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 14:16:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 14:45:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	parsing_token_list(t_info *info)
 	if (create_redirect_list(&info->execlist_head, info) == FAILURE)
 		return (FAILURE);
 
-	//	debug_print_exec_list(info->execlist_head, "command_list");
+	debug_print_exec_list(info->execlist_head, "create_redirect_list");
 
 	return (SUCCESS);
 }

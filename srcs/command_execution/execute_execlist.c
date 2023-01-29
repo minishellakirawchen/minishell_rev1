@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 13:53:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 14:51:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status);
  * 		cmd_ij : t_command_info
  *
  * */
-
 // pipelien_commands cmd1 | cmd2 | cmd3
 
 int	execute_execlist(t_info *info)
