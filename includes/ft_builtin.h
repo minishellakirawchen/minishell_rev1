@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 14:32:21 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 14:45:42 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ struct							s_cd_info
 /* ************************** */
 /*         ft_builtin         */
 /* ************************** */
-int								ft_env(t_info *info);
+int								ft_env(t_info *info, char **cmds);
 int								ft_export(t_info *info, char **cmds);
 int								ft_sort_env(t_info *info);
 int								ft_unset(t_info *info, char **cmds);
