@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 15:18:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:21:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,6 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 			redirect_info->filename = concat_tokens(redirect_info->token_list);
 			if (!redirect_info->filename)
 				return (FAILURE);//TODO;free
-
-			// expand var in command list
-//			redirect_info->filename = get_filename_or_heredoc_eof(&redirect_info->token_list, NULL, true, info);
-//			if (!redirect_info->filename)
-//				return (FAILURE);
 		}
 		redirect_list = redirect_list->next;
 	}
