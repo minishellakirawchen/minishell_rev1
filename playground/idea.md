@@ -322,6 +322,95 @@ echo $a1 ;  (echo $a1 ; export a1=a2dayo &&   echo $a1 && export a1=a3dayo) ; ec
 
 
 
+Jan/29th
+やり直し
+展開内容は同じっぽい
+heredocのexpansionはquote保持するので、
+コマンド実行前にheredoc実行して
+コマンド実行中にheredoc内のexpansionを実行する形かな
+export a1=a2 && cat<<d のdがa1=a2になっているので、コマンド内のexpandと同様に実現できそう
+
+heredocをpipelineからheredoc_listに移行しても、展開の整合性は保てる？
+困る可能性があるのは、<<h1<in1 のように入力の優先順位がわからなくなること？
+heredoc整形時にio_token_listにheredoc, redirect in/outを移動するか。めんど
+
+```shell
+
+// expand in heredoc
+cat<<a; cat<<b && (cat<<c; export a1=a2&&cat<<d; cat<<e && export a1=a3; cat <<f && cat<<g; cat<<h); cat<<i && export a1=a4 && cat<<j; cat<<k;
+    a1      a1        a1                    a2      a2                        a3       a3      a3       a1                        a4      a4
+a1=a1 in a
+a1=a1 in b
+a1=a1 in c
+a1=a2 in d
+a1=a2 in e
+a1=a3 in f
+a1=a3 in g
+a1=a3 in h
+a1=a1 in i
+a1=a4 in j
+a1=a4 in k
+
+// expand in echo
+echo $a1; echo $a1 && (echo $a1; export a1=a2&&echo $a1; echo $a1 && export a1=a3; echo $a1 && echo $a1; echo $a1); echo $a1 && export a1=a4 && echo $a1; echo $a1;
+      a1a       a1           a1                     a2          a2                       a3          a3        a3        a1                           a4        a4
+a1
+a1
+a1
+a2
+a2
+a3
+a3
+a3
+a1
+a4
+a4
+
+// expand in heredoc
+bash3.2 0 $ cat <<end
+> "$a1"
+> $a1=$a1_hoge 
+> "'$a1'"
+> '"$a1"'
+> end
+"a4"
+a4= 
+"'a4'"
+'"a4"'
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

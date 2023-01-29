@@ -108,7 +108,7 @@ char	**create_commands_from_token_list(t_list_bdi **token_list)
 	return (commands);
 }
 
-int	create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info)
+int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info)
 {
 	t_list_bdi		*expanded_token_list;
 	t_list_bdi		*popped_node;

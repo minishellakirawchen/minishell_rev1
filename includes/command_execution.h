@@ -96,8 +96,10 @@ char	**create_minishell_envp(t_list *envlist_head);
 
 /* execute_redirect.c */
 int	execute_redirect(t_command_info *command_info, t_list *envlist);
+int	execute_heredoc(t_exec_list **pipeline);
 
 /* execute_heredoc.c */
-int execute_heredoc(t_command_info *command_info, t_list *envlist);
+//int execute_heredoc(t_command_info *command_info, t_list *envlist);
+//int execute_heredoc(t_list_bdi **pipeline_cmd_node, t_list *envlist);
 
 #endif //COMMAND_EXECUTION_H

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/24 17:14:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 12:58:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,12 @@ int	create_operator_list(t_info *info);
 
 /* create_command_list.c */
 int	create_command_list(t_exec_list **exec_list_head);
+
+/* create_redirect_list.c */
+int		create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list);
+int		expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *info);
+int		create_heredoc_eof_from_tokens(t_command_info **cmd_list);
+
 
 /* move_tokens_to_command_list.c */
 void	move_tokens_to_command_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token);

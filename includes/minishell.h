@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 22:02:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 12:30:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # include "input.h"
 # include "tokenizer.h"
-# include "paeser.h"
+# include "parser.h"
 # include "expansion.h"
 # include "command_execution.h"
 
@@ -50,6 +50,8 @@
 # define SUCCESS	1
 # define CONTINUE	2
 # define BREAK		3
+
+# define PROCESS_ERROR	0
 
 
 /* ************************** */
@@ -180,13 +182,15 @@ struct s_command_info
 	t_list_bdi		*subshell_token_list; //parsing create_operator_listから実行できる
 };
 
+// redirect_list->content
 struct s_redirect_info
 {
 	t_token_type	io_type;
-	char			*file;			// malloc, in/out/heredoc
+	char			*filename;		// malloc, in/out/heredoc
 	char			*heredoc_eof;	// malloc
 	bool			is_expansion;	// "eof"->not expand
 
+	t_list_bdi		*token_list;
 };
 
 /* ************************** */

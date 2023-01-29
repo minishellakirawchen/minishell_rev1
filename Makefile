@@ -23,11 +23,11 @@ SRC		= main.c \
 		  parser/parser.c \
 		  parser/create_operator_list.c \
 		  parser/create_command_list.c \
+		  parser/create_redirect_list.c \
 		  parser/move_tokens_to_command_list.c \
 		  parser/tree_operation.c \
 		  parser/tree_helper.c \
 		  expansion/expansion.c \
-		  expansion/create_redirect_list.c \
 		  expansion/expand_var.c \
 		  expansion/is_expand.c \
 		  expansion/get_expanded_str.c \

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 21:48:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 12:58:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
  * */
 /* call this function in execution part before command_execute */
 
-// input for expand_variable is "pipeline"
+// input for expand_var_and_create_commands_from_tokens is "pipeline"
 //  t_exec_list pipeline, node_lind=pipeline
 //    pipeline1->pipeline2->pipeline3->... ($> pipeline1 &&/||/; pipeline2 &&/||/; pipeline3 ..)
 //  t_list pipeline_commands = command_list1->command_list2->.. (command_list1 | command_list2 | ....)
@@ -55,7 +55,7 @@ int	expansion(t_info *info)
 	exec_node = info->execlist_head;
 	while (exec_node)
 	{
-		if (expand_variable(&exec_node, info) == FAILURE)
+		if (expand_var_and_create_commands_from_tokens(&exec_node, info) == FAILURE)
 			return (FAILURE);
 		exec_node = exec_node->next;
 	}
@@ -64,7 +64,7 @@ int	expansion(t_info *info)
 }
 */
 
-int	expand_variable(t_exec_list **pipeline, t_info *info)
+int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *info)
 {
 	t_list_bdi		*command_list_node;
 	t_command_info	*command_list;
@@ -75,15 +75,31 @@ int	expand_variable(t_exec_list **pipeline, t_info *info)
 	while (command_list_node)
 	{
 		command_list = command_list_node->content;
-		if (create_redirect_list_from_pipeline_tokens(&command_list, info) == FAILURE)
+		if (expand_var_in_cmd_and_create_cmds_from_tokens(&command_list, info) == FAILURE)
 			return (FAILURE);
-		if (create_commands_from_pipeline_tokens(&command_list, info) == FAILURE)
+		if (expand_var_in_redirect_filename(&command_list, info) == FAILURE)
 			return (FAILURE);
 		command_list_node = command_list_node->next;
 	}
 	return (SUCCESS);
 }
 
+int	create_redirect_list(t_exec_list **exexlist_head)
+{
+	t_list_bdi		*command_list_node;
+	t_command_info	*command_list;
 
-
-
+	if (!exexlist_head || !*exexlist_head)
+		return (FAILURE);
+	command_list_node = (*exexlist_head)->pipeline_commands;
+	while (command_list_node)
+	{
+		command_list = command_list_node->content;
+		if (create_redirect_list_from_pipeline_tokens(&command_list) == FAILURE)
+			return (FAILURE);
+		if (create_heredoc_eof_from_tokens(&command_list) == FAILURE)
+			return (FAILURE);
+		command_list_node = command_list_node->next;
+	}
+	return (SUCCESS);
+}

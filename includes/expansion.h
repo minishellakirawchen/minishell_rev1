@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 09:53:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 12:55:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,18 @@ typedef enum e_node_kind		t_node_kind;
 /*         function           */
 /* ************************** */
 
+/* expansion.c */
+int		expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *info);
+int		create_redirect_list(t_exec_list **execlist_head);
+
+
 /* expand_var.c */
-int		expand_variable(t_exec_list **pipeline, t_info *info);
 int		expansion(t_info *info);//test
 int		remove_quote_in_tokens(t_list_bdi **list_head);
 
-/* create_redirect_list.c */
-int		create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list, t_info *info);
 
 /* create_commands.c */
-int		create_commands_from_pipeline_tokens(t_command_info **cmd_list, t_info *info);
-
+int		expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info);
 
 char	*concat_tokens(t_list_bdi *list_head);
 int		expand_var_in_tokens(t_list_bdi **list_head, t_info *info);
@@ -67,8 +68,6 @@ char	*concat_dst_to_src(char **dst, char *src);
 char	*get_name_str(const char *str_start_with_dollar);
 char	*get_env_value(const char *search_key, t_list *env_list_head);
 int		expand_exit_status(char **expanded_str, int exit_status);
-
-
 
 
 /* is_expand.c */

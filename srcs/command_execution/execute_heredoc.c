@@ -6,15 +6,15 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 22:26:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 10:36:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
 
-static int	create_heredoc_file(t_command_info **command_info, t_redirect_info **redirect_info, int cnt, t_list *envlist);
+static int	create_heredoc_file(t_command_info **command_info, t_redirect_info **redirect_info, int cnt);
 static char	*get_heredoc_tmp_filename(int cnt);
-static int	do_heredoc(int fd, t_redirect_info *redirect_info, t_list *envlist);
+static int	do_heredoc(int fd, t_redirect_info *redirect_info);
 
 int	get_fd_and_open_file(const char *filename, t_fopen_type fopen_type)
 {
@@ -25,29 +25,38 @@ int	get_fd_and_open_file(const char *filename, t_fopen_type fopen_type)
 	return (open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644));
 }
 
-int execute_heredoc(t_command_info *command_info, t_list *envlist)
+int	execute_heredoc(t_exec_list **pipeline)
 {
+	t_list_bdi		*command_list_node;
+	t_command_info	*command_info;
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*redirect_info;
 	int				heredoc_cnt;
 
-	if (!command_info)
+	if (!pipeline)
 		return (FAILURE);
+	command_list_node = (*pipeline)->pipeline_commands;
 	heredoc_cnt = 0;
-	redirect_list = command_info->redirect_list;
-	while (redirect_list)
+	while (command_list_node)
 	{
-		redirect_info = redirect_list->content;
-		if (redirect_info->io_type == e_heredoc)
+		command_info = command_list_node->content;
+		redirect_list = command_info->redirect_list;
+		while (redirect_list)
 		{
-			if (create_heredoc_file(&command_info, &redirect_info, heredoc_cnt, envlist) == FAILURE)
-				return (FILE_OPEN_ERROR);
-			heredoc_cnt++;
+			redirect_info = redirect_list->content;
+			if (redirect_info->io_type == e_heredoc)
+			{
+				if (create_heredoc_file(&command_info, &redirect_info, heredoc_cnt) == FAILURE)
+					return (FILE_OPEN_ERROR);
+				heredoc_cnt++;
+			}
+			redirect_list = redirect_list->next;
 		}
-		redirect_list = redirect_list->next;
+		command_list_node = command_list_node->next;
 	}
 	return (SUCCESS);
 }
+
 
 // input: hogehoge\n
 // delim: hogehoge
@@ -85,7 +94,8 @@ bool	is_eof(char *line)
 //> $eof
 //hoge
 
-static int	do_heredoc(int fd, t_redirect_info *redirect_info, t_list *envlist)
+/* expand in command execution */
+static int	do_heredoc(int fd, t_redirect_info *redirect_info)
 {
 	char	*line;
 
@@ -102,8 +112,6 @@ static int	do_heredoc(int fd, t_redirect_info *redirect_info, t_list *envlist)
 			free_1d_alloc(line);
 			break ;
 		}
-		//TODO:expansion
-
 		ft_dprintf(fd, line);
 		line = free_1d_alloc(line);
 	}
@@ -112,20 +120,18 @@ static int	do_heredoc(int fd, t_redirect_info *redirect_info, t_list *envlist)
 
 static int	create_heredoc_file(t_command_info **cmd_info, t_redirect_info **redirect_info, int cnt, t_list *envlist)
 {
-	t_list_bdi		*redirect_list;
-
 	errno = 0;
 	if (!cmd_info || !*cmd_info
 		|| !redirect_info || !*redirect_info || !(*redirect_info)->heredoc_eof)
 		return (FAILURE);
 
-	(*redirect_info)->file = get_heredoc_tmp_filename(cnt);
-	if (!(*redirect_info)->file)
+	(*redirect_info)->filename = get_heredoc_tmp_filename(cnt);
+	if (!(*redirect_info)->filename)
 		return (FAILURE);
 
 	if ((*cmd_info)->redirect_fd[FD_HEREDOC] != -1 && close((*cmd_info)->redirect_fd[FD_HEREDOC]) < 0)
 		return (perror_ret_int("close", FAILURE));
-	(*cmd_info)->redirect_fd[FD_HEREDOC] = get_fd_and_open_file((*redirect_info)->file, e_overwrite);
+	(*cmd_info)->redirect_fd[FD_HEREDOC] = get_fd_and_open_file((*redirect_info)->filename, e_overwrite);
 	if ((*cmd_info)->redirect_fd[FD_HEREDOC] < 0)
 		return (perror_ret_int("open", FAILURE));
 	if (do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], *redirect_info, envlist) == FAILURE)

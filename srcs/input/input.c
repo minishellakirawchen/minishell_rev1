@@ -70,6 +70,7 @@ int	prompt_loop(t_info *info)
 			return (FAILURE);
 		}
 
+
 		/* expansion & command_execution */
 		exit_status = execute_execlist(info);
 

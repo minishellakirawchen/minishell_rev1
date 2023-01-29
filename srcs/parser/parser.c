@@ -6,11 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 10:02:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 12:57:24 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "paeser.h"
+#include "parser.h"
 
 void	delete_last_semicolon_node(t_exec_list **exec_list_head)
 {
@@ -51,7 +51,17 @@ int	parsing_token_list(t_info *info)
 		return (FAILURE);
 	}
 
-//	debug_print_exec_list(info->execlist_head, "command_list");
+	//quote_removal_in_heredoc, exec_heredocのために""の結合とremovalが必要
+	//redirect_listをまず作成、fileのexpandはあとで実施（heredoc eofはexpandなし）
+
+	// fileのexpansionをあとで実行すると, "'$key'" vs '$key'の判別がつかなくなる
+	// redirect_listを作成し、redirect_info->token_listに保管しておく
+	// heredocは結合してheredoc_eofを作成する
+	// fileの展開、結合はあとで実施する
+	if (create_redirect_list(&info->execlist_head) == FAILURE)
+		return (FAILURE);
+
+	//	debug_print_exec_list(info->execlist_head, "command_list");
 
 	return (SUCCESS);
 }

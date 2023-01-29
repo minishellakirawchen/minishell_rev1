@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 21:10:06 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 12:34:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,25 @@ int	execute_execlist(t_info *info)
 	printf("\nvvvvvvvvvvvvvvvvvvv\n");
 	exec_node = info->execlist_head;
 
-	//TODO:exec_heredoc
-	//先にheredocの""結合が必要
-	//
+	/* exec heredoc */
+	exec_node = info->execlist_head;
+	while (exec_node)
+	{
+		pipeline_node = exec_node;
+		execute_heredoc(&pipeline_node);
+		exec_node = exec_node->next;
+		if (exec_node)
+			exec_node = exec_node->next;//skip operator node
+	}
 
+	/* expand var and execute commands */
+	exec_node = info->execlist_head;
 	while (exec_node)
 	{
 		pipeline_node = exec_node;
 		/* expansion */
-		if (expand_variable(&pipeline_node, info) == FAILURE)
+		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
 			return (FAILURE);
-
 		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info->envlist_head);
 		exec_node = exec_node->next;
