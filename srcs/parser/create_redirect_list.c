@@ -74,6 +74,8 @@ static int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list)
 	{
 		popped_node = ft_lstpop_bdi(&(*cmd_list)->pipeline_token_list);
 		token_elem = popped_node->content;
+
+		/* type=redirect_in/out/append/heredoc, create redirect_info and move tokens */
 		if (is_tokentype_redirection(token_elem->type))
 		{
 			redirect_info = create_redirect_info(token_elem->type, &(*cmd_list)->pipeline_token_list);
@@ -84,6 +86,7 @@ static int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list)
 			ft_lstadd_back_bdi(&(*cmd_list)->redirect_list, new_redirect_list);
 			continue ;
 		}
+		/* if token type is not redirect */
 		ft_lstadd_back_bdi(&command_save, popped_node);
 	}
 	(*cmd_list)->pipeline_token_list = command_save;

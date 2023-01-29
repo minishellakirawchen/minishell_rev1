@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 21:18:21 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:07:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
 
-//	debug_print_tokens(*tokenlist_head, "before arrange");
+	debug_print_tokens(*tokenlist_head, "before arrange");
 
 	if (valid_control_operator(tokenlist_head) == FAILURE)
 		return (FAILURE);
@@ -38,7 +38,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 
 //	debug_print_tokens(*tokenlist_head, "set parenthesis no");
 
-//	debug_print_tokens(*tokenlist_head, "set opes");
+	debug_print_tokens(*tokenlist_head, "set opes");
 
 //	delete_empty_elem(tokenlist_head);
 
@@ -54,7 +54,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 	if (ft_lstsize_bdi(*tokenlist_head) == 0)
 		return (FAILURE);
 
-//	debug_print_tokens(*tokenlist_head, "set word type");
+	debug_print_tokens(*tokenlist_head, "set word type");
 
 	return (SUCCESS);
 }
