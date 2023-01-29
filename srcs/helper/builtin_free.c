@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/28 22:48:18 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 18:32:56 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	perror_and_return_int(char *err, int exit_status)
 
 int	free_cdinfo_ret_status(t_cd_info *cd_info, int exit_status)
 {
-	if (cd_info->env_pwd != NULL)
-		free(cd_info->env_pwd);
 	if (cd_info->pwd != NULL)
 		free(cd_info->pwd);
 	if (cd_info->newpwd != NULL)

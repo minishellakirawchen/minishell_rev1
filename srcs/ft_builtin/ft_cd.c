@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 17:37:16 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 21:25:09 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,12 @@ static t_cd_info	*init_cd_info(t_info *info)
 	cd_info->cd_type = e_cd_init;
 	cd_info->home = get_elem(info, "HOME");
 	cd_info->cdpath = get_elem(info, "CDPATH");
-	cd_info->env_pwd = ft_strdup(*get_elem(info, "PWD"));
+	cd_info->env_pwd = get_elem(info, "PWD");
 	cd_info->pwd = getcwd(NULL, 0);
 	if (cd_info->pwd == NULL)
 	{
-		ft_printf("cd: error retrieving current directory: ");
-		perror("getcwd");
+		ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
+		ft_dprintf(STDERR_FILENO, "getcwd: cannot access parent directories: No such file or directory\n");
 	}
 	cd_info->oldpwd = get_elem(info, "OLDPWD");
 	cd_info->newpwd = NULL;
