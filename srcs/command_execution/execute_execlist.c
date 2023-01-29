@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 16:03:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 17:00:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,15 @@ int	execute_execlist(t_info *info)
 		/* expansion */
 		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
 			return (FAILURE);
+
+		/* @@@@ TMP execute single builtin  @@@@ */
+		t_list_bdi *pipeline_cmds = pipeline_node->pipeline_commands;
+		t_command_info *command_info = pipeline_cmds->content;
+		if (is_builtin(command_info->commands))
+			return (execute_builtin(info, command_info->commands));
+		/* @@@@ TMP execute single builtin  @@@@ */
+
+
 
 		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
