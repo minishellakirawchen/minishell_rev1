@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 17:22:21 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 19:34:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ int	execute_execlist(t_info *info)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 
-	printf("\n***** execute *****\n");
-	printf("\nvvvvvvvvvvvvvvvvvvv\n");
 	exec_node = info->execlist_head;
 
 	/* exec heredoc */
@@ -66,26 +64,28 @@ int	execute_execlist(t_info *info)
 		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
 			return (FAILURE);
 
-		/* @@@@ TMP execute single builtin  @@@@ */
-		/*
-		t_list_bdi *pipeline_cmds = pipeline_node->pipeline_commands;
-		t_command_info *command_info = pipeline_cmds->content;
-		if (is_builtin(command_info->commands))
-			return (execute_builtin(info, command_info->commands));
-		*/
-		/* @@@@ TMP execute single builtin  @@@@ */
-
+		/* vvvvv debug mode: print command_info vvvvv */
+		t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
+		while (pipeline_cmds_node)
+		{
+			t_command_info *command_info = pipeline_cmds_node->content;
+			// tmp print
+			debug_print_command_info(command_info);
+			pipeline_cmds_node = pipeline_cmds_node->next;
+			if (pipeline_cmds_node)
+				ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
+		}
+		/* ^^^^^ debug mode: print command_info ^^^^^ */
+		printf("\nvvvvv execute vvvvv\n");
 		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
+		printf("^^^^^^^^^^^^^^^^^^^  ");
 
 		/* get next pipeline node */
 		exec_node = exec_node->next;
 		move_to_next_exec_node(&exec_node, exit_status);
 	}
-	printf("^^^^^^^^^^^^^^^^^^^\n");
-
 //	debug_print_exec_list(info->execlist_head, "expansion");
-
 	return (exit_status);
 }
 

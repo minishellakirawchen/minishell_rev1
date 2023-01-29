@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 17:39:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 19:31:12 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,12 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 {
 	int				exit_status;
 	t_command_info	*command_info;
-	t_list_bdi		*pipeline_cmds_node;
 	char			**minishell_envp;
-
 
 	if (!pipeline_cmds_head)
 		return (FAILURE);
-
-	/* vvvvv debug mode: print command_info vvvvv */
-	pipeline_cmds_node = pipeline_cmds_head;
-	while (pipeline_cmds_node)
-	{
-		command_info = pipeline_cmds_node->content;
-		// tmp print
-		debug_print_command_info(command_info);
-		pipeline_cmds_node = pipeline_cmds_node->next;
-		if (pipeline_cmds_node)
-			ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
-	}
-	/* ^^^^^ debug mode: print command_info ^^^^^ */
-
 	/* execute pipeline commands */
+	command_info = pipeline_cmds_head->content;
 	if (is_single_builtin(pipeline_cmds_head))
 		return (execute_builtin(info, command_info->commands));
 
@@ -54,7 +39,6 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 		return (FAILURE);
 	}
 	exit_status = get_last_status_and_wait_children(pipeline_cmds_head);
-
 	free_2d_alloc((void **)minishell_envp);
 	return (exit_status);
 }

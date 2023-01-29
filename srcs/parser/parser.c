@@ -61,7 +61,7 @@ int	parsing_token_list(t_info *info)
 	if (create_redirect_list(&info->execlist_head, info) == FAILURE)
 		return (FAILURE);
 
-	debug_print_exec_list(info->execlist_head, "create_redirect_list");
+//	debug_print_exec_list(info->execlist_head, "create_redirect_list");
 
 	return (SUCCESS);
 }
