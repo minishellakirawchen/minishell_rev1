@@ -41,7 +41,6 @@ SRC		= main.c \
 		  command_execution/judge_fork_process.c \
 		  command_execution/ft_exec.c \
 		  command_execution/open_file.c \
-		  command_execution/command_execution.c \
 		  command_execution/execute_builtin.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \

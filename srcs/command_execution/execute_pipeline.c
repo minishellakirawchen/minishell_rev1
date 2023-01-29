@@ -6,16 +6,16 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 13:43:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 16:02:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
 
+static int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_info *info);
 static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head);
-int			execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_list *envlist);
 
-int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head)
+int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 {
 	int				exit_status;
 	t_command_info	*command_info;
@@ -39,11 +39,11 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head)
 	/* ^^^^^ debug mode: print command_info ^^^^^ */
 
 	/* execute pipeline commands */
-	minishell_envp = create_minishell_envp(envlist_head);
+	minishell_envp = create_minishell_envp(info->envlist_head);
 	if (!minishell_envp)
 		return (FAILURE);
 
-	if (execute_pipeline_iter(&pipeline_cmds_head, minishell_envp, envlist_head) == FAILURE)
+	if (execute_pipeline_iter(&pipeline_cmds_head, minishell_envp, info) == FAILURE)
 	{
 		minishell_envp = (char **)free_2d_alloc((void **)minishell_envp);
 		return (FAILURE);
@@ -55,7 +55,7 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head)
 	return (exit_status);
 }
 
-int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_list *envlist)
+static int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_info *info)
 {
 	int				now_pipefd[2];
 	int				prev_pipefd[2];
@@ -80,7 +80,7 @@ int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_list *
 				return (FAILURE);
 			if (close_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
 				return (FAILURE);
-			exit (ft_execve(command_info, envp, envlist));
+			exit (ft_execve(command_info, envp, info));
 		}
 		if (is_parent_process(command_info->pid))
 		{

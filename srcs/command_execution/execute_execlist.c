@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 14:51:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 16:03:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	execute_execlist(t_info *info)
 			return (FAILURE);
 
 		/* execution */
-		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info->envlist_head);
+		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
 
 		/* get next pipeline node */
 		exec_node = exec_node->next;

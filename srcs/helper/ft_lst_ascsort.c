@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/18 11:02:01 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 02:08:31 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 16:11:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	front_back_split(t_list *source, t_list **front_ref,
 	slow->next = NULL;
 }
 
-static ssize_t	max_size(t_env_elem *a, t_env_elem *b)
+static ssize_t	sort_max_size(t_env_elem *a, t_env_elem *b)
 {
 	ssize_t	a_len;
 	ssize_t	b_len;
@@ -57,7 +57,7 @@ static t_list	*sorted_merge(t_list *a, t_list *b)
 		return (a);
 	if (ft_strncmp(((t_env_elem *)a->content)->key,
 			((t_env_elem *)b->content)->key,
-			max_size(a->content, b->content)) <= 0)
+			sort_max_size(a->content, b->content)) <= 0)
 	{
 		result = a;
 		result->next = sorted_merge(a->next, b);

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 13:47:04 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 16:07:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist);
 static bool	is_path(const char *commands_head);
 static char	*get_execute_path(char *path, char *file);
 
-int	ft_execve(t_command_info *command_info, char **minishell_envp, t_list *envlist)
+int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 {
-	if (!command_info || !minishell_envp || !envlist)
+	if (!command_info || !minishell_envp || !info)
 		return (FAILURE);
 
 	// connect_redirect_fd() && expand_var_in_heredoc()
@@ -26,12 +26,14 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_list *envli
 
 	// is_builtin -> execute_builtin
 	// TODO
+	if (is_builtin(command_info->commands))
+		return (execute_builtin(info, command_info->commands));
 
 	// execute commands (other than builtin)
 	if (is_path(command_info->commands[0]))
 		execve(command_info->commands[0], command_info->commands, minishell_envp);
 	else
-		ft_execvp(command_info->commands, minishell_envp, envlist);
+		ft_execvp(command_info->commands, minishell_envp, info->envlist_head);
 	ft_dprintf(STDERR_FILENO, "command not found: %s\n", command_info->commands[0]);
 	return (CMD_NOT_FOUND);
 }

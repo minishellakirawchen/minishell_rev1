@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 15:45:08 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 16:06:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ typedef enum e_fopen_type		t_fopen_type;
 
 enum e_fopen_type
 {
-	e_read,
-	e_overwrite,
-	e_append,
+	e_io_read,
+	e_io_overwrite,
+	e_io_append,
 };
 
 
@@ -76,10 +76,10 @@ enum e_fopen_type
 /* ************************** */
 
 int		execute_execlist(t_info *info);
-int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_list *envlist_head);
+int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info);
 
 /* ft_exec.c */
-int		ft_execve(t_command_info *command_info, char **minishell_envp, t_list *envlist);
+int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info);
 
 /* judge_fork_process */
 bool	is_child_process(pid_t pid);
@@ -100,7 +100,6 @@ int	execute_heredoc(t_exec_list **pipeline);
 
 /* open_file.c */
 int	get_fd_and_open_file(const char *filename, t_fopen_type fopen_type);
-
 
 /* execute_heredoc.c */
 //int execute_heredoc(t_command_info *command_info, t_list *envlist);
