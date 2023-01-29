@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 16:02:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 17:39:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_info *info);
 static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head);
+static int	is_single_builtin(t_list_bdi *pipeline_cmds_head);
 
 int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 {
@@ -21,6 +22,7 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 	t_command_info	*command_info;
 	t_list_bdi		*pipeline_cmds_node;
 	char			**minishell_envp;
+
 
 	if (!pipeline_cmds_head)
 		return (FAILURE);
@@ -39,20 +41,30 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 	/* ^^^^^ debug mode: print command_info ^^^^^ */
 
 	/* execute pipeline commands */
+	if (is_single_builtin(pipeline_cmds_head))
+		return (execute_builtin(info, command_info->commands));
+
 	minishell_envp = create_minishell_envp(info->envlist_head);
 	if (!minishell_envp)
 		return (FAILURE);
 
 	if (execute_pipeline_iter(&pipeline_cmds_head, minishell_envp, info) == FAILURE)
 	{
-		minishell_envp = (char **)free_2d_alloc((void **)minishell_envp);
+		free_2d_alloc((void **)minishell_envp);
 		return (FAILURE);
 	}
-
 	exit_status = get_last_status_and_wait_children(pipeline_cmds_head);
 
-	minishell_envp = (char **)free_2d_alloc((void **)minishell_envp);
+	free_2d_alloc((void **)minishell_envp);
 	return (exit_status);
+}
+
+static int	is_single_builtin(t_list_bdi *pipeline_cmds_head)
+{
+	t_command_info	*command_info;
+
+	command_info = pipeline_cmds_head->content;
+	return (is_builtin(command_info->commands) && ft_lstsize_bdi(pipeline_cmds_head) == 1);
 }
 
 static int	execute_pipeline_iter(t_list_bdi **pipeline_cmds_head, char **envp, t_info *info)
