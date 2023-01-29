@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_envlist.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:13:19 by takira            #+#    #+#             */
-/*   Updated: 2023/01/17 18:54:21 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 02:11:56 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ t_list	*get_envlist(void)
 	}
 	return (env_list_head);
 }
-
 // '='idx
 //  v  v len
 // 0123

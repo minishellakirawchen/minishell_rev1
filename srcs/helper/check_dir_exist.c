@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   check_dir_exist.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/16 10:46:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 15:52:57 by takira           ###   ########.fr       */
+/*   Created: 2023/01/28 22:37:33 by wchen             #+#    #+#             */
+/*   Updated: 2023/01/29 12:28:08 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "minishell.h"
 
-# include "ft_gnl.h"
-# include "ft_math.h"
-# include "ft_printf.h"
-# include "ft_put.h"
-# include "ft_std.h"
-# include "ft_string.h"
-# include "ft_list.h"
+int	check_dir_exist(char *tdir)
+{
+	DIR		*dir;
 
-#endif
+	dir = opendir(tdir);
+	if (ENOENT == errno)
+		return (ENOENT);
+	if (EACCES == errno)
+		return (EACCES);
+	if (dir)
+		closedir(dir);
+	return (SUCCESS);
+}

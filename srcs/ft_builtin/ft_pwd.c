@@ -1,24 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/16 10:46:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 15:52:57 by takira           ###   ########.fr       */
+/*   Created: 2023/01/27 22:13:40 by wchen             #+#    #+#             */
+/*   Updated: 2023/01/28 22:09:58 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "minishell.h"
 
-# include "ft_gnl.h"
-# include "ft_math.h"
-# include "ft_printf.h"
-# include "ft_put.h"
-# include "ft_std.h"
-# include "ft_string.h"
-# include "ft_list.h"
+int	ft_pwd(t_info *info)
+{
+	char	**env_pwd;
+	char	*cwd_pwd;
 
-#endif
+	if (!info)
+		return (EXIT_FAILURE);
+	env_pwd = get_elem(info, "PWD");
+	if (env_pwd != NULL)
+		ft_printf("%s\n", *env_pwd);
+	else
+	{
+		cwd_pwd = getcwd(NULL, 0);
+		if (!cwd_pwd)
+			return (perror_and_return_int("getcwd", EXIT_FAILURE));
+		else
+			ft_printf("%s\n", cwd_pwd);
+		free (cwd_pwd);
+	}
+	return (EXIT_SUCCESS);
+}

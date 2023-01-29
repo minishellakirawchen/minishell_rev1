@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 12:30:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:49:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "parser.h"
 # include "expansion.h"
 # include "command_execution.h"
+# include "ft_builtin.h"
 
 /* ************************** */
 /*           macro            */
@@ -54,6 +55,10 @@
 # define PROCESS_ERROR	0
 
 
+# define EXIT_TOO_MANY_ARGS			1
+# define EXIT_NUMERIC_ARGS_REQUIRED	255
+# define SYNTAX_ERROR				258
+
 /* ************************** */
 /*          typedef           */
 /* ************************** */
@@ -71,10 +76,6 @@ typedef struct s_redirect_info	t_redirect_info;
 /* enum */
 typedef enum e_token_type		t_token_type;
 typedef enum e_node_kind		t_node_kind;
-
-/* ************************** */
-/*           enum             */
-/* ************************** */
 
 enum e_token_type
 {
@@ -108,6 +109,7 @@ enum e_node_kind
 	e_node_init,
 };
 
+
 /* ************************** */
 /*          struct            */
 /* ************************** */
@@ -135,6 +137,8 @@ struct s_exec_list
 
 	// create_command_list
 	t_list_bdi		*token_list_head;	// content=command_list, tmp_save
+	t_list	*envlist_head;
+	t_list	*tokenlist_head;
 };
 
 
@@ -193,6 +197,7 @@ struct s_redirect_info
 	t_list_bdi		*token_list;
 };
 
+
 /* ************************** */
 /*          parsing           */
 /* ************************** */
@@ -204,6 +209,9 @@ struct s_redirect_info
 /* ************************** */
 /*     command execution      */
 /* ************************** */
+int		command_execution(t_info *info);
+int		execute_builtin(t_info *info, char **cmds);
+int		is_builtin(char **cmds);
 
 /* ************************** */
 /*       signal handler       */
@@ -213,8 +221,9 @@ struct s_redirect_info
 /*         ft_builtin         */
 /* ************************** */
 
-
 /*         helper.c           */
+void	print_key_value(void *content);
+
 void	*free_1d_alloc(void *alloc);
 void	**free_2d_alloc(void **alloc);
 void	*free_info(t_info **info);
@@ -225,10 +234,10 @@ void	free_command_info(void *content);
 void	free_redirect_info(void *content);
 void	clear_exec_list(t_exec_list **exec_list);
 
+
 /*         error_return.c           */
 void	*perror_ret_nullptr(char *err);
 int		perror_ret_int(char *err, int retno);
-
 
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);

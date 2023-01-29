@@ -41,11 +41,26 @@ SRC		= main.c \
 		  command_execution/judge_fork_process.c \
 		  command_execution/ft_exec.c \
 		  command_execution/open_file.c \
+		  command_execution/command_execution.c \
+		  command_execution/execute_builtin.c \
 		  signal_handler/signal_handler.c \
 		  ft_builtin/ft_echo.c \
+		  ft_builtin/ft_env.c \
+		  ft_builtin/ft_export.c \
+		  ft_builtin/ft_unset.c \
+		  ft_builtin/ft_pwd.c \
+		  ft_builtin/ft_cd.c \
+		  ft_builtin/ft_exit.c \
 		  helper/alloc_free.c \
 		  helper/get_envlist.c \
 		  helper/error_return.c \
+		  helper/print_key_value.c \
+		  helper/builtin_judge.c \
+		  helper/builtin_free.c \
+		  helper/get_set_elem.c \
+		  helper/check_dir_exist.c \
+		  helper/ft_lst_ascsort.c \
+		  helper/chdir_setpath.c \
 		  debug/debug_print.c \
 
 
@@ -115,4 +130,3 @@ norm_lib	:
 -include	$(DEPS)
 
 .PHONY	: all clean fclean re bonus norm $(DEPS)
-

@@ -1,24 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   is_same_str.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/16 10:46:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 15:52:57 by takira           ###   ########.fr       */
+/*   Created: 2023/01/09 12:05:08 by takira            #+#    #+#             */
+/*   Updated: 2023/01/21 15:44:19 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
+#include "minishell.h"
 
-# include "ft_gnl.h"
-# include "ft_math.h"
-# include "ft_printf.h"
-# include "ft_put.h"
-# include "ft_std.h"
-# include "ft_string.h"
-# include "ft_list.h"
+int	is_same_str(const char *str1, const char *str2)
+{
+	const size_t	len1 = ft_strlen_ns(str1);
+	const size_t	len2 = ft_strlen_ns(str2);
 
-#endif
+	return (len1 == len2 && !ft_strncmp_ns(str1, str2, len1));
+}
