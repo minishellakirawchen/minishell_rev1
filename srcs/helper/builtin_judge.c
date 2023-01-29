@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 22:26:30 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 12:49:32 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 00:25:53 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_key_type	judge_info_key(t_export_info *e_info)
 	i = 0;
 	key = e_info->key;
 	if (!key)
-		return(e_nokey);
+		return (e_nokey);
 	if (ft_isdigit(*key) || *key == '\0')
 		return (e_error);
 	key_len = ft_strlen(key);

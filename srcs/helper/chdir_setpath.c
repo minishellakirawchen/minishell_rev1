@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 21:27:01 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 00:24:51 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,16 @@ static int	set_append_path(t_info *info, t_cd_info *cd_info, char *env_pwd)
 	temp = cd_info->newpwd;
 	cd_info->newpwd = ft_strjoin("/", cd_info->newpwd);
 	exit_status += append_env(info, ft_strdup("PWD="),
-		ft_strdup_ns(cd_info->newpwd));
-	exit_status += add_env(info, ft_strdup("OLDPWD"),
-		ft_strdup_ns(env_pwd));
-	free (temp);
+			ft_strdup_ns(cd_info->newpwd));
+	exit_status += add_env(info, ft_strdup("OLDPWD"), ft_strdup_ns(env_pwd));
+	free(temp);
 	return (exit_status);
 }
 
 static int	set_path(t_info *info, t_cd_info *cd_info)
 {
-	int	exit_status;
-	char *env_pwd;
+	int		exit_status;
+	char	*env_pwd;
 
 	if (!cd_info->env_pwd)
 		env_pwd = NULL;
@@ -53,7 +52,7 @@ static int	set_path(t_info *info, t_cd_info *cd_info)
 
 int	chdir_setpath(t_info *info, t_cd_info *cd_info, char **cmds)
 {
-	int		ret_chdir;
+	int	ret_chdir;
 
 	if (check_dir_exist(cd_info->newpwd) == EACCES)
 	{

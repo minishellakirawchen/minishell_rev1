@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:13:19 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 02:11:56 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 00:23:51 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static t_env_elem	*get_env_elem(const char *environ_i)
 		return (perror_ret_nullptr("malloc"));
 	elem->key = ft_substr(environ_i, 0, idx);
 	elem->value = ft_substr(environ_i, idx + 1, len - idx - 1);
+	elem->not_print = 0;
 	if (!elem->key || !elem->value)
 	{
 		free_env_elem(elem);

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:36 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/25 20:58:39 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 00:21:33 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ static int	unset_elem(t_list *pre_node, t_list *cur_node)
 	return (EXIT_SUCCESS);
 }
 
+static int	unset_pwd(t_env_elem *elem)
+{
+	elem->not_print = 1;
+	return (EXIT_SUCCESS);
+}
+
 static int	unset_env(t_info *info, char *cmd)
 {
 	t_list	*pre_node;
@@ -40,7 +46,11 @@ static int	unset_env(t_info *info, char *cmd)
 	while (env_node != NULL)
 	{
 		if (get_value_from_key(env_node->content, cmd) != NULL)
+		{
+			if (is_same_str("PWD", cmd) || is_same_str("OLDPWD", cmd))
+				return (unset_pwd(env_node->content));
 			return (unset_elem(pre_node, env_node));
+		}
 		pre_node = env_node;
 		env_node = env_node->next;
 	}

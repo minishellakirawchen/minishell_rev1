@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 12:52:25 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 00:27:48 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ static int	define_key_value(char *cmd, t_export_info *e_info)
 	while (cmd[equal_index] != '=')
 		equal_index++;
 	e_info->key = ft_substr(cmd, 0, equal_index);
-	e_info->value = ft_substr(cmd, equal_index + 1,
-			(cmd_len - (equal_index + 1)));
+	e_info->value = ft_substr(cmd, equal_index + 1, (cmd_len - (equal_index
+					+ 1)));
 	if (!e_info->key || !e_info->value)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	return (exit_status);
@@ -48,11 +48,24 @@ static t_export_info	*init_export_info(void)
 		return (perror_ret_nullptr("malloc"));
 	e_info->key = NULL;
 	e_info->value = NULL;
-	e_info->key_type = e_tpyeinit;
+	e_info->key_type = e_typeinit;
 	return (e_info);
 }
 
-int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
+static void	pwd_flag_controller(t_list *node, char *key)
+{
+	t_env_elem	*elem;
+
+	while (node != NULL)
+	{
+		elem = node->content;
+		if (is_same_str(elem->key, key))
+			elem->not_print = 0;
+		node = node->next;
+	}
+}
+
+static int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 {
 	int	exit_status;
 
@@ -71,6 +84,9 @@ int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 			e_info->value = free_1d_alloc(e_info->value);
 		}
 	}
+	if (is_same_str(e_info->key, "PWD") || is_same_str(e_info->key,
+			"OLDPWD") == SUCCESS || is_same_str(e_info->key, "PWD+") == SUCCESS)
+		pwd_flag_controller(info->envlist_head, e_info->key);
 	if (e_info->key_type == e_append)
 		exit_status = append_env(info, e_info->key, e_info->value);
 	if (e_info->key_type == e_add | e_info->key_type == e_novalue)
@@ -89,7 +105,7 @@ int	ft_export(t_info *info, char **cmds)
 	e_info = init_export_info();
 	if (!e_info)
 		return (EXIT_FAILURE);
-	cmds ++;
+	cmds++;
 	if (*cmds == NULL)
 	{
 		ft_sort_env(info);

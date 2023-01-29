@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 21:28:34 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 21:53:48 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,9 @@ struct s_exec_list
 // environment variable list
 struct s_env_elem
 {
-	char *key;
-	char *value;
+	char	*key;
+	char	*value;
+	int		not_print;
 };
 
 // token elem

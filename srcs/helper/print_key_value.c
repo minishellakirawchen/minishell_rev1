@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 23:47:15 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 12:45:52 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 22:25:20 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_key_value(void *content)
 	t_env_elem	*elem;
 
 	elem = content;
-	if (elem->value != NULL)
+	if (elem->value != NULL && elem->not_print == 0)
 		ft_printf("%s=%s\n", elem->key, elem->value);
 }
 
@@ -26,8 +26,8 @@ void	print_export_key_value(void *content)
 	t_env_elem	*elem;
 
 	elem = content;
-	if (elem->value != NULL)
+	if (elem->value != NULL && elem->not_print == 0)
 		printf("declare -x %s=\"%s\"\n", elem->key, elem->value);
-	else
+	else if (elem->not_print == 0)
 		printf("declare -x %s\n", elem->key);
 }

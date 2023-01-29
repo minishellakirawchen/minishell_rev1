@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 18:37:46 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 23:13:11 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ enum							e_cd_cmd_type
 
 enum							e_key_type
 {
-	e_tpyeinit,
+	e_typeinit,
 	e_append,
 	e_error,
 	e_add,
