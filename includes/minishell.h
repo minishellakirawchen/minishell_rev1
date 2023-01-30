@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:50:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:13:17 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ struct s_token_elem
 	bool			is_connect_to_next_word;
 	char			quote_chr;
 	bool			is_quoted;
-	ssize_t			depth; //TODO:depth
+	int				subshell_depth;
 };
 
 // split

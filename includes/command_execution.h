@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:46:06 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 15:33:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,16 @@ enum e_fopen_type
 /* ************************** */
 
 /* execute_execlist.c */
-int		execute_execlist(t_info *info);
+int		execute_execlist(t_exec_list **execlist_head, t_info *info);
+
+/* execute_subshell */
+int		execute_subshell(t_list_bdi **token_list, t_info *info);
 
 /* execute_pipeline.c */
 int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info);
 
 /* ft_exec.c */
-int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info);
+int		ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info);
 
 /* judge_fork_process */
 bool	is_child_process(pid_t pid);

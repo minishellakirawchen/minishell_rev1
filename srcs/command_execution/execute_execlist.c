@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:37:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 12:31:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,25 @@ static void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status);
  * */
 // pipelien_commands cmd1 | cmd2 | cmd3
 
-int	execute_execlist(t_info *info)
+int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 {
 	int			exit_status;
 	t_exec_list	*exec_node;
 	t_exec_list	*pipeline_node;
 	bool		debug = false;
 
-	if (!info || !info->execlist_head)
+	if (!info || !execlist_head)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 
-	exec_node = info->execlist_head;
+	exec_node = *execlist_head;
 
 	/* exec heredoc */
-	if (execute_heredoc(&info->execlist_head) == FAILURE)
+	if (execute_heredoc(execlist_head) == FAILURE)
 		return (FAILURE);
 
 	/* expand_var and execute_commands in pipeline_node unit */
-	exec_node = info->execlist_head;
+	exec_node = *execlist_head;
 	while (exec_node)
 	{
 		pipeline_node = exec_node;

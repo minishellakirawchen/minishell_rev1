@@ -46,7 +46,7 @@ int	create_command_list(t_exec_list **exec_list_head)
 
 /* create_command_info_from_pipeline_node(t_exec_list **pipeline_node) */
 /*
-// command_list->subshell_token_list : token list in subshell w/o ( and ) which same depth
+// command_list->subshell_token_list : token list in subshell w/o ( and ) which same subshell_depth
 // command_list->pipeline_token_list : token list in until pipe
 
 // exec_list->token_list[i]				: cat Makefile    |  grep a       | (echo hello) > out1 | (pwd && (cd /bin && pwd) || echo hoge) >> out2 < in1

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 21:04:42 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:03:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char 
 		token_elem->is_connect_to_next_word = is_connect_to_next;
 		token_elem->quote_chr = quote_chr;
 		token_elem->is_quoted = is_quoted;
+		token_elem->subshell_depth = -1;
 		new_list = ft_lstnew_bdi(token_elem);
 		if (!new_list)
 		{
@@ -176,6 +177,7 @@ int	split_by_operators(t_list_bdi **token_head)
 			}
 
 			debug_print_tokens(splitted_list_head, "split head");
+
 			if (prev)
 				prev->next = splitted_list_head;
 			else

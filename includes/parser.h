@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 14:13:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 12:35:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ typedef enum e_node_kind		t_node_kind;
 
 /* create_operator_list.c */
 //t_exec_list	*create_operator_list(t_list **tokenlist_head);
-int	create_operator_list(t_info *info);
-
+//int	create_operator_list(t_info *info);
+int	create_operator_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head);
+int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head, t_info *info);
 
 /* create_command_list.c */
 int	create_command_list(t_exec_list **exec_list_head);
@@ -63,8 +64,6 @@ void	add_bottom_of_tree(t_exec_list **tree, t_exec_list *add_elem);
 t_exec_list	*get_last_node(t_exec_list *node);
 t_exec_list	*pop_from_top(t_exec_list **tree);
 t_exec_list	*pop_from_bottom(t_exec_list **tree);
-
-int		parsing_token_list(t_info *info);
 
 
 #endif //PAESER_H

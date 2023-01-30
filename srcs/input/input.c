@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:57:24 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 16:11:39 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,18 @@ int	prompt_loop(t_info *info)
 			is_return_input = true;//add_history & free(line)
 
 		// debug
-//		debug_print_tokens(info->tokenlist_head, "arranged");
+		debug_print_tokens(info->tokenlist_head, "arranged");
+
 
 		/* parsing (Mandatory/Bonus) */
-		if (!is_return_input && parsing_token_list(info) == FAILURE)
+		if (!is_return_input && parsing_token_list(&info->tokenlist_head, &info->execlist_head, info) == FAILURE)
 		{
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]parsing failure\n");
 			return (FAILURE);
 		}
 		/* expansion & command_execution */
-		exit_status = execute_execlist(info);
+		if (!is_return_input)
+			exit_status = execute_execlist(&info->execlist_head, info);
 		/* clear input */
 		clear_input_info(&info);
 		if (exit_status == PROCESS_ERROR)
