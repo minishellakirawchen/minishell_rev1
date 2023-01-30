@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 10:40:51 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:06:56 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:31:17 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	expand_var_save_to_list(t_list_bdi **savelist, char *filename, t_info
 	errno = 0;
 	if (!savelist || !filename)
 		return (FAILURE);
-	fd = get_fd_and_open_file(filename, e_io_read);
+	fd = get_openfile_fd(filename, e_io_read);
 	if (fd < 0)
 		return (perror_and_return_int("open", FAILURE));
 	while (true)
@@ -57,6 +57,7 @@ static int	expand_var_save_to_list(t_list_bdi **savelist, char *filename, t_info
 	}
 	if (close(fd) < 0)
 		return (perror_and_return_int("close", FAILURE));
+	return (SUCCESS);
 }
 
 static int	write_heredoc_file_from_list(t_list_bdi *savelist, char *filename)
@@ -68,7 +69,7 @@ static int	write_heredoc_file_from_list(t_list_bdi *savelist, char *filename)
 	errno = 0;
 	if (!filename)
 		return (FAILURE);
-	fd = get_fd_and_open_file(filename, e_io_overwrite);
+	fd = get_openfile_fd(filename, e_io_overwrite);
 	if (fd < 0)
 		return (perror_and_return_int("open", FAILURE));
 	list_node = savelist;
@@ -80,4 +81,5 @@ static int	write_heredoc_file_from_list(t_list_bdi *savelist, char *filename)
 	}
 	if (close(fd) < 0)
 		return (perror_and_return_int("close", FAILURE));
+	return (SUCCESS);
 }

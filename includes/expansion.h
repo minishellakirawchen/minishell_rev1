@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 10:44:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:30:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int		remove_quote_in_tokens(t_list_bdi **list_head);
 
 
 /* expand_var_in_heredoc.c */
-int	do_expansion_in_heredoc(char *filename, t_info *info)
+int	do_expansion_in_heredoc(char *filename, t_info *info);
 
 
 /* create_commands.c */

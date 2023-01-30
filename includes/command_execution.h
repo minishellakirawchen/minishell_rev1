@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 10:47:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:14:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,10 @@ enum e_fopen_type
 /*         function           */
 /* ************************** */
 
+/* execute_execlist.c */
 int		execute_execlist(t_info *info);
+
+/* execute_pipeline.c */
 int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info);
 
 /* ft_exec.c */
@@ -96,15 +99,18 @@ char	**create_minishell_envp(t_list *envlist_head);
 
 /* execute_redirect.c */
 int		execute_redirect(t_command_info *command_info, t_info *info);
+
+/* execute_heredoc.c */
 int		execute_heredoc(t_exec_list **pipeline);
+bool	is_delimiter(const char *input_line, const char *delimiter);
+bool	is_eof(char *line);
+char	*get_heredoc_tmp_filename(int cnt);
+
 
 /* open_file.c */
-int		get_fd_and_open_file(const char *filename, t_fopen fopen_type);
+int		get_openfile_fd(const char *filename, t_fopen fopen_type);
 int		get_io_fd(t_token_type io_type);
 t_fopen	get_fopen_type(t_token_type io_type);
 
-/* execute_heredoc.c */
-//int execute_heredoc(t_command_info *command_info, t_list *envlist);
-//int execute_heredoc(t_list_bdi **pipeline_cmd_node, t_list *envlist);
 
 #endif //COMMAND_EXECUTION_H

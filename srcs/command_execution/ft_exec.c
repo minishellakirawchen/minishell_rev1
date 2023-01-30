@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 22:23:57 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:10:59 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,21 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 	if (!command_info || !minishell_envp || !info)
 		return (FAILURE);
 
-	/* redirect */
+	/* exec redirect */
 	if (execute_redirect(command_info, info) == FAILURE)
 		return (FAILURE);
 
-	// is_builtin -> execute_builtin
+	/* is_builtin -> execute_builtin */
 	if (is_builtin(command_info->commands))
 		return (execute_builtin(info, command_info->commands));
 
-	// execute commands (other than builtin)
+	/* execute commands (other than builtin) */
 	if (is_path(command_info->commands[0]))
 		execve(command_info->commands[0], command_info->commands, minishell_envp);
 	else
 		ft_execvp(command_info->commands, minishell_envp, info->envlist_head);
+
+	/* if command not fount */
 	ft_dprintf(STDERR_FILENO, "command not found: %s\n", command_info->commands[0]);
 	return (CMD_NOT_FOUND);
 }
@@ -58,7 +60,6 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 		path = get_execute_path(splitted_paths[idx], commands[0]);
 		if (!path)
 			return (perror_ret_int("malloc", FAILURE));
-//		dprintf(STDERR_FILENO, "debug: cmdpath:%s\n", path);
 		execve(path, commands, minishell_envp);
 		free_1d_alloc(path);
 		idx++;
@@ -81,10 +82,10 @@ static char	*get_execute_path(char *path, char *file)
 	execute_path = (char *)ft_calloc(sizeof(char), len + 1);
 	if (!execute_path)
 		return (perror_ret_nullptr("malloc"));
-	ft_strlcat(execute_path, path, len + 1);
+	ft_strlcat_ns(execute_path, path, len + 1);
 	if (path_len > 0 && path[path_len - 1] != '/')
-		ft_strlcat(execute_path, "/", len + 1);
-	ft_strlcat(execute_path, file, len + 1);
+		ft_strlcat_ns(execute_path, "/", len + 1);
+	ft_strlcat_ns(execute_path, file, len + 1);
 	return (execute_path);
 }
 

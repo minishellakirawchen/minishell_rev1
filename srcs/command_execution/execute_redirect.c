@@ -74,7 +74,8 @@ static int connect_redirect_fds(t_command_info **command_info)
 		if ((*command_info)->redirect_fd[fd_idx] != -1)
 			if (close((*command_info)->redirect_fd[fd_idx]) < 0)
 				return (perror_and_return_int("close", FAILURE));
-		(*command_info)->redirect_fd[fd_idx] = get_fd_and_open_file(redirect_info->filename, get_fopen_type(io_type));
+		(*command_info)->redirect_fd[fd_idx] = get_openfile_fd(
+				redirect_info->filename, get_fopen_type(io_type));
 		if ((*command_info)->redirect_fd[fd_idx] < 0)
 			return (perror_and_return_int("open", FAILURE));
 		redirect_list = redirect_list->next;

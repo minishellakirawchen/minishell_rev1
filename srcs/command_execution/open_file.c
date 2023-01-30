@@ -12,7 +12,7 @@
 
 #include "command_execution.h"
 
-int	get_fd_and_open_file(const char *filename, t_fopen fopen_type)
+int	get_openfile_fd(const char *filename, t_fopen fopen_type)
 {
 	if (fopen_type == e_io_read)
 		return (open(filename, O_RDONLY));

@@ -6,24 +6,20 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 10:40:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:28:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
-
-static int	create_heredoc_file(t_command_info **command_info, t_redirect_info **redirect_info, int cnt);
-static char	*get_heredoc_tmp_filename(int cnt);
+//static int	create_heredoc_file(t_command_info **cmd_info, t_redirect_info **redirect_info, int cnt);
 static int	do_heredoc(int fd, t_redirect_info *redirect_info);
+static int	create_heredoc_file_in_command_info(t_command_info **cmd_info);
 
 int	execute_heredoc(t_exec_list **execlist_head)
 {
 	t_exec_list		*exec_node;
 	t_list_bdi		*command_list_node;
 	t_command_info	*command_info;
-	t_list_bdi		*redirect_list;
-	t_redirect_info	*redirect_info;
-	int				heredoc_cnt;
 
 	if (!execlist_head || !*execlist_head)
 		return (FAILURE);
@@ -31,22 +27,10 @@ int	execute_heredoc(t_exec_list **execlist_head)
 	while (exec_node)
 	{
 		command_list_node = exec_node->pipeline_commands;
-		heredoc_cnt = 0;
 		while (command_list_node)
 		{
 			command_info = command_list_node->content;
-			redirect_list = command_info->redirect_list;
-			while (redirect_list)
-			{
-				redirect_info = redirect_list->content;
-				if (redirect_info->io_type == e_heredoc)
-				{
-					if (create_heredoc_file(&command_info, &redirect_info, heredoc_cnt) == FAILURE)
-						return (FILE_OPEN_ERROR);
-					heredoc_cnt++;
-				}
-				redirect_list = redirect_list->next;
-			}
+			create_heredoc_file_in_command_info(&command_info);
 			command_list_node = command_list_node->next;
 		}
 		exec_node = exec_node->next;
@@ -56,41 +40,68 @@ int	execute_heredoc(t_exec_list **execlist_head)
 	return (SUCCESS);
 }
 
-// input: hogehoge\n
-// delim: hogehoge
-bool	is_delimiter(const char *input_line, const char *delimiter)
+static int	create_heredoc_file_in_command_info(t_command_info **cmd_info)
 {
-	size_t	input_len;
-	size_t	delim_len;
+	int				heredoc_cnt;
+	t_list_bdi		*redirect_list;
+	t_redirect_info	*redirct_info;
 
-	if (!input_line || !delimiter)
-		return (false);
-	input_len = ft_strlen_ns(input_line);
-	delim_len = ft_strlen_ns(delimiter);
-	if ((input_len == delim_len + 1)
-	&& ft_strncmp_ns(input_line, delimiter, delim_len) == 0)
-		return (true);
-	return (false);
+	heredoc_cnt = 0;
+	if (!cmd_info || !*cmd_info)
+		return (FAILURE);
+	errno = 0;
+	redirect_list = (*cmd_info)->redirect_list;
+	while (redirect_list)
+	{
+		redirct_info = redirect_list->content;
+		if (redirct_info->io_type == e_heredoc)
+		{
+			redirct_info->filename = get_heredoc_tmp_filename(heredoc_cnt);
+			if (!redirct_info->filename)
+				return (FAILURE);
+			(*cmd_info)->redirect_fd[FD_HEREDOC] = get_openfile_fd(redirct_info->filename, e_io_overwrite);
+			if ((*cmd_info)->redirect_fd[FD_HEREDOC] < 0)
+				return (perror_ret_int("open", FAILURE));
+			if (do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], redirct_info) == FAILURE)
+				return (FAILURE);
+			if (close((*cmd_info)->redirect_fd[FD_HEREDOC]) < 0)
+				return (perror_ret_int("close", FAILURE));
+			heredoc_cnt++;
+		}
+		redirect_list = redirect_list->next;
+	}
+	return (SUCCESS);
 }
 
-bool	is_eof(char *line)
+/*
+static int	create_heredoc_file(t_command_info **cmd_info, t_redirect_info **redirect_info, int cnt)
 {
-	return (!line);
+	errno = 0;
+	if (!cmd_info || !*cmd_info
+		|| !redirect_info || !*redirect_info || !(*redirect_info)->heredoc_eof)
+		return (FAILURE);
+
+	(*redirect_info)->filename = get_heredoc_tmp_filename(cnt);
+	if (!(*redirect_info)->filename)
+		return (FAILURE);
+	(*cmd_info)->redirect_fd[FD_HEREDOC] = get_openfile_fd((*redirect_info)->filename, e_io_overwrite);
+	if ((*cmd_info)->redirect_fd[FD_HEREDOC] < 0)
+		return (perror_ret_int("open", FAILURE));
+	if (do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], *redirect_info) == FAILURE)
+		return (EXIT_FAILURE);
+	if (close((*cmd_info)->redirect_fd[FD_HEREDOC]) < 0)
+		return (perror_ret_int("close", FAILURE));
+	return (SUCCESS);
 }
-
-// is_expand, env
-
-//bash3.2 0 $ cat <<eof
-//> $a
-//> "$a"
+*/
+//bash3.2 0 $ cat <<eof ;;where $a=eof
+//> $a		//eof
+//> "$a"	//"eof"
 //> eof
-//eof
-//"eof"
 
-//bash3.2 0 $ cat << $eof
-//> hoge
+//bash3.2 0 $ cat << $eof ;;where $eof=hoge
+//> hoge	//hoge
 //> $eof
-//hoge
 
 /* expand in command execution */
 static int	do_heredoc(int fd, t_redirect_info *redirect_info)
@@ -116,45 +127,3 @@ static int	do_heredoc(int fd, t_redirect_info *redirect_info)
 	return (SUCCESS);
 }
 
-static int	create_heredoc_file(t_command_info **cmd_info, t_redirect_info **redirect_info, int cnt)
-{
-	errno = 0;
-	if (!cmd_info || !*cmd_info
-		|| !redirect_info || !*redirect_info || !(*redirect_info)->heredoc_eof)
-		return (FAILURE);
-
-	(*redirect_info)->filename = get_heredoc_tmp_filename(cnt);
-	if (!(*redirect_info)->filename)
-		return (FAILURE);
-	(*cmd_info)->redirect_fd[FD_HEREDOC] = get_fd_and_open_file((*redirect_info)->filename, e_io_overwrite);
-	if ((*cmd_info)->redirect_fd[FD_HEREDOC] < 0)
-		return (perror_ret_int("open", FAILURE));
-	if (do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], *redirect_info) == FAILURE)
-		return (EXIT_FAILURE);
-	if (close((*cmd_info)->redirect_fd[FD_HEREDOC]) < 0)
-		return (perror_ret_int("close", FAILURE));
-	return (SUCCESS);
-}
-
-// tmpfile: here_doc_<cnt>.tmp
-static char	*get_heredoc_tmp_filename(int cnt)
-{
-	char	*cnt_string;
-	char 	*filename;
-	size_t	tmp_len;
-	size_t	strcnt_len;
-
-	errno = 0;
-	cnt_string = ft_itoa(cnt);
-	if (!cnt_string)
-		return (perror_ret_nullptr("malloc"));
-	tmp_len = ft_strlen_ns(HEREDOC_TMP_FILE);
-	strcnt_len = ft_strlen_ns(cnt_string);
-	filename = (char *)ft_calloc(sizeof(char) ,(tmp_len + strcnt_len + 1));
-	if (!filename)
-		return (perror_ret_nullptr("malloc"));
-	ft_strlcat(filename, HEREDOC_TMP_FILE, tmp_len + strcnt_len + 1);
-	ft_strlcat(filename, cnt_string, tmp_len + strcnt_len + 1);
-	free(cnt_string);
-	return (filename);
-}
