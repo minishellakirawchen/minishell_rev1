@@ -28,7 +28,8 @@ SRC		= main.c \
 		  parser/tree_operation.c \
 		  parser/tree_helper.c \
 		  expansion/expansion.c \
-		  expansion/expand_var.c \
+		  expansion/expand_var_in_tokens.c \
+		  expansion/expand_var_in_heredoc.c \
 		  expansion/is_expand.c \
 		  expansion/get_expanded_str.c \
 		  expansion/create_commands.c \
@@ -61,7 +62,6 @@ SRC		= main.c \
 		  helper/ft_lst_ascsort.c \
 		  helper/chdir_setpath.c \
 		  debug/debug_print.c \
-
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))
 

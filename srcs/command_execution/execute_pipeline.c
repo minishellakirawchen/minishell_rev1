@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 10:15:12 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 10:34:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,40 +97,17 @@ static int	execute_pipeline_iter(t_list_bdi *pipeline_cmds_head, char **envp, t_
 			return (perror_ret_int("fork", FAILURE));
 		if (is_child_process(command_info->pid))
 		{
-			if (prev_pipefd[WRITE] != -1)
-			{
-				if (close(STDIN_FILENO) < 0)
-					return (perror_ret_int("close", FAILURE));
-				if (dup2(prev_pipefd[READ], STDIN_FILENO) < 0)
-					return (perror_ret_int("dup2", FAILURE));
-				if (close(prev_pipefd[READ]) < 0 || close(prev_pipefd[WRITE] < 0))
-					return (perror_ret_int("close", FAILURE));
-			}
-			if (pipeline_cmds_node->next)
-			{
-				if (close(STDOUT_FILENO) < 0)
-					return (perror_ret_int("close", FAILURE));
-				if (dup2(now_pipefd[WRITE], STDOUT_FILENO) < 0)
-					return (perror_ret_int("dup2", FAILURE));
-				if (close(now_pipefd[READ]) < 0 || close(now_pipefd[WRITE] < 0))
-					return (perror_ret_int("close", FAILURE));
-			}
-
-//			if (dup2_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
-//				return (FAILURE);
-//			if (close_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
-//				return (FAILURE);
+			if (dup2_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
+				return (FAILURE);
+			if (close_fds(now_pipefd, prev_pipefd, pipeline_cmds_node->next) < 0)
+				return (FAILURE);
 			ft_execve(command_info, envp, info);
 			return (CMD_NOT_FOUND);
 		}
 		if (is_parent_process(command_info->pid))
 		{
-			if (prev_pipefd[WRITE] != -1)
-				if (close(prev_pipefd[READ]) < 0 || close(prev_pipefd[WRITE] < 0))
-					return (perror_ret_int("close", FAILURE));
-
-//			if (close_fds(NULL, prev_pipefd, NULL) < 0)
-//				return (FAILURE);
+			if (close_fds(NULL, prev_pipefd, NULL) < 0)
+				return (FAILURE);
 			copy_prevfd_to_newfd(prev_pipefd, now_pipefd);
 		}
 		pipeline_cmds_node = pipeline_cmds_node->next;

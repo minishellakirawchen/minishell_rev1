@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 20:09:49 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 10:47:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef enum e_token_type		t_token_type;
 typedef enum e_syntax_err		t_syntax_err;
 typedef enum e_node_kind		t_node_kind;
 
-typedef enum e_fopen_type		t_fopen_type;
+typedef enum e_fopen_type		t_fopen;
 
 
 /* ************************** */
@@ -95,11 +95,13 @@ int		close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
 char	**create_minishell_envp(t_list *envlist_head);
 
 /* execute_redirect.c */
-int	execute_redirect(t_command_info *command_info, t_info *info);
-int	execute_heredoc(t_exec_list **pipeline);
+int		execute_redirect(t_command_info *command_info, t_info *info);
+int		execute_heredoc(t_exec_list **pipeline);
 
 /* open_file.c */
-int	get_fd_and_open_file(const char *filename, t_fopen_type fopen_type);
+int		get_fd_and_open_file(const char *filename, t_fopen fopen_type);
+int		get_io_fd(t_token_type io_type);
+t_fopen	get_fopen_type(t_token_type io_type);
 
 /* execute_heredoc.c */
 //int execute_heredoc(t_command_info *command_info, t_list *envlist);

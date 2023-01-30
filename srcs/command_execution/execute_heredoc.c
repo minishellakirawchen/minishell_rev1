@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 20:26:51 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 10:40:14 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,40 +55,6 @@ int	execute_heredoc(t_exec_list **execlist_head)
 	}
 	return (SUCCESS);
 }
-
-//int	execute_heredoc(t_exec_list **pipeline)
-//{
-//	t_list_bdi		*command_list_node;
-//	t_command_info	*command_info;
-//	t_list_bdi		*redirect_list;
-//	t_redirect_info	*redirect_info;
-//	int				heredoc_cnt;
-//
-//
-//	if (!pipeline)
-//		return (FAILURE);
-//	command_list_node = (*pipeline)->pipeline_commands;
-//	heredoc_cnt = 0;
-//	while (command_list_node)
-//	{
-//		command_info = command_list_node->content;
-//		redirect_list = command_info->redirect_list;
-//		while (redirect_list)
-//		{
-//			redirect_info = redirect_list->content;
-//			if (redirect_info->io_type == e_heredoc)
-//			{
-//				if (create_heredoc_file(&command_info, &redirect_info, heredoc_cnt) == FAILURE)
-//					return (FILE_OPEN_ERROR);
-//				heredoc_cnt++;
-//			}
-//			redirect_list = redirect_list->next;
-//		}
-//		command_list_node = command_list_node->next;
-//	}
-//	return (SUCCESS);
-//}
-
 
 // input: hogehoge\n
 // delim: hogehoge
