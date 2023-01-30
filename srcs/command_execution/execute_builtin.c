@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 15:35:04 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 14:54:15 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/29 21:44:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,15 @@ int	execute_builtin(t_info *info, char **cmds)
 
 int	is_builtin(char **cmds)
 {
+	if (!cmds || !*cmds)
+		return (FAILURE);
 	if (is_same_str("env", cmds[0]))
 		return (SUCCESS);
 	if (is_same_str("export", cmds[0]))
 		return (SUCCESS);
 	if (is_same_str("unset", cmds[0]))
 		return (SUCCESS);
-	if (is_same_str("echo", cmds[0]))
+	if (is_same_str("ft_echo", cmds[0]))
 		return (SUCCESS);
 	if (is_same_str("pwd", cmds[0]))
 		return (SUCCESS);

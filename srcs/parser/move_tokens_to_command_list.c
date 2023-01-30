@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   move_tokens_to_command_list.c                      :+:      :+:    :+:   */
+/*   move_tokens_to_command_info.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,7 +15,7 @@
 static void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token);
 static void	move_tokens_to_pipeline_list(t_command_info **command_list, t_list_bdi *popped_token);
 
-void	move_tokens_to_command_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token)
+void	move_tokens_to_command_info(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token)
 {
 	t_token_elem	*token_elem;
 

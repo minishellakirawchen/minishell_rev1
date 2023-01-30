@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 13:18:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 20:26:51 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ static int	do_heredoc(int fd, t_redirect_info *redirect_info)
 			break ;
 		}
 		ft_dprintf(fd, line);
-		line = free_1d_alloc(line);
+		free_1d_alloc(line);
 	}
 	return (SUCCESS);
 }

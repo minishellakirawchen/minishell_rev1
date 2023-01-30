@@ -6,15 +6,15 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:02:36 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 12:55:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 22:08:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static int				create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node);
-static t_command_info	*create_command_list_node(void);
-int						connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_info *command_list);
+static int				create_command_info_from_pipeline_node(t_exec_list **exec_pipeline_node);
+static t_command_info	*create_command_info(void);
+int						connect_command_info_to_execlist(t_list_bdi **connect_to, t_command_info *command_info);
 
 // operatorなら飛ばす
 // そうでなければlist=create_command_list(node->tokenlist)でpipeをnextとする線形リストを作成
@@ -36,7 +36,7 @@ int	create_command_list(t_exec_list **exec_list_head)
 	while (node)
 	{
 		if (node->node_kind == e_node_pipeline)
-			if (create_command_list_from_pipeline_node(&node) == FAILURE)
+			if (create_command_info_from_pipeline_node(&node) == FAILURE)
 				return (FAILURE); //TODO:free?
 		node = node->next;
 	}
@@ -44,7 +44,7 @@ int	create_command_list(t_exec_list **exec_list_head)
 }
 
 
-/* create_command_list_from_pipeline_node(t_exec_list **pipeline_node) */
+/* create_command_info_from_pipeline_node(t_exec_list **pipeline_node) */
 /*
 // command_list->subshell_token_list : token list in subshell w/o ( and ) which same depth
 // command_list->pipeline_token_list : token list in until pipe
@@ -67,16 +67,16 @@ int	create_command_list(t_exec_list **exec_list_head)
 
 // exec_pipeline_node=exec_list
 // node_kind=pipeline_commands(!=operator)
-int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
+int create_command_info_from_pipeline_node(t_exec_list **exec_pipeline_node)
 {
 	t_token_elem	*token_elem;
 	t_list_bdi		*popped_token;
-	t_command_info	*command_list;
+	t_command_info	*command_info;
 
 	if (!exec_pipeline_node || !*exec_pipeline_node || !(*exec_pipeline_node)->token_list_head)
 		return (FAILURE);
-	command_list = create_command_list_node();
-	if (!command_list)
+	command_info = create_command_info();
+	if (!command_info)
 		return (FAILURE);
 	while ((*exec_pipeline_node)->token_list_head)
 	{
@@ -85,44 +85,51 @@ int create_command_list_from_pipeline_node(t_exec_list **exec_pipeline_node)
 		/* subshell or commands */
 		if (token_elem->type != e_ope_pipe)
 		{
-			move_tokens_to_command_list(&(*exec_pipeline_node)->token_list_head, &command_list, popped_token);
+			move_tokens_to_command_info(&(*exec_pipeline_node)->token_list_head,
+										&command_info, popped_token);
 			continue ;
 		}
 		/* pipe */
-		if (connect_command_list_to_execlist(&(*exec_pipeline_node)->pipeline_commands, command_list) == FAILURE)
+		if (connect_command_info_to_execlist(
+				&(*exec_pipeline_node)->pipeline_commands, command_info) == FAILURE)
 			return (FAILURE);
 		ft_lstdelone_bdi(&popped_token, free_token_elem); // delete '|'
-		command_list = create_command_list_node();
-		if (!command_list)
+		command_info = create_command_info();
+		if (!command_info)
 			return (FAILURE);
 	}
 	/* last command line */
-	if (connect_command_list_to_execlist(&(*exec_pipeline_node)->pipeline_commands, command_list) == FAILURE)
+	if (connect_command_info_to_execlist(
+			&(*exec_pipeline_node)->pipeline_commands, command_info) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
 
-t_command_info	*create_command_list_node(void)
+static t_command_info	*create_command_info(void)
 {
-	t_command_info	*command_list;
+	t_command_info	*command_info;
 
 	errno = 0;
-	command_list = (t_command_info *)malloc(sizeof(t_command_info));
-	if (!command_list)
+	command_info = (t_command_info *)malloc(sizeof(t_command_info));
+	if (!command_info)
 		return (perror_ret_nullptr("malloc"));
-	command_list->type = e_node_init;
-	command_list->commands = NULL;
-	command_list->pipeline_token_list = NULL;
-	command_list->subshell_token_list = NULL;
-	command_list->redirect_list = NULL;
-	return (command_list);
+	command_info->type = e_node_init;
+	command_info->commands = NULL;
+	command_info->redirect_list = NULL;
+	command_info->redirect_fd[FD_INFILE] = -1;
+	command_info->redirect_fd[FD_OUTFILE] = -1;
+	command_info->redirect_fd[FD_HEREDOC] = -1;
+	command_info->pid = -1;
+	command_info->pipeline_token_list = NULL;
+	command_info->subshell_token_list = NULL;
+	return (command_info);
 }
 
-int	connect_command_list_to_execlist(t_list_bdi **connect_to, t_command_info *command_list)
+int	connect_command_info_to_execlist(t_list_bdi **connect_to, t_command_info *command_info)
 {
 	t_list_bdi	*new_pipeline;
 
-	new_pipeline = ft_lstnew_bdi(command_list);
+	new_pipeline = ft_lstnew_bdi(command_info);
 	if (!new_pipeline)
 		return (FAILURE); //TODO
 	ft_lstadd_back_bdi(connect_to, new_pipeline);

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 18:43:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 22:23:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 	if (!command_info || !minishell_envp || !info)
 		return (FAILURE);
 
-	// connect_redirect_fd() && expand_var_in_heredoc()
-	// TODO
-
+	/* redirect */
+	if (execute_redirect(command_info, info) == FAILURE)
+		return (FAILURE);
 
 	// is_builtin -> execute_builtin
 	if (is_builtin(command_info->commands))
