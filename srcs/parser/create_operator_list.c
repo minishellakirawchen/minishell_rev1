@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:06:20 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:38:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:40:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,17 +92,16 @@ int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec
 /* create and connect t_exec_list, node type is pipeline and operator */
 /* pipeline->operator->pipeline->... */
 
-// ()内は分割しない
 int	create_operator_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head)
 {
 	t_token_elem	*token_elem;
-	ssize_t			subshell_depth;
+	int				subshell_depth;
 	t_exec_list		*pipeline_node;
 	t_exec_list		*operator_node;
 	int				handle_result;
 
 	errno = 0;
-	if (!tokenlist_head || !execlist_head)
+	if (!tokenlist_head || !*tokenlist_head || !execlist_head)
 		return (FAILURE);
 	*execlist_head = create_execlist_node(e_node_pipeline, NULL, NULL, NULL);
 	if (!*execlist_head)

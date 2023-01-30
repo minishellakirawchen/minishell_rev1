@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 15:32:12 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:24:39 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:45:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ int	execute_subshell(t_list_bdi **token_list, t_info *info)
 	if (parsing_token_list(token_list, &exec_list, info) == FAILURE)
 		return (PROCESS_ERROR);
 
-	debug_print_exec_list(exec_list, "subshell exec");
+//	debug_print_exec_list(exec_list, "subshell exec");
 
 	exit_status = execute_execlist(&exec_list, info);
 
 	clear_exec_list(&exec_list);
-	dprintf(STDERR_FILENO, "\n ########## ^^^ execute subshell ^^^ ##########\n\n");
+	dprintf(STDERR_FILENO, "\n ########## ^^^ execute subshell depth:%d ^^^ ##########\n\n", subshell_depth);
 	return (exit_status);
 }

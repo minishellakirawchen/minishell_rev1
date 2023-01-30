@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:33:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:41:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ int	split_by_operators(t_list_bdi **token_head)
 				return (FAILURE);
 			}
 
-			debug_print_tokens(splitted_list_head, "split head");
+//			debug_print_tokens(splitted_list_head, "split head");
 
 			if (prev)
 				prev->next = splitted_list_head;

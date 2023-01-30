@@ -21,7 +21,7 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 	if (!command_info || !minishell_envp || !info)
 		return (FAILURE);
 
-	debug_print_2d_arr(command_info->commands, "<execute command>");
+//	debug_print_2d_arr(command_info->commands, "<execute command>");
 
 	/* exec redirect */
 	if (execute_redirect(command_info, info) == FAILURE)

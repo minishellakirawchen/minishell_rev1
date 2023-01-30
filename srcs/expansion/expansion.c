@@ -109,7 +109,7 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 		}
 		redirect_list = redirect_list->next;
 	}
-	debug_print_redirect_info((*cmd_list)->redirect_list, "expand_var_in_redirect");
+//	debug_print_redirect_info((*cmd_list)->redirect_list, "expand_var_in_redirect");
 	return (SUCCESS);
 }
 
