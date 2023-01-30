@@ -73,6 +73,7 @@ int	prompt_loop(t_info *info)
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]parsing failure\n");
 			return (FAILURE);
 		}
+
 		/* expansion & command_execution */
 		if (!is_return_input)
 			exit_status = execute_execlist(&info->execlist_head, info);

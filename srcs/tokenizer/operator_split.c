@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:03:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:33:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char 
 // new1 ->..-> new2
 //
 // どうやって間に入れれば良いんだ...?->dekita
+
 int	split_by_operators(t_list_bdi **token_head)
 {
 	t_list_bdi		*now_node;

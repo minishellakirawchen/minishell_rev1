@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 16:59:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:27:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 	/* operator list */
 	if (create_operator_list(tokenlist_head, execlist_head) == FAILURE)
 	{
-		ft_dprintf(STDERR_FILENO, "fail to create_operator_list\n");
+		ft_dprintf(STDERR_FILENO, "[#DEBUG]fail to create_operator_list\n");
 		return (FAILURE);
 	}
-	debug_print_exec_list(info->execlist_head, "operator_list");
+	debug_print_exec_list(*execlist_head, "operator_list");
 
 	delete_last_semicolon_node(execlist_head);
 
@@ -33,7 +33,7 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 
 	if (create_command_list(execlist_head) == FAILURE)
 	{
-		ft_dprintf(STDERR_FILENO, "fail to create_command_list\n");
+		ft_dprintf(STDERR_FILENO, "[#DEBUG]fail to create_command_list\n");
 		return (FAILURE);
 	}
 
@@ -47,7 +47,7 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 	if (create_redirect_list(execlist_head, info) == FAILURE)
 		return (FAILURE);
 
-	debug_print_exec_list(info->execlist_head, "create_redirect_list");
+	debug_print_exec_list(*execlist_head, "create_redirect_list");
 
 	return (SUCCESS);
 }
