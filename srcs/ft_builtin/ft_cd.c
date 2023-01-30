@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 21:52:25 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/31 00:27:29 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,14 @@ static t_cd_info	*init_cd_info(t_info *info)
 	cd_info->pwd = getcwd(NULL, 0);
 	if (cd_info->pwd == NULL)
 	{
-		ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
-		perror("getcwd");
+		if (check_dir_exist("./") == EACCES)
+			cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
+		else
+		{
+			ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
+			ft_dprintf(STDERR_FILENO, "getcwd: cannot access parent directories: ");
+			ft_dprintf(STDERR_FILENO, "directories: No such file or directory ");
+		}
 	}
 	cd_info->oldpwd = get_elem(info, "OLDPWD");
 	cd_info->newpwd = NULL;
@@ -100,6 +106,9 @@ int	ft_cd(t_info *info, char **cmds)
 	if (cd_error_handler(cd_info, cmds) == EXIT_FAILURE)
 		return (free_cdinfo_ret_status(cd_info, EXIT_FAILURE));
 	cd_info->newpwd = define_new_path(cd_info, *cmds);
+	printf("-----debug-----\n");
+	printf("new pwd : %s\n", cd_info->newpwd);
+	printf("-----debug-----\n");
 	if (!cd_info->newpwd)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	exit_status = chdir_setpath(info, cd_info, cmds);
