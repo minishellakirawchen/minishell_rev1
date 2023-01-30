@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   move_tokens_to_command_list.c                      :+:      :+:    :+:   */
+/*   move_tokens_to_command_info.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,7 +15,7 @@
 static void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token);
 static void	move_tokens_to_pipeline_list(t_command_info **command_list, t_list_bdi *popped_token);
 
-void	move_tokens_to_command_list(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token)
+void	move_tokens_to_command_info(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token)
 {
 	t_token_elem	*token_elem;
 
@@ -37,13 +37,13 @@ void	move_tokens_to_subshell_list(t_list_bdi **token_list, t_command_info **comm
 		return ;
 	token_elem = popped_token->content;
 	(*command_list)->type = e_node_subshell;
-	subshell_depth = token_elem->depth;
+	subshell_depth = token_elem->subshell_depth;
 	ft_lstdelone_bdi(&popped_token, free_token_elem); // delete '('
 	while (*token_list)
 	{
 		popped_token = ft_lstpop_bdi(&(*token_list));
 		token_elem = popped_token->content;
-		if (token_elem->type == e_subshell_end && token_elem->depth == subshell_depth)
+		if (token_elem->type == e_subshell_end && token_elem->subshell_depth == subshell_depth)
 		{
 			ft_lstdelone_bdi(&popped_token, free_token_elem); // delete ')'
 			return ;

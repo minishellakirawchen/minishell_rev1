@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 16:06:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 15:33:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef enum e_token_type		t_token_type;
 typedef enum e_syntax_err		t_syntax_err;
 typedef enum e_node_kind		t_node_kind;
 
-typedef enum e_fopen_type		t_fopen_type;
+typedef enum e_fopen_type		t_fopen;
 
 
 /* ************************** */
@@ -75,11 +75,17 @@ enum e_fopen_type
 /*         function           */
 /* ************************** */
 
-int		execute_execlist(t_info *info);
+/* execute_execlist.c */
+int		execute_execlist(t_exec_list **execlist_head, t_info *info);
+
+/* execute_subshell */
+int		execute_subshell(t_list_bdi **token_list, t_info *info);
+
+/* execute_pipeline.c */
 int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info);
 
 /* ft_exec.c */
-int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info);
+int		ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info);
 
 /* judge_fork_process */
 bool	is_child_process(pid_t pid);
@@ -95,14 +101,22 @@ int		close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
 char	**create_minishell_envp(t_list *envlist_head);
 
 /* execute_redirect.c */
-//int	execute_redirect(t_command_info *command_info, t_list *envlist);
-int	execute_heredoc(t_exec_list **pipeline);
-
-/* open_file.c */
-int	get_fd_and_open_file(const char *filename, t_fopen_type fopen_type);
+int		execute_redirect(t_command_info *command_info, t_info *info);
 
 /* execute_heredoc.c */
-//int execute_heredoc(t_command_info *command_info, t_list *envlist);
-//int execute_heredoc(t_list_bdi **pipeline_cmd_node, t_list *envlist);
+int		execute_heredoc(t_exec_list **pipeline);
+bool	is_delimiter(const char *input_line, const char *delimiter);
+bool	is_eof(char *line);
+char	*get_heredoc_tmp_filename(int cnt);
+
+/* open_file.c */
+int		get_openfile_fd(const char *filename, t_fopen fopen_type);
+int		get_io_fd(t_token_type io_type);
+t_fopen	get_fopen_type(t_token_type io_type);
+
+/* execute_builtin.c */
+int		execute_builtin(t_info *info, char **cmds);
+bool	is_builtin(char **cmds);
+bool	is_single_builtin(t_list_bdi *pipeline_cmds_head);
 
 #endif //COMMAND_EXECUTION_H

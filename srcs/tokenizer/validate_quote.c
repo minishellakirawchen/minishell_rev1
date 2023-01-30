@@ -27,12 +27,12 @@ int	validate_quote(t_list_bdi *tokenlist_head)
 		now_token = node->content;
 		if (now_token->is_quoted)
 		{
-			printf("quoted token:%s\n", now_token->word);
+//			printf("quoted token:%s\n", now_token->word);
 			word = now_token->word;
 			word_len = ft_strlen_ns(word);
 			if (word_len < 2 || word[0] != word[word_len - 1])
 			{
-				printf("unclosed quoted token:%s\n", now_token->word);
+//				printf("unclosed quoted token:%s\n", now_token->word);
 				ft_dprintf(STDERR_FILENO, "minishell: unclosed quote `%c'\n", now_token->word[0]);
 				return (FAILURE);
 			}

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/01/23 18:59:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:32:39 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,30 @@
 // disconnect to control opes ["hoge"]=[|] -> ["hoge"],[|]
 int	tokenize_input_line(t_info *info, const char *readline_input)
 {
+	char	*space_trimmed_input;
+
 	if (!info | !readline_input)
 		return (FAILURE);
 	/* split by space */
+	errno = 0;
+	space_trimmed_input = ft_strtrim(readline_input, STR_SPACE);
+	if (!space_trimmed_input)
+		return (perror_ret_int("malloc", FAILURE));
+
 	/*   char **input -> list */
-	info->tokenlist_head = get_delim_splitted_tokenlist(readline_input, STR_SPACE, STR_QUOTE);
+	info->tokenlist_head = get_delim_splitted_tokenlist(space_trimmed_input, STR_SPACE, STR_QUOTE);
+	free_1d_alloc(space_trimmed_input);
 	if (!info->tokenlist_head)
 		return (FAILURE);
 
-	debug_print_tokens(info->tokenlist_head, "split space");
+//	debug_print_tokens(info->tokenlist_head, "split space");
 
 	/* split by control operation and redirection */
 	/* prev->before_list->next  ->  prev->split1->split2...->next */
 	if (split_by_operators(&info->tokenlist_head) == FAILURE)
 		return (FAILURE);
 
-	debug_print_tokens(info->tokenlist_head, "split opes");
+//	debug_print_tokens(info->tokenlist_head, "split opes");
 
 	return (SUCCESS);
 }

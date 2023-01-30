@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 21:31:48 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 20:21:51 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ int	main(int argc, char **argv)
 	return (exit_status);
 }
 
-
+/*
 __attribute__((destructor))
 static void	destructor(void)
 {
 	system("leaks -q minishell");
 }
-
+*/

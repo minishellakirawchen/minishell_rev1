@@ -6,13 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:15:59 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 11:01:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 10:42:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-
-
 
 // "$hoge $huga"
 // remove "'	//"'hoge'"->'hoge'
@@ -42,9 +40,6 @@ int	expand_var_in_tokens(t_list_bdi **list_head, t_info *info)
 			if (!token_elem->word)
 				return (FAILURE);
 		}
-//		if (token_elem->is_quoted)
-//			if (remove_quotes(&token_elem->word) == FAILURE)
-//				return (FAILURE);
 		list_node = list_node->next;
 	}
 	return (SUCCESS);
@@ -113,36 +108,7 @@ int remove_quotes(char **token_word)
 	quote_removal_word = ft_substr(*token_word, 1, wordlen - 2);
 	if (!quote_removal_word)
 		return (perror_ret_int("malloc", FAILURE));
-//	printf("before removal:%s\n", *token_word);
 	free_1d_alloc(*token_word);
 	*token_word = quote_removal_word;
 	return (SUCCESS);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

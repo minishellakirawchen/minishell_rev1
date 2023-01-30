@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 21:31:55 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 20:22:40 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	prompt_loop(t_info *info)
 			info->readline_input = free_1d_alloc(info->readline_input);
 			continue ;
 		}
+		add_history(info->readline_input);
+
 		// debug
 		ft_dprintf(STDERR_FILENO, "#%-15s:[%s]\n", "input", info->readline_input);
 
@@ -62,20 +64,23 @@ int	prompt_loop(t_info *info)
 			is_return_input = true;//add_history & free(line)
 
 		// debug
-//		debug_print_tokens(info->tokenlist_head, "arranged");
+		debug_print_tokens(info->tokenlist_head, "arranged");
+
 
 		/* parsing (Mandatory/Bonus) */
-		if (!is_return_input && parsing_token_list(info) == FAILURE)
+		if (!is_return_input && parsing_token_list(&info->tokenlist_head, &info->execlist_head, info) == FAILURE)
 		{
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]parsing failure\n");
 			return (FAILURE);
 		}
-		/* expansion & command_execution */
-		exit_status = execute_execlist(info);
 
+		/* expansion & command_execution */
+		if (!is_return_input)
+			exit_status = execute_execlist(&info->execlist_head, info);
 		/* clear input */
-		add_history(info->readline_input);
 		clear_input_info(&info);
+		if (exit_status == PROCESS_ERROR)
+			break ;
 	}
 	return (exit_status);
 }

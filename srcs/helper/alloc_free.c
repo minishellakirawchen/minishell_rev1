@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 00:25:08 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 20:22:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,9 @@ void	free_redirect_info(void *content)
 	if (!content)
 		return ;
 	redirect_info = content;
+	if (redirect_info->io_type == e_heredoc)
+		if (unlink(redirect_info->filename) < 0)
+			perror_and_return_int("unlink", FAILURE);
 	free_1d_alloc(redirect_info->filename);
 	free_1d_alloc(redirect_info->heredoc_eof);
 	ft_lstclear_bdi(&redirect_info->token_list, free_token_elem);

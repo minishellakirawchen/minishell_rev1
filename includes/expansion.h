@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 14:15:43 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:30:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,13 @@ typedef enum e_node_kind		t_node_kind;
 int		expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *info);
 
 
-/* expand_var.c */
+/* expand_var_in_tokens.c */
 int		expansion(t_info *info);//test
 int		remove_quote_in_tokens(t_list_bdi **list_head);
+
+
+/* expand_var_in_heredoc.c */
+int	do_expansion_in_heredoc(char *filename, t_info *info);
 
 
 /* create_commands.c */

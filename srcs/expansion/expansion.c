@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 15:52:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/29 21:57:03 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 		}
 		redirect_list = redirect_list->next;
 	}
+//	debug_print_redirect_info((*cmd_list)->redirect_list, "expand_var_in_redirect");
 	return (SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:16:04 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 20:17:13 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 10:31:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,19 @@ int	dup2_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next)
 {
 	errno = 0;
 	if (prev_fd && prev_fd[WRITE] != -1)
+	{
+		if (close(STDIN_FILENO) < 0)
+			return (perror_ret_int("close", FAILURE));
 		if (dup2(prev_fd[READ], STDIN_FILENO) < 0)
 			return (perror_ret_int("dup2", FAILURE));
+	}
 	if (next && now_fd)
+	{
+		if (close(STDOUT_FILENO) < 0)
+			return (perror_ret_int("close", FAILURE));
 		if (dup2(now_fd[WRITE], STDOUT_FILENO) < 0)
 			return (perror_ret_int("dup2", FAILURE));
+	}
 	return (SUCCESS);
 }
 

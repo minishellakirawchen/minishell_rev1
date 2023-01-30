@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 15:07:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:43:21 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 	if (!tokenlist_head || !*tokenlist_head)
 		return (FAILURE);
 
-	debug_print_tokens(*tokenlist_head, "before arrange");
+//	debug_print_tokens(*tokenlist_head, "before arrange");
 
 	if (valid_control_operator(tokenlist_head) == FAILURE)
 		return (FAILURE);
@@ -36,14 +36,6 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 
 	set_parenthesis_no(tokenlist_head);
 
-//	debug_print_tokens(*tokenlist_head, "set parenthesis no");
-
-	debug_print_tokens(*tokenlist_head, "set opes");
-
-//	delete_empty_elem(tokenlist_head);
-
-//	debug_print_tokens(*tokenlist_head, "delete empty");
-
 	if (validate_syntax_operators(*tokenlist_head) == FAILURE)
 		return (FAILURE);
 
@@ -54,7 +46,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 	if (ft_lstsize_bdi(*tokenlist_head) == 0)
 		return (FAILURE);
 
-	debug_print_tokens(*tokenlist_head, "set word type");
+//	debug_print_tokens(*tokenlist_head, "set word type");
 
 	return (SUCCESS);
 }
@@ -107,9 +99,9 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 // 0 11 1 22 22 1 0
 static void	set_parenthesis_no(t_list_bdi **tokenlist_head)
 {
-	t_list_bdi			*node;
+	t_list_bdi		*node;
 	t_token_elem	*token;
-	ssize_t			parentesis_no;
+	int				parentesis_no;
 
 	if (!tokenlist_head || !*tokenlist_head)
 		return ;
@@ -121,17 +113,20 @@ static void	set_parenthesis_no(t_list_bdi **tokenlist_head)
 		if (token->type == e_subshell_start)
 		{
 			parentesis_no++;
-			token->depth = parentesis_no;
+			token->subshell_depth = parentesis_no;
+//			printf("token:%s, subshell_depth:%d\n", token->word, parentesis_no);
 		}
 		else if (token->type == e_subshell_end)
 		{
-			token->depth = parentesis_no;
+			token->subshell_depth = parentesis_no;
 			parentesis_no--;
 		}
 		else
-			token->depth = parentesis_no;
+			token->subshell_depth = parentesis_no;
+//		printf("token:%s, subshell_depth:%d\n", token->word, parentesis_no);
 		node = node->next;
 	}
+//	debug_print_tokens(*tokenlist_head, "parenthesis no");
 }
 
 
@@ -158,7 +153,7 @@ static void	set_elem_type_if_operator(t_list_bdi **tokenlist_head)
 {
 	const char		*operators[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", NULL};
 	size_t			idx;
-	t_list_bdi			*node;
+	t_list_bdi		*node;
 	t_token_elem	*token;
 
 	if (!tokenlist_head || !*tokenlist_head)

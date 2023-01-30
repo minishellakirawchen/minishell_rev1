@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:06:20 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 12:01:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:40:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static bool	is_pipeline_token(t_token_elem *token_elem, ssize_t	subshell_depth)
 {
 	if (!token_elem)
 		return (false);
-	if (!(is_tokentype_operator(token_elem->type) && token_elem->depth == subshell_depth))
+	if (!(is_tokentype_operator(token_elem->type) && token_elem->subshell_depth == subshell_depth))
 		return (true);
 	return (false);
 }
@@ -91,26 +91,29 @@ int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec
 
 /* create and connect t_exec_list, node type is pipeline and operator */
 /* pipeline->operator->pipeline->... */
-int	create_operator_list(t_info *info)
+
+int	create_operator_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head)
 {
 	t_token_elem	*token_elem;
-	ssize_t			subshell_depth;
+	int				subshell_depth;
 	t_exec_list		*pipeline_node;
 	t_exec_list		*operator_node;
 	int				handle_result;
 
 	errno = 0;
-	if (!info || !info->tokenlist_head)
+	if (!tokenlist_head || !*tokenlist_head || !execlist_head)
 		return (FAILURE);
-	info->execlist_head = create_execlist_node(e_node_pipeline, NULL, NULL, NULL);
-	if (!info->execlist_head)
+	*execlist_head = create_execlist_node(e_node_pipeline, NULL, NULL, NULL);
+	if (!*execlist_head)
 		return (FAILURE); //TODO:all free
-	token_elem = info->tokenlist_head->content;
-	subshell_depth = token_elem->depth;
-	pipeline_node = info->execlist_head;
-	while (info->tokenlist_head)
+	token_elem = (*tokenlist_head)->content;
+	subshell_depth = token_elem->subshell_depth;
+	if (token_elem->type == e_subshell_start)
+		subshell_depth--;
+	pipeline_node = *execlist_head;
+	while (*tokenlist_head)
 	{
-		handle_result = handle_each_token(&info->tokenlist_head, pipeline_node, &operator_node, subshell_depth);
+		handle_result = handle_each_token(tokenlist_head, pipeline_node, &operator_node, subshell_depth);
 		if (handle_result == CONTINUE)
 			continue ;
 		if (handle_result == BREAK)
