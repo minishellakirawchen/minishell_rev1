@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 20:08:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 22:33:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,7 @@ char	*get_expanded_str(char *src, t_info *info)
 			skip_str = ft_substr(src, idx, skip);
 			expanded_str = concat_dst_to_src(&expanded_str, skip_str);
 			if (!skip_str || !expanded_str)
-			{
-//				printf("error 1\n");
 				return (perror_ret_nullptr("malloc"));
-			}
 			skip_str = free_1d_alloc(skip_str);
 			idx += skip;
 		}
@@ -65,18 +62,14 @@ char	*get_expanded_str(char *src, t_info *info)
 			value = get_env_value(key, info->envlist_head);
 //			printf("key:%s, value:%s\n", key, value);
 			if (!key | !value)
-			{
-//				printf("error 2\n");
 				return (perror_ret_nullptr("malloc"));
-			}
 			expanded_str = concat_dst_to_src(&expanded_str, value);
 			idx += ft_strlen_ns(key); // $key
 			key = free_1d_alloc(key);
 		}
 		idx++;
 	}
-	free(src);
-//	printf("expanded:%s\n", expanded_str);
+	free_1d_alloc(src);
 	return (expanded_str);
 }
 
@@ -143,15 +136,16 @@ char	*concat_dst_to_src(char **dst, char *src)
 
 int	expand_exit_status(char **expanded_str, int exit_status)
 {
-	char	*var;
+	char	*status_itoa;
 
 	if (!expanded_str)
 		return (FAILURE);
-	var = ft_itoa(exit_status);
-	if (!var)
+	status_itoa = ft_itoa(exit_status);
+	if (!status_itoa)
 		return (perror_ret_int("malloc", FAILURE));
-	*expanded_str = concat_dst_to_src(expanded_str, var);
-	if (*expanded_str)
+	*expanded_str = concat_dst_to_src(expanded_str, status_itoa);
+	free(status_itoa);
+	if (!*expanded_str)
 		return (FAILURE);
 	return (SUCCESS);
 }
