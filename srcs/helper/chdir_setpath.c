@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 00:24:51 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 20:56:10 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static int	set_path(t_info *info, t_cd_info *cd_info)
 		env_pwd = NULL;
 	else
 		env_pwd = *cd_info->env_pwd;
+	printf("env_pwd: %s\n", env_pwd);
 	exit_status = 0;
 	if (*cd_info->newpwd == '.')
 		set_append_path(info, cd_info, env_pwd);
