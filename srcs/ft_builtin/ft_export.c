@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 00:27:48 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/30 20:10:36 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static void	pwd_flag_controller(t_list *node, char *key)
 {
 	t_env_elem	*elem;
 
+	if (is_same_str(key, "PWD+"))
+		key = "PWD";
 	while (node != NULL)
 	{
 		elem = node->content;
@@ -84,8 +86,8 @@ static int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 			e_info->value = free_1d_alloc(e_info->value);
 		}
 	}
-	if (is_same_str(e_info->key, "PWD") || is_same_str(e_info->key,
-			"OLDPWD") == SUCCESS || is_same_str(e_info->key, "PWD+") == SUCCESS)
+	if (is_same_str(e_info->key, "PWD") ||
+			is_same_str(e_info->key, "OLDPWD") || is_same_str(e_info->key, "PWD+"))
 		pwd_flag_controller(info->envlist_head, e_info->key);
 	if (e_info->key_type == e_append)
 		exit_status = append_env(info, e_info->key, e_info->value);
