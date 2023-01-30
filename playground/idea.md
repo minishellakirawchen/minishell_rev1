@@ -1,5 +1,74 @@
 
 
+# wildcard
+Use wildcards in arguments in the current working directory.
+
+current working directoryにあるfile, directoryを取得
+一致するものを引数とする
+
+token[*] -> token[file1]->[file2]->...へchangeする
+
+
+要チェック
+* 展開を含むケースも同様
+
+bash-3.2 0 $ export a1="echo *"
+bash-3.2 0 $ $a1
+in1 in2 ngfile out
+
+
+'*'の展開はexpansionに組み込もう
+
+取り組みの流れ
+
+* current working directoryのファイル一覧を取得
+* "*"と一致するものを出力
+ * "**...*" は"*"と同様
+ * "*a*"の前後*は別の文字列でもOK
+ * 一致するものがなければそのまま出力
+ * *はから文字以上の文字列, "abc*"や"*abc*","*a*b*c*" で "abc"がヒットする
+ * むずくね？
+
+* 前から貪欲に探していけば良さそう
+
+```shell
+bash-3.2 0 $ ls
+in1     in2     ngfile  out
+
+bash-3.2 0 $ echo *
+in1 in2 ngfile out
+
+bash-3.2 0 $ cat *
+in1
+in2
+cat: ngfile: Permission denied
+hoge
+
+
+bash-3.2 1 $ ls *
+in1     in2     ngfile  out
+
+bash-3.2 0 $ ls in*
+in1     in2
+
+bash-3.2 0 $ ls in* ou*
+in1     in2     out
+
+
+bash-3.2 0 $ echo "*"
+*
+bash-3.2 0 $ echo '*'
+*
+
+bash-3.2 0 $ echo ****a
+****a
+
+
+```
+
+
+
+
 # Expansion
 
 ```shell
