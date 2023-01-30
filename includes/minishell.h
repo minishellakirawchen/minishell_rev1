@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 21:28:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:50:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@
 # define CONTINUE	2
 # define BREAK		3
 
-# define PROCESS_ERROR	0
+# define PROCESS_ERROR	-1
 
 
 # define EXIT_TOO_MANY_ARGS			1
@@ -209,9 +209,6 @@ struct s_redirect_info
 /* ************************** */
 /*     command execution      */
 /* ************************** */
-int		command_execution(t_info *info);
-int		execute_builtin(t_info *info, char **cmds);
-int		is_builtin(char **cmds);
 
 /* ************************** */
 /*       signal handler       */

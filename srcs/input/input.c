@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 20:09:49 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:57:24 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	prompt_loop(t_info *info)
 			info->readline_input = free_1d_alloc(info->readline_input);
 			continue ;
 		}
+		add_history(info->readline_input);
+
 		// debug
 		ft_dprintf(STDERR_FILENO, "#%-15s:[%s]\n", "input", info->readline_input);
 
@@ -72,10 +74,10 @@ int	prompt_loop(t_info *info)
 		}
 		/* expansion & command_execution */
 		exit_status = execute_execlist(info);
-
 		/* clear input */
-		add_history(info->readline_input);
 		clear_input_info(&info);
+		if (exit_status == PROCESS_ERROR)
+			break ;
 	}
 	return (exit_status);
 }

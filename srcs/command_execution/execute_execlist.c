@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 22:09:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:37:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	execute_execlist(t_info *info)
 	int			exit_status;
 	t_exec_list	*exec_node;
 	t_exec_list	*pipeline_node;
+	bool		debug = false;
 
 	if (!info || !info->execlist_head)
 		return (FAILURE);
@@ -64,23 +65,27 @@ int	execute_execlist(t_info *info)
 		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
 			return (FAILURE);
 
-		/* vvvvv debug mode: print command_info vvvvv */
-		t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
-		while (pipeline_cmds_node)
+		if (debug)
 		{
-			t_command_info *command_info = pipeline_cmds_node->content;
-			// tmp print
-			debug_print_command_info(command_info);
-			pipeline_cmds_node = pipeline_cmds_node->next;
-			if (pipeline_cmds_node)
-				ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
+				/* vvvvv debug mode: print command_info vvvvv */
+			t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
+			while (pipeline_cmds_node)
+			{
+				t_command_info *command_info = pipeline_cmds_node->content;
+				// tmp print
+				debug_print_command_info(command_info);
+				pipeline_cmds_node = pipeline_cmds_node->next;
+				if (pipeline_cmds_node)
+					ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
+			}
+			/* ^^^^^ debug mode: print command_info ^^^^^ */
 		}
-		/* ^^^^^ debug mode: print command_info ^^^^^ */
 		printf("\nvvvvv execute vvvvv\n");
 		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
 		printf("^^^^^^^^^^^^^^^^^^^  ");
-
+		if (exit_status == PROCESS_ERROR)
+			return (PROCESS_ERROR);
 		/* get next pipeline node */
 		exec_node = exec_node->next;
 		move_to_next_exec_node(&exec_node, exit_status);
@@ -93,9 +98,10 @@ int	execute_execlist(t_info *info)
 static void	move_to_next_exec_node(t_exec_list **exec_list, int exit_status)
 {
 	t_exec_list	*next_operator_node;
-	bool		debug = true;
+	bool		debug = false;
 
 	printf("exit_status:%d\n", exit_status);
+
 	if (!exec_list || !*exec_list)
 		return ;
 

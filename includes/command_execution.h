@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:14:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 11:46:06 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,14 @@ bool	is_delimiter(const char *input_line, const char *delimiter);
 bool	is_eof(char *line);
 char	*get_heredoc_tmp_filename(int cnt);
 
-
 /* open_file.c */
 int		get_openfile_fd(const char *filename, t_fopen fopen_type);
 int		get_io_fd(t_token_type io_type);
 t_fopen	get_fopen_type(t_token_type io_type);
 
+/* execute_builtin.c */
+int		execute_builtin(t_info *info, char **cmds);
+bool	is_builtin(char **cmds);
+bool	is_single_builtin(t_list_bdi *pipeline_cmds_head);
 
 #endif //COMMAND_EXECUTION_H
