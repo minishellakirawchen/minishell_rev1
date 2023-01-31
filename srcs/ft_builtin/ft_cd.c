@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/01 01:11:07 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 02:10:40 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static char	*init_tdir(char *ref, char *cmd)
 	char	*trimed_cmd;
 	char	*tdir;
 
-	printf("ref : %s\n", ref);
 	if (ref == NULL)
 		return (ft_strdup_ns(cmd));
 	ref_len = ft_strlen(ref);

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/01 01:22:07 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 02:15:26 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	set_append_path(t_info *info, t_cd_info *cd_info, char *env_pwd)
 	int	exit_status;
 
 	exit_status = 0;
-	exit_status += append_env(info, ft_strdup("PWD="), ft_strjoin("/",
+	exit_status += append_env(info, ft_strdup("PWD+"), ft_strjoin("/",
 				cd_info->newpwd));
 	exit_status += add_env(info, ft_strdup("OLDPWD"), ft_strdup_ns(env_pwd));
 	return (exit_status);
