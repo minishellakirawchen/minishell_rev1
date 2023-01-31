@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:31:24 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 22:46:46 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 01:08:23 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,14 @@ int	cmd_to_ll(char **cmds)
 	input_exit_num_chr = ft_strtrim(cmds[1], " ");
 	if (!input_exit_num_chr)
 		return (EXIT_FAILURE);
-	exit_status = (int)(ft_strtoll(input_exit_num_chr, &is_strtoll_success) % 256);
-	free (input_exit_num_chr);
+	exit_status = (int)(ft_strtoll(input_exit_num_chr,
+				&is_strtoll_success) % 256);
+	free(input_exit_num_chr);
 	if (!is_strtoll_success)
 	{
 		ft_dprintf(STDERR_FILENO,
-			"minishell: exit: %s: numeric argument required\n", (char *)cmds[1]);
+			"minishell: exit: %s: numeric argument required\n",
+			(char *)cmds[1]);
 		return (255);
 	}
 	return (exit_status);
@@ -47,8 +49,8 @@ int	cmd_to_ll(char **cmds)
 
 int	ft_exit(t_info *info, char **cmds)
 {
-	int		exit_status;
-	int		cmds_count;
+	int	exit_status;
+	int	cmds_count;
 
 	if (!info || !cmds)
 		return (EXIT_FAILURE);

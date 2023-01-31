@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 18:32:56 by wchen            ###   ########.fr       */
+/*   Updated: 2023/01/31 23:23:06 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int	cd_error_handler(t_cd_info *cd_info, char **cmds)
 			(*cmds)[1]);
 		return (EXIT_FAILURE);
 	}
-	else if (cd_info->cd_type == e_oldpwd && cd_info->oldpwd == NULL)
+	else if (cd_info->cd_type == e_oldpwd &&
+			(cd_info->oldpwd == NULL || *(cd_info->oldpwd) == NULL))
 	{
 		ft_printf("minishell: cd: OLDPWD not set\n");
 		return (EXIT_FAILURE);

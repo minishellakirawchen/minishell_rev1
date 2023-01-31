@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/31 00:27:29 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 01:11:07 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static char	*init_tdir(char *ref, char *cmd)
 	char	*trimed_cmd;
 	char	*tdir;
 
+	printf("ref : %s\n", ref);
 	if (ref == NULL)
 		return (ft_strdup_ns(cmd));
 	ref_len = ft_strlen(ref);
@@ -63,6 +64,13 @@ static char	*define_new_path(t_cd_info *cd_info, char *cmd)
 	return (init_tdir(cd_info->pwd, cmd));
 }
 
+static void	print_err_message(void)
+{
+	ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
+	ft_dprintf(STDERR_FILENO, "getcwd: cannot access parent directories: ");
+	ft_dprintf(STDERR_FILENO, "directories: No such file or directory \n");
+}
+
 static t_cd_info	*init_cd_info(t_info *info)
 {
 	t_cd_info	*cd_info;
@@ -80,11 +88,7 @@ static t_cd_info	*init_cd_info(t_info *info)
 		if (check_dir_exist("./") == EACCES)
 			cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
 		else
-		{
-			ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
-			ft_dprintf(STDERR_FILENO, "getcwd: cannot access parent directories: ");
-			ft_dprintf(STDERR_FILENO, "directories: No such file or directory ");
-		}
+			print_err_message();
 	}
 	cd_info->oldpwd = get_elem(info, "OLDPWD");
 	cd_info->newpwd = NULL;
@@ -106,9 +110,6 @@ int	ft_cd(t_info *info, char **cmds)
 	if (cd_error_handler(cd_info, cmds) == EXIT_FAILURE)
 		return (free_cdinfo_ret_status(cd_info, EXIT_FAILURE));
 	cd_info->newpwd = define_new_path(cd_info, *cmds);
-	printf("-----debug-----\n");
-	printf("new pwd : %s\n", cd_info->newpwd);
-	printf("-----debug-----\n");
 	if (!cd_info->newpwd)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	exit_status = chdir_setpath(info, cd_info, cmds);

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 20:10:36 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 01:06:12 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,12 @@ static int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 			e_info->value = free_1d_alloc(e_info->value);
 		}
 	}
-	if (is_same_str(e_info->key, "PWD") ||
-			is_same_str(e_info->key, "OLDPWD") || is_same_str(e_info->key, "PWD+"))
+	if (is_same_str(e_info->key, "PWD") || is_same_str(e_info->key,
+			"OLDPWD") || is_same_str(e_info->key, "PWD+"))
 		pwd_flag_controller(info->envlist_head, e_info->key);
 	if (e_info->key_type == e_append)
 		exit_status = append_env(info, e_info->key, e_info->value);
-	if (e_info->key_type == e_add | e_info->key_type == e_novalue)
+	if (e_info->key_type == e_add || e_info->key_type == e_novalue)
 		exit_status = add_env(info, e_info->key, e_info->value);
 	return (exit_status);
 }
