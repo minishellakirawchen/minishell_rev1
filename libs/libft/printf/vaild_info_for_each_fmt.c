@@ -15,72 +15,72 @@
 static int	is_valid_strs(t_printf_info info, char type)
 {
 	if (info.width_siz > INT_MAX || info.perc_siz > INT_MAX)
-		return (FAIL);
+		return (FAILURE);
 	if (type == 'c')
 	{
 		if (info.flag_sign || info.flag_space || info.flag_zero_pad)
-			return (FAIL);
+			return (FAILURE);
 		if (info.prec_dot && !info.prec_dot_only)
-			return (FAIL);
-		return (PASS);
+			return (FAILURE);
+		return (SUCCESS);
 	}
 	if (type == 's')
 	{
 		if (info.flag_sign || info.flag_space || \
 		info.flag_zero_pad || info.flag_prefix)
-			return (FAIL);
-		return (PASS);
+			return (FAILURE);
+		return (SUCCESS);
 	}
-	return (FAIL);
+	return (FAILURE);
 }
 
 static int	is_valid_num(t_printf_info *info, char type)
 {
 	if (info->width_siz > INT_MAX || info->perc_siz > INT_MAX)
-		return (FAIL);
+		return (FAILURE);
 	if (info->flag_zero_pad && info->prec_dot)
 		info->flag_zero_pad = false;
 	if (type == 'd')
 	{
 		if ((info->flag_sign && info->flag_space) || info->flag_prefix)
-			return (FAIL);
+			return (FAILURE);
 		if (info->flag_zero_pad && info->flag_left)
-			return (FAIL);
-		return (PASS);
+			return (FAILURE);
+		return (SUCCESS);
 	}
 	if (type == 'u')
 	{
 		if (info->flag_sign || info->flag_space || info->flag_prefix)
-			return (FAIL);
-		return (PASS);
+			return (FAILURE);
+		return (SUCCESS);
 	}
-	return (FAIL);
+	return (FAILURE);
 }
 
 static int	is_valid_hex(t_printf_info *info, char type)
 {
 	if (info->width_siz > INT_MAX || info->perc_siz > INT_MAX)
-		return (FAIL);
+		return (FAILURE);
 	if (type == 'x')
 	{
 		if (info->flag_zero_pad && info->prec_dot)
 			info->flag_zero_pad = false;
 		if (info->flag_sign || info->flag_space)
-			return (FAIL);
-		return (PASS);
+			return (FAILURE);
+		return (SUCCESS);
 	}
 	if (type == 'p')
 	{
 		info->is_pointer = true;
 		if (info->flag_sign || info->flag_space || \
 		info->flag_zero_pad || info->flag_prefix)
-			return (FAIL);
+			return (FAILURE);
 		if (info->prec_dot && !info->prec_dot_only)
-			return (FAIL);
+			return (FAILURE);
 		info->flag_prefix = true;
-		return (PASS);
+		return (SUCCESS);
 	}
-	return (FAIL);
+	return (FAILURE);
 }
 
 int	valid_info4fmt(char c, t_printf_info *info)
@@ -98,6 +98,6 @@ int	valid_info4fmt(char c, t_printf_info *info)
 	if (c == 'p')
 		return (is_valid_hex(info, 'p'));
 	if (c == '%')
-		return (PASS);
-	return (FAIL);
+		return (SUCCESS);
+	return (FAILURE);
 }

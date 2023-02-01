@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 12:22:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 15:13:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,13 @@ int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_i
 			if (!token_elem->word)
 				return (FAILURE);
 		}
+		/* expand wildcard as space separated string */
+		if (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted))
+		{
+			token_elem->word = get_expand_wildcard(token_elem->word);
+			if (!token_elem->word)
+				return (FAILURE);
+		}
 		/* if is_quoted, quote removal */
 		if (token_elem->is_quoted)
 		{
@@ -146,6 +153,7 @@ int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_i
 		else
 		{
 			/* is_connect_to_next */
+			/* re tokenize by `space` */
 			space_splitted_list = get_delim_splitted_tokenlist(token_elem->word, STR_SPACE, STR_QUOTE);
 			if (!space_splitted_list)
 				return (FAILURE); //TODO:free
@@ -156,6 +164,7 @@ int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_i
 			ft_lstdelone_bdi(&popped_node, free_token_elem);
 		}
 	}
+
 //	debug_print_tokens(expanded_token_list, "expanded token");
 
 	/* expanded_token_list -> char **commands */

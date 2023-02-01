@@ -58,11 +58,11 @@ static ssize_t	print_fmt(char *fmt, t_printf_info *info, va_list *p)
 	get_flag((char *)fmt, info);
 	if (errno != 0)
 		return (-1);
-	if (get_width((char *) fmt, info, p) == FAIL)
+	if (get_width((char *) fmt, info, p) == FAILURE)
 		return (-1);
-	if (get_prec((char *) fmt, info, p) == FAIL)
+	if (get_prec((char *) fmt, info, p) == FAILURE)
 		return (-1);
-	if (valid_info4fmt(fmt[info->fmt_idx], info) == FAIL)
+	if (valid_info4fmt(fmt[info->fmt_idx], info) == FAILURE)
 		return (-1);
 	return (pass_to_printfunc(fmt[info->fmt_idx], *info, p));
 }

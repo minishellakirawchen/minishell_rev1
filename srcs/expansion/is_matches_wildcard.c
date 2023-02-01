@@ -6,12 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 10:30:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 10:42:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 11:25:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-
 
 static int **get_dp_table(size_t row, size_t col);
 static int	is_match(const char *wildcard_str, const char *target_str, int **dp);

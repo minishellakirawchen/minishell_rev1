@@ -50,17 +50,17 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *info)
 {
 	t_list_bdi		*command_list_node;
-	t_command_info	*command_list;
+	t_command_info	*command_info;
 
 	if (!pipeline || !info)
 		return (FAILURE);
 	command_list_node = (*pipeline)->pipeline_commands;
 	while (command_list_node)
 	{
-		command_list = command_list_node->content;
-		if (expand_var_in_cmd_and_create_cmds_from_tokens(&command_list, info) == FAILURE)
+		command_info = command_list_node->content;
+		if (expand_var_in_cmd_and_create_cmds_from_tokens(&command_info, info) == FAILURE)
 			return (FAILURE);
-		if (expand_var_in_redirect_filename(&command_list, info) == FAILURE)
+		if (expand_var_in_redirect_filename(&command_info, info) == FAILURE)
 			return (FAILURE);
 		command_list_node = command_list_node->next;
 	}
