@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 18:46:09 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 19:00:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*redirect_info;
 	t_list_bdi		*expanded_token_list;
-	char			**commands;
+	char			**expanded_retokenized_chars;
 	char			*concat_token_str;
 
 	if (!cmd_list || !*cmd_list)
@@ -166,21 +166,21 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 			while (redirect_info->token_list)
 				if (create_expanded_token_list(&expanded_token_list, &redirect_info->token_list, info) == FAILURE)
 					return (FAILURE); //TODO;free
-			commands = create_commands_from_token_list(&expanded_token_list);
-			debug_print_2d_arr(commands, ">> expand redirect >>");
-			if (get_2darray_size(commands) != 1)
+			expanded_retokenized_chars = create_commands_from_token_list(&expanded_token_list);
+			debug_print_2d_arr(expanded_retokenized_chars, ">> expand redirect >>");
+			if (get_2darray_size(expanded_retokenized_chars) != 1)
 			{
 				redirect_info->is_ambiguous = true;
 				redirect_info->filename = concat_token_str;
 			}
 			else
 			{
-				redirect_info->filename = ft_strdup(commands[0]);
+				redirect_info->filename = ft_strdup(expanded_retokenized_chars[0]);
 				if (!redirect_info->filename)
 					return (perror_ret_int("malloc", FAILURE));//TODO:free
 				free_1d_alloc(concat_token_str);
 			}
-			free_2d_alloc((void **)commands);
+			free_2d_alloc((void **)expanded_retokenized_chars);
 
 		}
 		redirect_list = redirect_list->next;
