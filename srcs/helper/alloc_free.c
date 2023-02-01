@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 20:22:34 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/31 22:00:39 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	**free_2d_alloc(void **alloc)
 	i = 0;
 	while (alloc[i])
 	{
-		free_1d_alloc(alloc[i]);
+		alloc[i] = free_1d_alloc(alloc[i]);
 		i++;
 	}
 	free(alloc);

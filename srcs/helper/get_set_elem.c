@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:04:28 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 21:12:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 23:47:03 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,14 @@ int	append_env(t_info *info, char *key, char *value)
 	else
 	{
 		temp_ptr = *elem_value;
-		*elem_value = ft_strjoin(*elem_value, value);
-		if (!elem_value)
-			return (perror_and_return_int("malloc", EXIT_FAILURE));
+		if (*elem_value != NULL)
+		{
+			*elem_value = ft_strjoin(*elem_value, value);
+			value = free_1d_alloc(value);
+		}
+		else
+			*elem_value = value;
 		elem_key = free_1d_alloc(elem_key);
-		value = free_1d_alloc(value);
 		temp_ptr = free_1d_alloc(temp_ptr);
 	}
 	return (EXIT_SUCCESS);

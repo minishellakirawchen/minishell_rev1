@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:13:40 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 21:49:46 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 01:08:35 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_pwd(t_info *info)
 	cwd_pwd = getcwd(NULL, 0);
 	if (!cwd_pwd)
 	{
-		env_pwd= get_elem(info, "PWD");
+		env_pwd = get_elem(info, "PWD");
 		if (env_pwd != NULL)
 			ft_printf("%s\n", *env_pwd);
 		else
@@ -30,6 +30,6 @@ int	ft_pwd(t_info *info)
 	}
 	else
 		ft_printf("%s\n", cwd_pwd);
-	free (cwd_pwd);
+	free(cwd_pwd);
 	return (EXIT_SUCCESS);
 }

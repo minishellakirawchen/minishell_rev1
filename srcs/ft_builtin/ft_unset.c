@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:36 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 00:21:33 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 01:08:58 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,12 @@ static int	unset_elem(t_list *pre_node, t_list *cur_node)
 
 static int	unset_pwd(t_env_elem *elem)
 {
+	char	*temp;
+
 	elem->not_print = 1;
+	temp = elem->value;
+	elem->value = NULL;
+	free(temp);
 	return (EXIT_SUCCESS);
 }
 
@@ -70,7 +75,8 @@ int	ft_unset(t_info *info, char **cmds)
 		if (judge_chr_key(*cmds) == FAILURE)
 		{
 			ft_dprintf(STDERR_FILENO,
-				"minishell: unset: `%s': not a valid identifier\n",*cmds);
+				"minishell: unset: `%s': not a valid identifier\n",
+				*cmds);
 			exit_status += EXIT_FAILURE;
 		}
 		else

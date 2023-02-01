@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 21:52:25 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 02:10:40 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ static char	*define_new_path(t_cd_info *cd_info, char *cmd)
 	return (init_tdir(cd_info->pwd, cmd));
 }
 
+static void	print_err_message(void)
+{
+	ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
+	ft_dprintf(STDERR_FILENO, "getcwd: cannot access parent directories: ");
+	ft_dprintf(STDERR_FILENO, "directories: No such file or directory \n");
+}
+
 static t_cd_info	*init_cd_info(t_info *info)
 {
 	t_cd_info	*cd_info;
@@ -77,8 +84,10 @@ static t_cd_info	*init_cd_info(t_info *info)
 	cd_info->pwd = getcwd(NULL, 0);
 	if (cd_info->pwd == NULL)
 	{
-		ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
-		perror("getcwd");
+		if (check_dir_exist("./") == EACCES)
+			cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
+		else
+			print_err_message();
 	}
 	cd_info->oldpwd = get_elem(info, "OLDPWD");
 	cd_info->newpwd = NULL;
