@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:23:30 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 10:44:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 18:44:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ static int connect_redirect_fds(t_command_info **command_info)
 	while (redirect_list)
 	{
 		redirect_info = redirect_list->content;
+		if (redirect_info->is_ambiguous)
+		{
+			ft_dprintf(STDERR_FILENO, "minishell: %s: ambiguous redirect\n", redirect_info->filename);
+			return (FAILURE);
+		}
 		io_type = redirect_info->io_type;
 		fd_idx = get_io_fd(io_type);
 		if ((*command_info)->redirect_fd[fd_idx] != -1)

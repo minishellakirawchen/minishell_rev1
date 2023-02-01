@@ -64,6 +64,21 @@ bash-3.2 0 $ echo ****a
 ****a
 
 ```
+リダイレクトもwildcard展開する
+
+
+
+
+
+
+
+
+export b=*は展開されない
+ここの除外がむずすぎる
+
+
+
+
 
 permission 000
 ```shell

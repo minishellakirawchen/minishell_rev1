@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 15:13:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 18:31:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,60 @@ char	**create_commands_from_token_list(t_list_bdi **token_list)
 	return (commands);
 }
 
-int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info)
+
+int create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **src_tokens, t_info *info)
 {
-	t_list_bdi		*expanded_token_list;
 	t_list_bdi		*popped_node;
 	t_token_elem	*token_elem;
 	t_token_elem	*splitted_token;
-	char			**commands;
 	t_list_bdi		*space_splitted_list;
+
+	popped_node = ft_lstpop_bdi(src_tokens);
+	token_elem = popped_node->content;
+
+	/* if is_expandable, expand vare */
+	if (is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
+	{
+//			printf("word:%s, quote_chr:%c, is_quoted:%d\n", token_elem->word, token_elem->quote_chr, token_elem->is_quoted);
+		token_elem->word = get_expanded_str(token_elem->word, info);
+		if (!token_elem->word)
+			return (FAILURE);
+	}
+	/* expand wildcard as space separated string */
+	if (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted))
+	{
+		token_elem->word = get_expand_wildcard(token_elem->word);
+		if (!token_elem->word)
+			return (FAILURE);
+	}
+	/* if is_quoted, quote removal */
+	if (token_elem->is_quoted)
+	{
+		if (remove_quotes(&token_elem->word) == FAILURE)
+			return (FAILURE);
+		ft_lstadd_back_bdi(expanded_token_list, popped_node);
+	}
+	else
+	{
+		/* is_connect_to_next */
+		/* re tokenize by `space` */
+		space_splitted_list = get_delim_splitted_tokenlist(token_elem->word, STR_SPACE, STR_QUOTE);
+		if (!space_splitted_list)
+			return (FAILURE); //TODO:free
+		splitted_token = space_splitted_list->content;
+		splitted_token->is_connect_to_next_word = token_elem->is_connect_to_next_word;
+
+		ft_lstadd_back_bdi(expanded_token_list, space_splitted_list);
+		ft_lstdelone_bdi(&popped_node, free_token_elem);
+	}
+	return (SUCCESS);
+}
+
+
+int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info)
+{
+	t_list_bdi		*expanded_token_list;
+	char			**commands;
 
 	if (!cmd_list || !*cmd_list || !info)
 		return (FAILURE);
@@ -124,47 +170,8 @@ int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_i
 	/* expand -> quote removal -> space split -> add expanded_token_list; */
 	expanded_token_list = NULL;
 	while ((*cmd_list)->pipeline_token_list)
-	{
-		popped_node = ft_lstpop_bdi(&(*cmd_list)->pipeline_token_list);
-		token_elem = popped_node->content;
-
-		/* if is_expandable, expand vare */
-		if (is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
-		{
-//			printf("word:%s, quote_chr:%c, is_quoted:%d\n", token_elem->word, token_elem->quote_chr, token_elem->is_quoted);
-			token_elem->word = get_expanded_str(token_elem->word, info);
-			if (!token_elem->word)
-				return (FAILURE);
-		}
-		/* expand wildcard as space separated string */
-		if (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted))
-		{
-			token_elem->word = get_expand_wildcard(token_elem->word);
-			if (!token_elem->word)
-				return (FAILURE);
-		}
-		/* if is_quoted, quote removal */
-		if (token_elem->is_quoted)
-		{
-			if (remove_quotes(&token_elem->word) == FAILURE)
-				return (FAILURE);
-			ft_lstadd_back_bdi(&expanded_token_list, popped_node);
-		}
-		else
-		{
-			/* is_connect_to_next */
-			/* re tokenize by `space` */
-			space_splitted_list = get_delim_splitted_tokenlist(token_elem->word, STR_SPACE, STR_QUOTE);
-			if (!space_splitted_list)
-				return (FAILURE); //TODO:free
-			splitted_token = space_splitted_list->content;
-			splitted_token->is_connect_to_next_word = token_elem->is_connect_to_next_word;
-
-			ft_lstadd_back_bdi(&expanded_token_list, space_splitted_list);
-			ft_lstdelone_bdi(&popped_node, free_token_elem);
-		}
-	}
-
+		if (create_expanded_token_list(&expanded_token_list, &(*cmd_list)->pipeline_token_list, info) == FAILURE)
+			return (FAILURE);//TODO;free
 //	debug_print_tokens(expanded_token_list, "expanded token");
 
 	/* expanded_token_list -> char **commands */
@@ -173,10 +180,79 @@ int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_i
 	//commands: {"echo", "helloworld", "good", "bye", NULL}
 	commands = create_commands_from_token_list(&expanded_token_list);
 	(*cmd_list)->commands = commands;
-	
+
 	return (SUCCESS);
 }
 
+//int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info)
+//{
+//	t_list_bdi		*expanded_token_list;
+//	t_list_bdi		*popped_node;
+//	t_token_elem	*token_elem;
+//	t_token_elem	*splitted_token;
+//	char			**commands;
+//	t_list_bdi		*space_splitted_list;
+//
+//	if (!cmd_list || !*cmd_list || !info)
+//		return (FAILURE);
+////	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
+//
+//	/* expand -> quote removal -> space split -> add expanded_token_list; */
+//	expanded_token_list = NULL;
+//	while ((*cmd_list)->pipeline_token_list)
+//	{
+//		popped_node = ft_lstpop_bdi(&(*cmd_list)->pipeline_token_list);
+//		token_elem = popped_node->content;
+//
+//		/* if is_expandable, expand vare */
+//		if (is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
+//		{
+////			printf("word:%s, quote_chr:%c, is_quoted:%d\n", token_elem->word, token_elem->quote_chr, token_elem->is_quoted);
+//			token_elem->word = get_expanded_str(token_elem->word, info);
+//			if (!token_elem->word)
+//				return (FAILURE);
+//		}
+//		/* expand wildcard as space separated string */
+//		if (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted))
+//		{
+//			token_elem->word = get_expand_wildcard(token_elem->word);
+//			if (!token_elem->word)
+//				return (FAILURE);
+//		}
+//		/* if is_quoted, quote removal */
+//		if (token_elem->is_quoted)
+//		{
+//			if (remove_quotes(&token_elem->word) == FAILURE)
+//				return (FAILURE);
+//			ft_lstadd_back_bdi(&expanded_token_list, popped_node);
+//		}
+//		else
+//		{
+//			/* is_connect_to_next */
+//			/* re tokenize by `space` */
+//			space_splitted_list = get_delim_splitted_tokenlist(token_elem->word, STR_SPACE, STR_QUOTE);
+//			if (!space_splitted_list)
+//				return (FAILURE); //TODO:free
+//			splitted_token = space_splitted_list->content;
+//			splitted_token->is_connect_to_next_word = token_elem->is_connect_to_next_word;
+//
+//			ft_lstadd_back_bdi(&expanded_token_list, space_splitted_list);
+//			ft_lstdelone_bdi(&popped_node, free_token_elem);
+//		}
+//	}
+//
+////	debug_print_tokens(expanded_token_list, "expanded token");
+//
+//	/* expanded_token_list -> char **commands */
+//	//input   : echo "hello"world good 'bye  '
+//	//expand  : [ehco]i, [hello]w"=[world]w, [good]w, [bye]w'
+//	//commands: {"echo", "helloworld", "good", "bye", NULL}
+//	commands = create_commands_from_token_list(&expanded_token_list);
+//	(*cmd_list)->commands = commands;
+//
+//	return (SUCCESS);
+//}
+//
 
 
 
