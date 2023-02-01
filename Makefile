@@ -33,6 +33,8 @@ SRC		= main.c \
 		  expansion/is_expand.c \
 		  expansion/get_expanded_str.c \
 		  expansion/create_commands.c \
+		  expansion/is_matches_wildcard.c \
+		  expansion/expand_wildcard.c \
 		  command_execution/execute_execlist.c \
 		  command_execution/execute_pipeline.c \
 		  command_execution/execute_redirect.c \
@@ -74,7 +76,7 @@ OBJ		= $(SRC:%.c=%.o)
 OBJS	= $(addprefix $(OBJ_DIR)/, $(OBJ))
 
 
-# DEPS
+# DEPSj
 DEPS	= $(OBJS:%.o=%.d)
 
 
