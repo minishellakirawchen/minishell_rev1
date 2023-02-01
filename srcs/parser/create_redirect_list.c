@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 14:14:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 23:50:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,30 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 {
 	t_list_bdi		*command_list_node;
 	t_command_info	*command_list;
+	t_exec_list		*exec_list_node;
+
 
 	if (!exexlist_head || !*exexlist_head)
 		return (FAILURE);
-	command_list_node = (*exexlist_head)->pipeline_commands;
-	while (command_list_node)
+	exec_list_node = *exexlist_head;
+	while (exec_list_node)
 	{
-		command_list = command_list_node->content;
-		if (create_redirect_list_from_pipeline_tokens(&command_list) == FAILURE)
-			return (FAILURE);
-		if (create_heredoc_eof_from_tokens(&command_list, info) == FAILURE)
-			return (FAILURE);
-		command_list_node = command_list_node->next;
+		command_list_node = exec_list_node->pipeline_commands;
+		while (command_list_node)
+		{
+			command_list = command_list_node->content;
+			if (create_redirect_list_from_pipeline_tokens(&command_list) == FAILURE)
+				return (FAILURE);
+			if (create_heredoc_eof_from_tokens(&command_list, info) == FAILURE)
+				return (FAILURE);
+			printf("createe_redirect_list\n");
+			debug_print_command_info(command_list);
+
+			command_list_node = command_list_node->next;
+		}
+		exec_list_node = exec_list_node->next;
 	}
+
 	return (SUCCESS);
 }
 

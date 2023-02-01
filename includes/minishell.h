@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 17:30:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 23:42:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,8 @@ struct s_exec_list
 
 	// create_command_list
 	t_list_bdi		*token_list_head;	// content=command_list, tmp_save
-	t_list	*envlist_head;
-	t_list	*tokenlist_head;
+	t_list			*envlist_head;
+	t_list			*tokenlist_head;
 };
 
 
