@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 22:26:30 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 00:25:53 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 21:10:40 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	judge_opt(char *cmd)
 
 int	judge_cmd(char *cmd)
 {
-	if (cmd == NULL)
+	if (cmd == NULL || is_same_str("--", cmd))
 		return (e_home);
 	else if (cmd[0] == '-')
 		return (judge_opt(cmd));
