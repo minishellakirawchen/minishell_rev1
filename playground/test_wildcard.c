@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 19:40:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 09:31:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 10:41:55 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,21 @@
 // a*
 // *a*
 // *a
+
+static void	free_dp_array(int **dp, size_t row_size)
+{
+	size_t	i;
+
+	if (!dp || !*dp)
+		return ;
+	i = 0;
+	while (i < row_size)
+	{
+		free(dp[i]);
+		i++;
+	}
+	free(dp);
+}
 
 int **get_dp_table(size_t row, size_t col)
 {
@@ -110,27 +125,18 @@ bool	is_matches_wildcard_and_str(char *wildcard_str, char *target_str)
 	size_t	len_wildcard = ft_strlen_ns(wildcard_str);
 	size_t	len_target = ft_strlen_ns(target_str);
 	int		**dp;
+	bool	ans;
 
-	if (!target_str || !wildcard_str || len_wildcard == 0 || len_target == 0)
+//	if (!target_str || !wildcard_str || len_wildcard == 0 || len_target == 0)
+	if (!target_str || !wildcard_str)
 		return (false);
-
-	// *, **, ..., ****...
-	if (len_wildcard == cnt_chr_in_str('*', wildcard_str))
-		return (true);
-
-//	if (len_wildcard - cnt_chr_in_str('*', wildcard_str) > len_target)
-//		return (false);
-
 
 	dp = get_dp_table(len_wildcard + 1, len_target + 1);
 	if (!dp)
 		return (false);
-//	print_dp_array(dp, wildcard_str, target_str);
 
-	//dp[i][j] : wildのi-1文字目, strのj-1文字目まで見て文字列が成立すれば1, そうでなければ0
+	//dp[i][j] : wildcardのi文字目, targetのj文字目まで見て文字列が成立すれば1, 成立しなければ0
 	dp[0][0] = 1;
-//	printf("init\n");
-//	print_dp_array(dp, wildcard_str, target_str);
 
 	i = 0;
 	while (i < len_wildcard + 1)
@@ -139,14 +145,9 @@ bool	is_matches_wildcard_and_str(char *wildcard_str, char *target_str)
 		while (j < len_target + 1)
 		{
 			if (wildcard_str[i - 1] == '*')
-			{
 				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-			}
-
 			if ((j > 0) && (wildcard_str[i - 1] == target_str[j - 1]))
-			{
 				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
-			}
 			j++;
 		}
 		i++;
@@ -154,57 +155,10 @@ bool	is_matches_wildcard_and_str(char *wildcard_str, char *target_str)
 	}
 	printf("result\n");
 	print_dp_array(dp, wildcard_str, target_str);
-	printf("dp:%d, i:%zu, j:%zu, wild[len_wildcard]:%c, lenstr+cnt'*':%zu\n", dp[len_wildcard][len_target], len_wildcard, len_target, wildcard_str[len_wildcard - 1], len_target + cnt_chr_in_str('*', wildcard_str));
-//	printf("ans:%d\n", ans);
 
-	if (dp[len_wildcard][len_target] > 0)
-		return (true);
-	return (false);
-	//TODO:free
-
-
-/*
-	chr_cnt = 0;
-	i = 1;
-	while (i < len_wildcard + 1)
-	{
-		j = 1;
-		while (j < len_target + 1)
-		{
-			if (wildcard_str[i - 1] == '*')
-			{
-				dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]);
-				dp[i][j] = max(dp[i][j], dp[i][j - 1]);
-//				dp[i][j] = max(dp[i - 1][j - 1], dp[i][j - 1]);
-			}
-			if (wildcard_str[i - 1] == target_str[j - 1] && chr_cnt < j)
-				dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]);
-
-//			if ((wildcard_str[i - 1] == target_str[j - 1]) || (wildcard_str[i - 1] == '*'))
-//				dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]);
-			j++;
-		}
-		if (wildcard_str[i - 1] != '*')
-			chr_cnt++;
-		i++;
-
-	}
-	printf("result\n");
-	print_dp_array(dp, wildcard_str, target_str);
-	printf("dp:%d, i:%zu, j:%zu, wild[len_wildcard]:%c, lenstr+cnt'*':%zu\n", dp[len_wildcard][len_target], len_wildcard, len_target, wildcard_str[len_wildcard - 1], len_target + cnt_chr_in_str('*', wildcard_str));
-//	printf("ans:%d\n", ans);
-
-
-	//	if (dp[len_wildcard][len_target] > 0)
-//	if (wildcard_str[len_wildcard - 1] == '*' && (0 < dp[len_wildcard][len_target] && dp[len_wildcard][len_target] <= len_target))
-//		return (true);
-	if (dp[len_wildcard][len_target] > 0)
-		return (true);
-//	if (0 < dp[len_wildcard][len_target] && dp[len_wildcard][len_target] <= len_target + cnt_chr_in_str('*', wildcard_str))
-//		return (true);
-	return (false);
-*/
- //TODO:free
+	ans = dp[len_wildcard][len_target] > 0;
+	free_dp_array(dp, len_wildcard + 1);
+	return (ans);
 }
 
 int	test_wildcart(int no, char *input_wild, char *test_str, bool expected)
@@ -224,44 +178,45 @@ int main(void)
 	int	no = 1;
 	int ng = 0;
 
-//	ng += test_wildcart(no++, "*", "a", true);
-//	ng += test_wildcart(no++, "*a", "a", true);
-//	ng += test_wildcart(no++, "*a*", "a", true);
-//	ng += test_wildcart(no++, "**a", "a", true);
-//	ng += test_wildcart(no++, "i*i*e", "infile", true);
-//	ng += test_wildcart(no++, "A*A*A", "AA", false);
+	ng += test_wildcart(no++, "*", "a", true);
+	ng += test_wildcart(no++, "*a", "a", true);
+	ng += test_wildcart(no++, "*a*", "a", true);
+	ng += test_wildcart(no++, "**a", "a", true);
+	ng += test_wildcart(no++, "i*i*e", "infile", true);
+	ng += test_wildcart(no++, "A*A*A", "AA", false);
 
-//	ng += test_wildcart(no++, "12345*", "12345", true);
-//	ng += test_wildcart(no++, "*", "a", true);
-//	ng += test_wildcart(no++, "**", "a", true);
-//	ng += test_wildcart(no++, "***", "a", true);
-//	ng += test_wildcart(no++, "*a", "a", true);
-//	ng += test_wildcart(no++, "a*", "a", true);
-//	ng += test_wildcart(no++, "*a*", "a", true);
-//	ng += test_wildcart(no++, "****a****", "a", true);
-//	ng += test_wildcart(no++, "i*", "infile", true);
-//	ng += test_wildcart(no++, "n*", "infile", false);
-//	ng += test_wildcart(no++, "*n*", "infile", true);
-//	ng += test_wildcart(no++, "**l", "infile", false);
-//	ng += test_wildcart(no++, "*e*", "infile", true);
-//	ng += test_wildcart(no++, "i*i*e", "infile", true);
-//	ng += test_wildcart(no++, "*i*n*f*i*l*e*", "infile", true);
-//	ng += test_wildcart(no++, "*1*", "file10", true);
-//	ng += test_wildcart(no++, "*a*", "hello", false);
-//	ng += test_wildcart(no++, "*abcx", "abc___abce___abcex", false);
-//	ng += test_wildcart(no++, "*abd*", "abc___abce_abd__abcex", true);
+	ng += test_wildcart(no++, "12345*", "12345", true);
+	ng += test_wildcart(no++, "*", "a", true);
+	ng += test_wildcart(no++, "**", "a", true);
+	ng += test_wildcart(no++, "***", "a", true);
+	ng += test_wildcart(no++, "*a", "a", true);
+	ng += test_wildcart(no++, "a*", "a", true);
+	ng += test_wildcart(no++, "*a*", "a", true);
+	ng += test_wildcart(no++, "****a****", "a", true);
+	ng += test_wildcart(no++, "i*", "infile", true);
+	ng += test_wildcart(no++, "n*", "infile", false);
+	ng += test_wildcart(no++, "*n*", "infile", true);
+	ng += test_wildcart(no++, "**l", "infile", false);
+	ng += test_wildcart(no++, "*e*", "infile", true);
+	ng += test_wildcart(no++, "i*i*e", "infile", true);
+	ng += test_wildcart(no++, "*i*n*f*i*l*e*", "infile", true);
+	ng += test_wildcart(no++, "*1*", "file10", true);
+	ng += test_wildcart(no++, "*a*", "hello", false);
+	ng += test_wildcart(no++, "*abcx", "abc___abce___abcex", false);
+	ng += test_wildcart(no++, "*abd*", "abc___abce_abd__abcex", true);
+	ng += test_wildcart(no++, "*****aba*****ab", "baaababbbbbbbab", true);
+
 	ng += test_wildcart(no++, "A*A*A*A**ABC*****ABX*AB*AB*B*B*B*ABC", "AxAxAxAxABCxAxAAABCxABCxABX1xxABX2xABX3xACxxxxxABXxABxABxxxxBxBxBxABC", true);
 	ng += test_wildcart(no++, "A*A*A*A**ABC*****ABX*AB*AB*B*B*B*ABC", "AxAAABCxABCxABX1xxABX2xxxABX3xACxxxABXxABxxABxxxBxBxBxABC", true);
 	ng += test_wildcart(no++, "A*A*A*A**ABC*****ABX*AB*AB*B*B*B*ABC", "AxAxAxAxABCxAxAAABCxABCxABX1xxABX2xABX3xACxxxxxABXxABxABxxxxBxBxABCD", false);
 	ng += test_wildcart(no++, "A*A*A*A**ABC*****ABX*AB*AB*B*B*B*ABC", "AxAAABCxAbCxABX1xxABX2xxxABX3xACxxxABXxABxxABxxxBxBxBxABC", false);
-//
-//	ng += test_wildcart(no++, "A*A*A*A", "AAA", false);
-//	ng += test_wildcart(no++, "A*A*A", "AA", false);
+
 
 	printf("############################################\n");
 	printf(" TEST RESULT :: %s\n", ng == 0 ? "\x1b[32mALL AC !!!\x1b[0m" : "\x1b[31mWA :X\x1b[0m");
 	printf("############################################\n\n");
 
+	system("leaks -q a.out");
 	return (0);
 }
 //"A * A * A * A **    ABC ***** ABX  * AB *      AB * B * B * B *   ABC"

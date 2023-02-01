@@ -54,7 +54,6 @@
 
 # define PROCESS_ERROR	-1
 
-
 # define EXIT_TOO_MANY_ARGS			1
 # define EXIT_NUMERIC_ARGS_REQUIRED	255
 # define SYNTAX_ERROR				258

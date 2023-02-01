@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:30:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 10:31:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,9 @@ bool	is_str_expandable_name(const char *str);
 bool	is_expandable_exit_status(const char *str);
 bool	is_expandable_str_with_dollar(const char *str);
 
+/* expand_wildcard.c */
+
+/* is_matches_wildcard.c */
+int		is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str);
 
 #endif //EXPANSION_H
