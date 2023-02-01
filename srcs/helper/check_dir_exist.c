@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 22:37:33 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/29 12:28:08 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/01 20:34:26 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 int	check_dir_exist(char *tdir)
 {
 	DIR		*dir;
+	int		err_no;
 
+	err_no = SUCCESS;
 	dir = opendir(tdir);
 	if (ENOENT == errno)
-		return (ENOENT);
+		err_no = ENOENT;
 	if (EACCES == errno)
-		return (EACCES);
+		err_no = EACCES;
 	if (dir)
 		closedir(dir);
-	return (SUCCESS);
+	return (err_no);
 }
