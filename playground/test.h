@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 20:20:39 by takira            #+#    #+#             */
-/*   Updated: 2023/01/31 16:30:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 15:02:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include <signal.h>
+#include <dirent.h>
 
 # include "../libs/include/libft.h"
 

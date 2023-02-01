@@ -29,7 +29,7 @@ in1 in2 ngfile out
  * *はから文字以上の文字列, "abc*"や"*abc*","*a*b*c*" で "abc"がヒットする
  * むずくね？
 
-* 前から貪欲に探していけば良さそう
+* 前から貪欲に探していけば良さそう->複雑なケースでWA、dpでやった
 
 ```shell
 bash-3.2 0 $ ls
@@ -63,6 +63,26 @@ bash-3.2 0 $ echo '*'
 bash-3.2 0 $ echo ****a
 ****a
 
+```
+
+permission 000
+```shell
+
+bash-3.2-2 0 $ chmod 000 ../playground/
+bash-3.2-2 0 $ ls
+ls: .: Permission denied
+
+bash-3.2-2 1 $ ls *
+ls: *: Permission denied
+
+bash-3.2-2 1 $ cat *
+cat: *: Permission denied
+
+bash-3.2-2 1 $ echo *
+*
+
+bash-3.2-2 0 $ *
+bash: *: command not found
 
 ```
 

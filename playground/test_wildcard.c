@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 19:40:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 10:41:55 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 15:10:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,25 @@
 // a*
 // *a*
 // *a
+char	*concat_dst_to_src(char **dst, char *src)
+{
+	size_t	dstlen;
+	size_t	srclen;
+	char	*concat_str;
+
+	if (!dst || !src)
+		return (NULL);
+	dstlen = ft_strlen_ns(*dst);
+	srclen = ft_strlen_ns(src);
+	concat_str = (char *)ft_calloc(sizeof(char), dstlen + srclen + 1);
+	if (!concat_str)
+		return (NULL);
+	ft_strlcat_ns(concat_str, *dst, dstlen + 1);
+	ft_strlcat_ns(concat_str, src, dstlen + srclen + 1);
+	free(*dst);
+	*dst = NULL;
+	return (concat_str);
+}
 
 static void	free_dp_array(int **dp, size_t row_size)
 {
@@ -161,6 +180,50 @@ bool	is_matches_wildcard_and_str(char *wildcard_str, char *target_str)
 	return (ans);
 }
 
+
+char	*get_expand_wildcard(char *wildcard_str)
+{
+	DIR 			*open_dir;
+	struct dirent	*read_dir;
+	char			*expanded_str;
+	char			*pwd_path;
+
+	if (!wildcard_str)
+		return (NULL);
+	expanded_str = ft_strdup("");
+	if (!expanded_str)
+		return (NULL);
+
+	pwd_path = getcwd(NULL, 0);
+	if (!pwd_path)
+		return (NULL);
+	open_dir = opendir(pwd_path);
+	if (!open_dir)
+		return (NULL);
+	read_dir = readdir(open_dir);
+	while (read_dir)
+	{
+		if (is_same_str(read_dir->d_name, ".") || is_same_str(read_dir->d_name, ".."))
+		{
+			read_dir = readdir(open_dir);
+			continue ;
+		}
+		if (is_matches_wildcard_and_str(wildcard_str, read_dir->d_name))
+		{
+			if (ft_strlen_ns(expanded_str) > 0)
+				expanded_str = concat_dst_to_src(&expanded_str, " ");
+			expanded_str = concat_dst_to_src(&expanded_str, read_dir->d_name);
+		}
+		read_dir = readdir(open_dir);
+	}
+	closedir(open_dir);
+
+	free(pwd_path);
+//	free(wildcard_str);
+	return (expanded_str);
+}
+
+
 int	test_wildcart(int no, char *input_wild, char *test_str, bool expected)
 {
 	bool	ret = is_matches_wildcard_and_str(input_wild, test_str);
@@ -170,7 +233,6 @@ int	test_wildcart(int no, char *input_wild, char *test_str, bool expected)
 		return (0);
 	return (1);
 }
-
 
 int main(void)
 {
@@ -215,6 +277,11 @@ int main(void)
 	printf("############################################\n");
 	printf(" TEST RESULT :: %s\n", ng == 0 ? "\x1b[32mALL AC !!!\x1b[0m" : "\x1b[31mWA :X\x1b[0m");
 	printf("############################################\n\n");
+
+
+	printf("\n");
+	printf("get_wildcard_str:[%s]\n", get_expand_wildcard("*"));
+
 
 	system("leaks -q a.out");
 	return (0);
