@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 17:18:43 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 20:00:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ char	*get_list_concat_str(t_list_bdi *list, char *separated_str)
 	concat_str = ft_strdup("");
 	if (!concat_str)
 		return (perror_ret_nullptr("malloc"));
+
 	while (list)
 	{
 		concat_str = concat_dst_to_src(&concat_str, (char *)list->content);
@@ -155,6 +156,7 @@ char	*get_list_concat_str(t_list_bdi *list, char *separated_str)
 				return (perror_ret_nullptr("malloc")); //TODO:free
 		}
 	}
+
 	return (concat_str);
 }
 
@@ -163,6 +165,7 @@ void	print_list_str(void *content)
 	printf("%s\n", (char *)content);
 }
 
+// 一致するstringがない場合、stringを返す
 char	*get_expand_wildcard(char *wildcard_str)
 {
 	DIR 			*dirp;
@@ -184,6 +187,9 @@ char	*get_expand_wildcard(char *wildcard_str)
 
 //	printf("\n## before sort\n");
 //	ft_lstiter_bdi(strlist, print_list_str);
+
+	if (ft_lstsize_bdi(strlist) == 0)
+		return (wildcard_str);
 
 	sort_ascending_strlist(&strlist);
 
