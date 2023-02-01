@@ -30,6 +30,7 @@ LIBFT_SRC	= string/str/ft_strlen.c \
 			  string/str/ft_strrchr.c \
 			  string/str/ft_strnstr.c \
 			  string/str/ft_strncmp.c \
+			  string/str/ft_strcmp.c \
 			  string/str/ft_isalpha.c \
 			  string/str/ft_isdigit.c \
 		  	  string/str/ft_isalnum.c \

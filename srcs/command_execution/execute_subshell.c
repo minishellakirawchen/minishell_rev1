@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 15:32:12 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:45:57 by takira           ###   ########.fr       */
+/*   Updated: 2023/01/30 18:10:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	execute_subshell(t_list_bdi **token_list, t_info *info)
 	dprintf(STDERR_FILENO, "\n ########## vvv execute subshell depth:%d vvv ##########\n", subshell_depth);
 //	debug_print_tokens(*token_list, "subshell token");
 	// // // // // //
-
 
 	exec_list = NULL;
 	if (parsing_token_list(token_list, &exec_list, info) == FAILURE)

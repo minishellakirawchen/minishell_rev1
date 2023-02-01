@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 22:33:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 19:25:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,8 @@ char	*concat_dst_to_src(char **dst, char *src)
 	size_t	srclen;
 	char	*concat_str;
 
-	if (!dst || !src)
+	if (!dst)
+//	if (!dst || !src)
 		return (NULL);
 	dstlen = ft_strlen_ns(*dst);
 	srclen = ft_strlen_ns(src);

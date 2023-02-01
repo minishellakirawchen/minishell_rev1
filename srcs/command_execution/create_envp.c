@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:14:39 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 20:15:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 19:46:00 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,10 @@ char **create_minishell_envp(t_list *envlist_head)
 	minishell_envp = (char **) ft_calloc(sizeof(char *), array_size + 1);
 	if (!minishell_envp)
 		return (perror_ret_nullptr("malloc"));
+
 	node = envlist_head;
 	idx = 0;
-	while (node)
+	while (node && idx < array_size)
 	{
 		env_elem = node->content;
 		minishell_envp[idx] = concat_dst_to_src(&minishell_envp[idx], env_elem->key);

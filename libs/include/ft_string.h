@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/27 17:17:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 15:47:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int			ft_tolower(int c);
 /* str */
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 int			ft_strncmp_ns(const char *s1, const char *s2, size_t n);
+int			ft_strcmp_ns(const char *s1, const char *s2);
 bool		is_same_str(const char *str1, const char *str2);
 
 size_t		ft_strlen(const char *s);

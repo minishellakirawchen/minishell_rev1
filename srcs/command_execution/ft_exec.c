@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 16:05:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 19:45:31 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 	/* is_subshell */
 	if (command_info->subshell_token_list)
 		return (execute_subshell(&command_info->subshell_token_list, info));
-
 	/* execute commands (other than builtin) */
 	if (is_path(command_info->commands[0]))
 		execve(command_info->commands[0], command_info->commands, minishell_envp);
@@ -56,10 +55,12 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 	if (!commands)
 		return (FAILURE);
 	errno = 0;
+
 	env_paths = get_env_value(PATH, envlist);
 	splitted_paths = ft_split(env_paths, CHA_PATH_DELIM);
 	if (!splitted_paths)
 		return (perror_ret_int("malloc", FAILURE));
+
 	idx = 0;
 	while (splitted_paths[idx])
 	{
