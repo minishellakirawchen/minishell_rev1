@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 19:53:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/01 20:48:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *p
 	return (SUCCESS);
 }
 
+//TODO
 /* wildcard is not expand if export assign */
 /* export hoge=* */
 //             ^
@@ -147,7 +148,7 @@ int create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **sr
 {
 	t_list_bdi		*popped_node;
 	t_token_elem	*token_elem;
-
+//	bool			is_command_export;
 
 	if (!expanded_token_list || !src_tokens || !info)
 		return (FAILURE);
