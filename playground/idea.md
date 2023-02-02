@@ -106,6 +106,47 @@ bash: *: command not found
 
 # Expansion
 
+## from ide
+### expansion.c
+// operator && || ;のように、区切りまでのexpansionにしなければならない
+// && || ;がexpandにより生成されることはあるか？
+// なければ execution内でexpansion->command_executionする ...(1)
+// vvv
+//bash-3.2$ export test="echo hello && echo world"
+//bash-3.2$ $test           //hello && echo world
+// 文字列として展開されるだけ(1)で良さそう
+
+/* expand variable. working example following:
+* ex) [$key]        ->[value]
+*     ["hello"world]->[helloworld]
+*     [good'   bye']->[good   bye]
+*     ["$key$key"]  ->[valuevalue]
+*     ['$key']      ->['$key']
+*     ["'$key'"]    ->['value']
+*     ['"$key"']    ->["$key"]
+* where key=value in environment parameter.
+* */
+  /* call this function in execution part before command_execute */
+
+// input for expand_var_and_create_commands_from_tokens is "pipeline"
+//  t_exec_list pipeline, node_lind=pipeline
+//    pipeline1->pipeline2->pipeline3->... ($> pipeline1 &&/||/; pipeline2 &&/||/; pipeline3 ..)
+//  t_list pipeline_commands = command_list1->command_list2->.. (command_list1 | command_list2 | ....)
+
+//  commant_list assign content of t_list
+//    t_command_info command_list
+//      t_list pipeline_token_list  : token list, echo(word)->hello(word)->world(word)->NULL
+//      char **commands             : expanded commands {"echo" "hello", "world", NULL} <-create this by token_list, and clear tokens
+
+// input pipeline is type=pipeline
+// type=subshell is expanded in execution->parsing process
+
+
+
+
+
+## memo
+
 ```shell
 
 bash-3.2$ export d1="echo -n hello world"
@@ -138,6 +179,8 @@ bash-3.2$ export a=b
 bash-3.2$ export c=d$a
 bash-3.2$ export e=c"$a"
 bash-3.2$ env
+
+
 a=b
 c=db
 e=cb
@@ -484,6 +527,8 @@ a4=
 
 
 ```
+
+
 
 
 

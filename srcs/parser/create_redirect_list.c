@@ -138,6 +138,7 @@ static t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **
 	redirect_info->filename = NULL;
 	redirect_info->heredoc_eof = NULL;
 	redirect_info->is_expansion = true;
+	redirect_info->is_ambiguous = false;
 	redirect_info->token_list = get_filename_or_eof_tokenlist(token_list);
 	return (redirect_info);
 }

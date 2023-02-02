@@ -46,25 +46,6 @@ int	expand_var_in_tokens(t_list_bdi **list_head, t_info *info)
 	return (SUCCESS);
 }
 */
-int	remove_quote_in_tokens(t_list_bdi **list_head)
-{
-	t_list_bdi		*list_node;
-	t_token_elem	*token_elem;
-
-	if (!list_head || !*list_head)
-		return (SUCCESS);
-
-	list_node = *list_head;
-	while (list_node)
-	{
-		token_elem = list_node->content;
-		if (token_elem->is_quoted)
-			if (remove_quotes(&token_elem->word) == FAILURE)
-				return (FAILURE);
-		list_node = list_node->next;
-	}
-	return (SUCCESS);
-}
 
 char	*concat_tokens(t_list_bdi *list_head)
 {
@@ -96,20 +77,3 @@ char	*concat_tokens(t_list_bdi *list_head)
 	return (concat_str);
 }
 
-int remove_quotes(char **token_word)
-{
-	size_t	wordlen;
-	char	*quote_removal_word;
-
-	if (!token_word || !*token_word)
-		return (FAILURE);
-	wordlen = ft_strlen_ns(*token_word);
-	if (wordlen < 2)
-		return (FAILURE);
-	quote_removal_word = ft_substr(*token_word, 1, wordlen - 2);
-	if (!quote_removal_word)
-		return (perror_ret_int("malloc", FAILURE));
-	free_1d_alloc(*token_word);
-	*token_word = quote_removal_word;
-	return (SUCCESS);
-}

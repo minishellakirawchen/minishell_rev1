@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 16:43:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:53:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,8 @@ int	skip_to_expandable_str(char **src, size_t *idx, char **expanded_str)
 
 	if (!src || !expanded_str)
 		return (FAILURE);
-	//		printf("expand src[idx]:%s, idx:%zu\n", &(*src)[idx], idx);
 	// $? or $nameまでidx++
 	skip = 0;
-//		printf("idx:%zu, src:%s\n", idx, &src[idx + skip]);
 	while ((*src)[*idx + skip] && !is_expandable_str_with_dollar(&(*src)[*idx + skip]))
 		skip++;
 	if (skip > 0)

@@ -37,6 +37,7 @@ SRC		= main.c \
 		  expansion/concat_connected_tokens.c \
 		  expansion/is_matches_wildcard.c \
 		  expansion/expand_wildcard.c \
+		  expansion/quote_removal_or_re_tokenize.c \
 		  command_execution/execute_execlist.c \
 		  command_execution/execute_pipeline.c \
 		  command_execution/execute_redirect.c \

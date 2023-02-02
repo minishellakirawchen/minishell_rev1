@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 16:14:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:04:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int		expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *
 
 /* expand_var_in_tokens.c */
 int		expansion(t_info *info);//test
-int		remove_quote_in_tokens(t_list_bdi **list_head);
 
 
 /* expand_var_in_heredoc.c */
@@ -68,15 +67,12 @@ int		create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **s
 //int expand_var_in_token_word(t_list_bdi **expanded_token_list, t_list_bdi **pipeline_token_list, t_info *info);
 //int expand_var_in_token_word(t_list_bdi **expanded_token_list, t_command_info **cmd_list, t_info *info, t_list_kind kind);
 int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info);
-int remove_quote_or_re_tokenize(t_list_bdi **src_tokens);
 
 
 char	*concat_tokens(t_list_bdi *list_head);
 int		expand_var_in_tokens(t_list_bdi **list_head, t_info *info);
 
 int	concat_connected_tokens(t_list_bdi **token_list);
-
-int		remove_quotes(char **token_word);
 
 /* get_expanded_str.c */
 //char	*get_expanded_str(char *src, t_info *info);
@@ -85,6 +81,12 @@ char	*concat_dst_to_src(char **dst, char *src);
 char	*get_name_str(const char *str_start_with_dollar);
 char	*get_env_value(const char *search_key, t_list *env_list_head);
 int		expand_exit_status(char **expanded_str, int exit_status);
+
+/* quote_removal_or_re_tokenize.c */
+int remove_quote_or_re_tokenize_tokens(t_list_bdi **src_tokens);
+int	remove_quote_in_tokens(t_list_bdi **list_head);
+
+
 
 
 /* is_expand.c */

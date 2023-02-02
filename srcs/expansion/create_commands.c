@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 16:08:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:00:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,38 +107,6 @@ char	**create_commands_from_token_list(t_list_bdi **token_list)
 	return (commands);
 }
 
-/* おそらく不要になる */
-
-int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *popped_node)
-{
-	t_token_elem	*splitted_token;
-	t_list_bdi		*space_splitted_list;
-	t_token_elem	*token_elem;
-
-	if (!expanded_token_list || !popped_node || !popped_node->content)
-		return (FAILURE);
-	token_elem = popped_node->content;
-	if (token_elem->is_quoted)
-	{
-		if (remove_quotes(&token_elem->word) == FAILURE)
-			return (FAILURE);
-		ft_lstadd_back_bdi(expanded_token_list, popped_node);
-		return (SUCCESS);
-	}
-	if (!is_str1chrs_in_str2(STR_SPACE, token_elem->word))
-		ft_lstadd_back_bdi(expanded_token_list, popped_node);
-	else
-	{
-		space_splitted_list = get_delim_splitted_tokenlist(token_elem->word, STR_SPACE, STR_QUOTE);
-		if (!space_splitted_list)
-			return (FAILURE); //TODO:free
-		splitted_token = space_splitted_list->content;
-		splitted_token->is_connect_to_next_word = token_elem->is_connect_to_next_word;
-		ft_lstadd_back_bdi(expanded_token_list, space_splitted_list);
-		ft_lstdelone_bdi(&popped_node, free_token_elem);
-	}
-	return (SUCCESS);
-}
 
 int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 {
@@ -160,25 +128,6 @@ int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	return (SUCCESS);
 }
 
-/* re tokenizeでnode数が増える可能性あり。expanded_token_listに一時保管する */
-int remove_quote_or_re_tokenize(t_list_bdi **src_tokens)
-{
-	t_list_bdi		*popped_node;
-	t_list_bdi		*expanded_token_list;
-
-	if (!src_tokens)
-		return (FAILURE);
-
-	expanded_token_list = NULL;
-	while (*src_tokens)
-	{
-		popped_node = ft_lstpop_bdi(src_tokens);
-		if (quote_removal_or_re_tokenize(&expanded_token_list, popped_node) == FAILURE)
-			return (FAILURE);
-	}
-	*src_tokens = expanded_token_list;
-	return (SUCCESS);
-}
 
 // expand var
 //  ↓
@@ -187,7 +136,6 @@ int remove_quote_or_re_tokenize(t_list_bdi **src_tokens)
 // expand wildcard
 //  ↓
 // create char **commands
-
 char	**get_expanded_commands(t_list_bdi **token_list, t_info *info)
 {
 	char	**commands;
@@ -199,7 +147,7 @@ char	**get_expanded_commands(t_list_bdi **token_list, t_info *info)
 	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
 		return (NULL);
 	debug_print_tokens(*token_list, "after expand");
-	if (remove_quote_or_re_tokenize(&*token_list) == FAILURE)
+	if (remove_quote_or_re_tokenize_tokens(&*token_list) == FAILURE)
 		return (NULL);
 	debug_print_tokens(*token_list, "after quote removal/re tokenize");
 	if (concat_connected_tokens(&*token_list) == FAILURE)
