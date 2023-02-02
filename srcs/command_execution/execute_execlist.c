@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 23:28:41 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 09:52:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 
 	/* exec heredoc */
 	if (execute_heredoc(execlist_head) == FAILURE)
-		return (FAILURE);
+		return (PROCESS_ERROR);
 
 	/* expand_var and execute_commands in pipeline_node unit */
 	exec_node = *execlist_head;
@@ -63,7 +63,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 		pipeline_node = exec_node;
 		/* expansion */
 		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
-			return (FAILURE);
+			return (PROCESS_ERROR);
 
 		if (debug)
 		{

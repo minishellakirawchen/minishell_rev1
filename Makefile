@@ -19,7 +19,8 @@ SRC		= main.c \
 		  tokenizer/validate_quote.c \
 		  tokenizer/validate_syntax.c \
 		  tokenizer/validate_operator.c \
-		  tokenizer/arrange_token.c \
+		  tokenizer/check_operator_syntax.c \
+		  tokenizer/arrange_and_validate_token.c \
 		  parser/parser.c \
 		  parser/create_operator_list.c \
 		  parser/create_command_list.c \

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 20:22:40 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 09:59:41 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,56 +27,66 @@ int	prompt_loop(t_info *info)
 {
 	int		exit_status;
 	bool	is_return_input;
+	char	*prompt;
+	char	*tmp;
+	char	*itoa;
 
 	if (!info)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 	while (true)
 	{
+		itoa = ft_itoa(exit_status);
+		tmp = ft_strjoin("minishell ", itoa);
+		prompt = ft_strjoin(tmp, " $> ");
+		free(tmp);
+		free(itoa);
+
 		is_return_input = false;
 		/* input */
-		info->readline_input = readline(PROMPT);
+		info->readline_input = readline(prompt);
+		free(prompt);
+//		info->readline_input = readline(PROMPT);
 		if (!info->readline_input)
 		{
 			// debug
-			ft_dprintf(STDERR_FILENO, "[#DEBUG]^D Pressed. Exit minishell\n");
+			ft_dprintf(STDERR_FILENO, "[#DEBUG]^D Pressed. Exit minishell\n");  // check exit_status using ^D
 			break ;
 		}
 		if (is_same_str(info->readline_input, ""))
 		{
-			info->readline_input = free_1d_alloc(info->readline_input);
+			info->readline_input = free_1d_alloc(info->readline_input); // Not update exit_status
 			continue ;
 		}
-		add_history(info->readline_input);
+		add_history(info->readline_input); // `space` includes
 
 		// debug
 		ft_dprintf(STDERR_FILENO, "#%-15s:[%s]\n", "input", info->readline_input);
 
 		/* tokenize */
-		if (tokenize_input_line(info, info->readline_input) == FAILURE)
-		{
+		exit_status = tokenize_input_line(info, info->readline_input);
+		is_return_input |= exit_status;
+		if (exit_status != EXIT_SUCCESS)
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]tokenize failure\n");
-			return (FAILURE);//free
-		}
 
 		/* input validation (Mandatory/Bonus) */
-		if (arrange_and_validate_token_list(&info->tokenlist_head) == FAILURE)
-			is_return_input = true;//add_history & free(line)
+		exit_status = arrange_and_validate_token_list(&info->tokenlist_head);
+		is_return_input |= exit_status;
 
 		// debug
 		debug_print_tokens(info->tokenlist_head, "arranged");
 
-
 		/* parsing (Mandatory/Bonus) */
-		if (!is_return_input && parsing_token_list(&info->tokenlist_head, &info->execlist_head, info) == FAILURE)
-		{
+		if (!is_return_input)
+			exit_status = parsing_token_list(&info->tokenlist_head, &info->execlist_head, info);
+		is_return_input |= exit_status;
+		if (exit_status != EXIT_SUCCESS)
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]parsing failure\n");
-			return (FAILURE);
-		}
 
 		/* expansion & command_execution */
 		if (!is_return_input)
 			exit_status = execute_execlist(&info->execlist_head, info);
+
 		/* clear input */
 		clear_input_info(&info);
 		if (exit_status == PROCESS_ERROR)

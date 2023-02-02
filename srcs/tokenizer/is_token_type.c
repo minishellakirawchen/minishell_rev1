@@ -17,7 +17,7 @@ int is_tokentype_semicolon(t_token_type type)
 	return (type == e_semicolon);
 }
 
-int is_tokentype_pipe_or_and(t_token_type type)
+int is_tokentype_pipe_and_or(t_token_type type)
 {
 	return (type == e_ope_pipe || type == e_ope_or || type == e_ope_and);
 }

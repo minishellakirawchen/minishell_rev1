@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:01 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 10:23:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 09:16:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,13 @@ int			validate_operator_sign(t_token_elem *now_token);
 int			validate_syntax_operators(t_list_bdi *tokenlist_head);;
 int			validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head);
 
+int	validate_operator_tokens(t_token_elem *now_token, t_token_elem *next_token, bool is_head);
+
+
 int			is_tokentype_operator(t_token_type type);
 int			is_tokentype_pipeline(t_token_type type);
 int			is_tokentype_semicolon(t_token_type type);
-int			is_tokentype_pipe_or_and(t_token_type type);
+int			is_tokentype_pipe_and_or(t_token_type type);
 int			is_tokentype_redirection(t_token_type type);
 int			is_tokentype_subshell(t_token_type type);
 int			is_tokentype_io(t_token_type type);

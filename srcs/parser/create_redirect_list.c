@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 23:50:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 00:01:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 				return (FAILURE);
 			if (create_heredoc_eof_from_tokens(&command_list, info) == FAILURE)
 				return (FAILURE);
-			printf("createe_redirect_list\n");
-			debug_print_command_info(command_list);
+//			printf("createe_redirect_list\n");
+//			debug_print_command_info(command_list);
 
 			command_list_node = command_list_node->next;
 		}

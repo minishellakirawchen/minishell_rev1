@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 23:42:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 09:51:51 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@
 # define CONTINUE	2
 # define BREAK		3
 
-# define PROCESS_ERROR	-1
+# define PROCESS_ERROR		-1
 
 # define EXIT_TOO_MANY_ARGS			1
 # define EXIT_NUMERIC_ARGS_REQUIRED	255
@@ -91,8 +91,8 @@ enum e_token_type
 	e_file = 10,			//
 	e_heredoc_eof = 11,		//
 	e_word = 12,			//
-	e_init = 13,			// init
-	e_nothing
+	e_init = 13,			// init=word
+	e_null
 };
 
 enum e_node_kind
