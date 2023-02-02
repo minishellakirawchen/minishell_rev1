@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 14:58:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 15:56:49 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *i
 	while (command_list_node)
 	{
 		command_info = command_list_node->content;
-		if (expand_var_in_cmd_and_create_cmds_from_tokens(&command_info, info) == FAILURE)
+		command_info->commands = get_expanded_commands(&command_info->pipeline_token_list, info);
+		if (!command_info->commands)
 			return (FAILURE);
 		if (expand_var_in_redirect_filename(&command_info, info) == FAILURE)
 			return (FAILURE);
@@ -105,7 +106,8 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 	t_redirect_info	*redirect_info;
 //	t_list_bdi		*expanded_token_list;
 	char			**expanded_retokenized_chars;
-	char			*concat_token_str;
+//	char			*concat_token_str;
+	t_token_elem	*token_elem;
 
 	if (!cmd_list || !*cmd_list)
 		return (FAILURE);
@@ -118,33 +120,38 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 			|| redirect_info->io_type == e_redirect_out
 			|| redirect_info->io_type == e_redirect_append)
 		{
-//			expanded_token_list = NULL;
-			concat_token_str = concat_tokens(redirect_info->token_list);
-			if (!concat_token_str)
+			expanded_retokenized_chars = get_expanded_commands(&redirect_info->token_list, info);
+			if (!expanded_retokenized_chars)
 				return (FAILURE);
-			while (redirect_info->token_list)
-			{
-				if (expand_var_in_token_word(&redirect_info->token_list, info) == FAILURE)
-					return (FAILURE);
 
-				if (remove_quote_or_re_tokenize(&redirect_info->token_list) == FAILURE)
-					return (FAILURE);
-			}
-//				if (create_expanded_token_list(&expanded_token_list, &redirect_info->token_list, info) == FAILURE)
-//					return (FAILURE); //TODO;free
-			expanded_retokenized_chars = create_commands_from_token_list(&redirect_info->token_list);
+//			expanded_token_list = NULL;
+//			concat_token_str = concat_tokens(redirect_info->token_list);
+//			if (!concat_token_str)
+//				return (FAILURE);
+//			while (redirect_info->token_list)
+//			{
+//				if (expand_var_in_token_word(&redirect_info->token_list, info) == FAILURE)
+//					return (FAILURE);
+//
+//				if (remove_quote_or_re_tokenize(&redirect_info->token_list) == FAILURE)
+//					return (FAILURE);
+//			}
+////				if (create_expanded_token_list(&expanded_token_list, &redirect_info->token_list, info) == FAILURE)
+////					return (FAILURE); //TODO;free
+//			expanded_retokenized_chars = create_commands_from_token_list(&redirect_info->token_list);
 			debug_print_2d_arr(expanded_retokenized_chars, ">> expand redirect >>");
 			if (get_2darray_size(expanded_retokenized_chars) != 1)
 			{
+				token_elem = redirect_info->token_list->content;
 				redirect_info->is_ambiguous = true;
-				redirect_info->filename = concat_token_str;
+				redirect_info->filename = token_elem->word;
 			}
 			else
 			{
 				redirect_info->filename = ft_strdup(expanded_retokenized_chars[0]);
 				if (!redirect_info->filename)
 					return (perror_ret_int("malloc", FAILURE));//TODO:free
-				free_1d_alloc(concat_token_str);
+//				free_1d_alloc(concat_token_str);
 			}
 			free_2d_alloc((void **)expanded_retokenized_chars);
 

@@ -57,7 +57,12 @@ int	do_expansion_in_heredoc(char *filename, t_info *info);
 
 
 /* create_commands.c */
-int		expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info);
+
+char	**get_expanded_commands(t_list_bdi **token_list, t_info *info);
+
+//int	expand_var_in_cmd_and_create_cmds_from_tokens(t_list_bdi **token_list, char ***cmds, t_info *info);
+//int		get_expanded_commands(t_command_info **cmd_list, t_info *info);
+
 char	**create_commands_from_token_list(t_list_bdi **token_list);
 int		create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **src_tokens, t_info *info);
 //int expand_var_in_token_word(t_list_bdi **expanded_token_list, t_list_bdi **pipeline_token_list, t_info *info);

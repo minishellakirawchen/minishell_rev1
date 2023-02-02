@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 09:52:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 15:33:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 {
 	if (!tokenlist_head || !execlist_head || !info)
 		return (PROCESS_ERROR);
-
 	/* operator list */
 	if (create_operator_list(tokenlist_head, execlist_head) == FAILURE)
 	{
@@ -26,11 +25,8 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 		return (PROCESS_ERROR);
 	}
 //	debug_print_exec_list(*execlist_head, "operator_list");
-
 	delete_last_semicolon_node(execlist_head);
-
 //	debug_print_exec_list(info->execlist_head, "delete last ;");
-
 	if (create_command_list(execlist_head) == FAILURE)
 	{
 		ft_dprintf(STDERR_FILENO, "[#DEBUG]fail to create_command_list\n");
@@ -46,9 +42,7 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 	// fileの展開、結合はあとで実施する
 	if (create_redirect_list(execlist_head, info) == FAILURE)
 		return (PROCESS_ERROR);
-
 	debug_print_exec_list(*execlist_head, "parsing fin");
-
 	return (EXIT_SUCCESS);
 }
 

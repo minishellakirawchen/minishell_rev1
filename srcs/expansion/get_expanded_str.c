@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 15:20:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:00:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ int	expand_var_in_str(char **src, t_info *info)
 		else
 		{
 
-//			printf("idx:%zu, src[idx]:%s\n", idx, &src[idx]);
+			printf("idx:%zu, src[idx]:%s\n", idx, &(*src)[idx]);
 			key = get_name_str(&(*src)[idx]);
 			value = get_env_value(key, info->envlist_head);
-//			printf("key:%s, value:%s\n", key, value);
+			printf("key:%s, value:%s\n", key, value);
 			if (!key | !value)
 				return (perror_ret_int("malloc", FAILURE));
 			expanded_str = concat_dst_to_src(&expanded_str, value);
@@ -170,7 +170,11 @@ char *get_env_value(const char *search_key, t_list *env_list_head)
 		elem = env_list_head->content;
 		if ((ft_strlen_ns(elem->key) == search_key_len) \
 		&& (ft_strncmp_ns(elem->key, search_key, search_key_len) == 0))
+		{
+			if (!elem->value)
+				return ("");
 			return (elem->value);
+		}
 		env_list_head = env_list_head->next;
 	}
 	return ("");

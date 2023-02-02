@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 00:01:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 15:30:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 		}
 		exec_list_node = exec_list_node->next;
 	}
-
 	return (SUCCESS);
 }
 

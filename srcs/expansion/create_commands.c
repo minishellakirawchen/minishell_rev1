@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 15:11:46 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 15:49:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ char	**create_commands_from_token_list(t_list_bdi **token_list)
 	return (commands);
 }
 
+/* おそらく不要になる */
 int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *popped_node)
 {
 	t_token_elem	*splitted_token;
@@ -117,11 +118,10 @@ int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *p
 		return (FAILURE);
 	token_elem = popped_node->content;
 	/* if is_quoted, quote removal */
-	printf("1　word:%s, quoted:%d\n", token_elem->word, token_elem->is_quoted);
+//	printf("1　word:%s, quoted:%d\n", token_elem->word, token_elem->is_quoted);
 
 	if (token_elem->is_quoted)
 	{
-		printf("2\n");
 
 		if (remove_quotes(&token_elem->word) == FAILURE)
 			return (FAILURE);
@@ -129,7 +129,6 @@ int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *p
 	}
 	else
 	{
-		printf("3\n");
 		// splitできない場合は何もしない
 
 		if (!is_str1chrs_in_str2(STR_SPACE, token_elem->word))
@@ -141,10 +140,8 @@ int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *p
 			space_splitted_list = get_delim_splitted_tokenlist(token_elem->word, STR_SPACE, STR_QUOTE);
 			if (!space_splitted_list)
 			{
-				printf("3-1\n");
 				return (FAILURE); //TODO:free
 			}
-			printf("4\n");
 
 			splitted_token = space_splitted_list->content;
 			splitted_token->is_connect_to_next_word = token_elem->is_connect_to_next_word;
@@ -153,17 +150,9 @@ int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *p
 			ft_lstdelone_bdi(&popped_node, free_token_elem);
 		}
 	}
-	printf("4\n");
-
 	return (SUCCESS);
 }
 
-//TODO
-/* wildcard is not expand if export assign */
-/* export hoge=* */
-//             ^
-
-//
 int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 {
 	t_token_elem	*token_elem;
@@ -176,7 +165,6 @@ int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	while (node)
 	{
 		token_elem = node->content;
-		/* if is_expandable, expand vare */
 		if (is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
 			if (expand_var_in_str(&token_elem->word, info) == FAILURE)
 				return (FAILURE);
@@ -185,6 +173,7 @@ int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	return (SUCCESS);
 }
 
+/* re tokenizeでnode数が増える可能性あり。expanded_token_listに一時保管する */
 int remove_quote_or_re_tokenize(t_list_bdi **src_tokens)
 {
 	t_list_bdi		*popped_node;
@@ -199,41 +188,72 @@ int remove_quote_or_re_tokenize(t_list_bdi **src_tokens)
 		popped_node = ft_lstpop_bdi(src_tokens);
 		if (quote_removal_or_re_tokenize(&expanded_token_list, popped_node) == FAILURE)
 			return (FAILURE);
-
 	}
 	*src_tokens = expanded_token_list;
 	return (SUCCESS);
 }
 
+// expand var
+//  ↓
+// concat ["hello"]=[world] = [helloworld]
+//  ↓
+// expand wildcard
+//  ↓
+// create char **commands
 
-// ここでconcat ["hello"]=[world] = [helloworld]
-int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info)
+char	**get_expanded_commands(t_list_bdi **token_list, t_info *info)
 {
-	char			**commands;
+	char	**commands;
 
-	if (!cmd_list || !*cmd_list || !info)
-		return (FAILURE);
+	if (!token_list || !info)
+		return (NULL);
 //	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
 
-	/* expand -> quote removal -> space split -> add expanded_token_list; */
-	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded");
-	if (expand_var_in_token_word(&(*cmd_list)->pipeline_token_list, info) == FAILURE)
-		return (FAILURE);
-	if (remove_quote_or_re_tokenize(&(*cmd_list)->pipeline_token_list) == FAILURE)
-		return (FAILURE);
-	debug_print_tokens((*cmd_list)->pipeline_token_list, "before connected");
-	if (concat_connected_tokens(&(*cmd_list)->pipeline_token_list) == FAILURE)
-		return (FAILURE);
-	debug_print_tokens((*cmd_list)->pipeline_token_list, "after connected");
-	//ここでwild card ?TODO
-	if (expanded_wildcard_to_token_list(&(*cmd_list)->pipeline_token_list) == FAILURE)
-		return (FAILURE);
-
-//	while ((*cmd_list)->pipeline_token_list)
-//		if (expand_var_in_token_word(&expanded_token_list, &(*cmd_list)->pipeline_token_list, info) == FAILURE)
-//			return (FAILURE);//TODO;free
-	commands = create_commands_from_token_list(&(*cmd_list)->pipeline_token_list);
-	(*cmd_list)->commands = commands;
-
-	return (SUCCESS);
+	debug_print_tokens(*token_list, "before expand");
+	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
+		return (NULL);
+	debug_print_tokens(*token_list, "after expand");
+	if (remove_quote_or_re_tokenize(&*token_list) == FAILURE)
+		return (NULL);
+	debug_print_tokens(*token_list, "after quote removal/re tokenize");
+	if (concat_connected_tokens(&*token_list) == FAILURE)
+		return (NULL);
+	debug_print_tokens(*token_list, "after connect");
+	if (expanded_wildcard_to_token_list(&*token_list) == FAILURE)
+		return (NULL);
+	debug_print_tokens(*token_list, "after wildcard expand");
+	commands = create_commands_from_token_list(&*token_list);
+	if (!commands)
+		return (NULL);
+	return (commands);
 }
+
+
+//int	get_expanded_commands(t_command_info **cmd_list, t_info *info)
+//{
+//	char			**commands;
+//
+//	if (!cmd_list || !*cmd_list || !info)
+//		return (FAILURE);
+////	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
+//
+//	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expand");
+//	if (expand_var_in_token_word(&(*cmd_list)->pipeline_token_list, info) == FAILURE)
+//		return (FAILURE);
+//	debug_print_tokens((*cmd_list)->pipeline_token_list, "after expand");
+//	if (remove_quote_or_re_tokenize(&(*cmd_list)->pipeline_token_list) == FAILURE)
+//		return (FAILURE);
+//	debug_print_tokens((*cmd_list)->pipeline_token_list, "after quote removal/re tokenize");
+//	if (concat_connected_tokens(&(*cmd_list)->pipeline_token_list) == FAILURE)
+//		return (FAILURE);
+//	debug_print_tokens((*cmd_list)->pipeline_token_list, "after connect");
+//	if (expanded_wildcard_to_token_list(&(*cmd_list)->pipeline_token_list) == FAILURE)
+//		return (FAILURE);
+//	debug_print_tokens((*cmd_list)->pipeline_token_list, "after wildcard expand");
+//	commands = create_commands_from_token_list(&(*cmd_list)->pipeline_token_list);
+//	if (!commands)
+//		return (FAILURE);
+//	(*cmd_list)->commands = commands;
+//
+//	return (SUCCESS);
+//}
