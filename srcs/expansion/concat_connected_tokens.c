@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 10:36:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 20:15:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 21:51:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ bool	check_valid_wildcard_in_word(t_token_elem *token)
 
 	if (!token)
 		return (false);
-	if (!token->wildcard_valid_list)
-		return (is_expandable_wildcard_in_str(token->word, token->is_quoted));
+//	if (!token->wildcard_valid_list)
+//		return (is_expandable_wildcard_in_str(token->word, token->is_quoted));
 	idx = 0;
 	while (token->word[idx])
 	{

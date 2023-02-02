@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 20:27:09 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 21:53:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,16 +251,16 @@ void	debug_print_command_info(t_command_info *command_info)
 	}
 }
 
-void	debug_print_wildcard_valid_list(int *list, const char *word)
+void	debug_print_wildcard_valid_list(int *list, size_t len)
 {
 	size_t	idx = 0;
 
 	printf("(");
-	while (word[idx])
+	while (idx < len)
 	{
 		printf("%d", list[idx]);
 		idx++;
-		if (word[idx])
+		if (idx < len)
 			printf(",");
 	}
 	printf(")\n");

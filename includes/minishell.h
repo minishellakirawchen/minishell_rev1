@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 20:07:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 21:54:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,6 +256,7 @@ void	debug_print_exec_nodetype(t_exec_list *node);
 void	debug_print_redirect_info(t_list_bdi *head, char *str);
 void	debug_print_command_info(t_command_info *command_info);
 //void	debug_print_command_info(t_command_info *command_info, bool subshell, bool token_cmds, bool cmds, bool redirect)
-void	debug_print_wildcard_valid_list(int *list, const char *word);
+void	debug_print_wildcard_valid_list(int *list, size_t len);
+
 
 #endif //MINISHELL_H
