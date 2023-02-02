@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 13:33:34 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 15:09:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 
 // tokenを検索, *が展開できれば置換する
 // wildcard_str is one word
-
+\
 // sort as a to z
 // echo  * :隠しファイルは表示しない
 // echo .* :                する
@@ -54,19 +54,19 @@
  * `.` is the first half and `*` in the second half */
 bool	check_is_hidden_include(const char *wildcard_str)
 {
-	size_t	idx;
+//	size_t	idx;
 
 	if (!wildcard_str || wildcard_str[0] != '.')
 		return (false);
-	idx = 0;
-	while (wildcard_str[idx] && wildcard_str[idx] == '.')
-		idx++;
-	if (wildcard_str[idx] && wildcard_str[idx] != '*')
-		return (false);
-	while (wildcard_str[idx] && wildcard_str[idx] == '*')
-		idx++;
-	if (wildcard_str[idx])
-		return (false);
+//	idx = 0;
+//	while (wildcard_str[idx] && wildcard_str[idx] == '.')
+//		idx++;
+//	if (wildcard_str[idx] && wildcard_str[idx] != '*')
+//		return (false);
+//	while (wildcard_str[idx] && wildcard_str[idx] == '*')
+//		idx++;
+//	if (wildcard_str[idx])
+//		return (false);
 	return (true);
 }
 
@@ -212,7 +212,7 @@ bool	is_expandable_wildcard_in_str(const char *word, bool is_quoted)
 	return (true);
 }
 
-bool	is_command_export(t_list_bdi *first_token)
+bool	is_not_expandable_command(t_list_bdi *first_token)
 {
 	t_token_elem	*token_elem;
 
@@ -315,7 +315,7 @@ int expanded_wildcard_to_token_list(t_list_bdi **token_list)
 
 	if (!token_list)
 		return (FAILURE);
-	if (is_command_export(*token_list))
+	if (is_not_expandable_command(*token_list))
 		return (SUCCESS);
 	expanded_tokens = NULL;
 	while (*token_list)
@@ -342,8 +342,15 @@ int expanded_wildcard_to_token_list(t_list_bdi **token_list)
 }
 
 
-
-
+/*
+ * これを作れば対応できる
+ * 展開後, 結合前のtokenを操作する
+ * もしくはtoken内にwild tableを持っておく
+ * wildcard tokens = [hoge]=["huga"]=[*]=["*"]
+ * wods   = "hogehuga**"
+ * wild   =  0000000010
+ *
+ */
 
 
 

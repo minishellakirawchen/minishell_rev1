@@ -22,6 +22,7 @@
 
 // mendokusai...
 
+/*
 int	expand_var_in_tokens(t_list_bdi **list_head, t_info *info)
 {
 	t_list_bdi		*list_node;
@@ -44,7 +45,7 @@ int	expand_var_in_tokens(t_list_bdi **list_head, t_info *info)
 	}
 	return (SUCCESS);
 }
-
+*/
 int	remove_quote_in_tokens(t_list_bdi **list_head)
 {
 	t_list_bdi		*list_node;

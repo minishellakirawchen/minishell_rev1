@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 13:18:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 14:58:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 {
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*redirect_info;
-	t_list_bdi		*expanded_token_list;
+//	t_list_bdi		*expanded_token_list;
 	char			**expanded_retokenized_chars;
 	char			*concat_token_str;
 
@@ -118,14 +118,21 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 			|| redirect_info->io_type == e_redirect_out
 			|| redirect_info->io_type == e_redirect_append)
 		{
-			expanded_token_list = NULL;
+//			expanded_token_list = NULL;
 			concat_token_str = concat_tokens(redirect_info->token_list);
 			if (!concat_token_str)
 				return (FAILURE);
 			while (redirect_info->token_list)
-				if (create_expanded_token_list(&expanded_token_list, &redirect_info->token_list, info) == FAILURE)
-					return (FAILURE); //TODO;free
-			expanded_retokenized_chars = create_commands_from_token_list(&expanded_token_list);
+			{
+				if (expand_var_in_token_word(&redirect_info->token_list, info) == FAILURE)
+					return (FAILURE);
+
+				if (remove_quote_or_re_tokenize(&redirect_info->token_list) == FAILURE)
+					return (FAILURE);
+			}
+//				if (create_expanded_token_list(&expanded_token_list, &redirect_info->token_list, info) == FAILURE)
+//					return (FAILURE); //TODO;free
+			expanded_retokenized_chars = create_commands_from_token_list(&redirect_info->token_list);
 			debug_print_2d_arr(expanded_retokenized_chars, ">> expand redirect >>");
 			if (get_2darray_size(expanded_retokenized_chars) != 1)
 			{

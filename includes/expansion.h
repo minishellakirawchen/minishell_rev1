@@ -59,9 +59,11 @@ int	do_expansion_in_heredoc(char *filename, t_info *info);
 /* create_commands.c */
 int		expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_info *info);
 char	**create_commands_from_token_list(t_list_bdi **token_list);
-int create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **src_tokens, t_info *info);
-//int create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **pipeline_token_list, t_info *info);
-//int create_expanded_token_list(t_list_bdi **expanded_token_list, t_command_info **cmd_list, t_info *info, t_list_kind kind);
+int		create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **src_tokens, t_info *info);
+//int expand_var_in_token_word(t_list_bdi **expanded_token_list, t_list_bdi **pipeline_token_list, t_info *info);
+//int expand_var_in_token_word(t_list_bdi **expanded_token_list, t_command_info **cmd_list, t_info *info, t_list_kind kind);
+int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info);
+int remove_quote_or_re_tokenize(t_list_bdi **src_tokens);
 
 
 char	*concat_tokens(t_list_bdi *list_head);
@@ -74,6 +76,7 @@ char	*get_expanded_str(char *src, t_info *info);
 
 /* get_expanded_str.c */
 char	*get_expanded_str(char *src, t_info *info);
+int		expand_var_in_str(char **src, t_info *info);
 char	*concat_dst_to_src(char **dst, char *src);
 char	*get_name_str(const char *str_start_with_dollar);
 char	*get_env_value(const char *search_key, t_list *env_list_head);
