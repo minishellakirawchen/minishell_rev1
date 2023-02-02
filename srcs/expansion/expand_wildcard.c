@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 11:19:24 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 13:33:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ t_list_bdi	*get_strlist_matching_wildcard(const char *wildcard_str, DIR *dirp)
 		if (is_matches_wildcard_and_target_str(wildcard_str, read_dir->d_name))
 		{
 			getstr = ft_strdup(read_dir->d_name);
+			printf("get_str:%s\n", getstr);
 			newlist = ft_lstnew_bdi(getstr);
 			if (!getstr || !newlist)
 				return (perror_ret_nullptr("malloc"));// TODO: free
@@ -211,16 +212,132 @@ bool	is_expandable_wildcard_in_str(const char *word, bool is_quoted)
 	return (true);
 }
 
-
-
-
-int expanded_wildcard_to_token_list(t_list_bdi **expanded_token_list)
+bool	is_command_export(t_list_bdi *first_token)
 {
-	//while node, pop-> == concat
-	if (!expanded_token_list)
+	t_token_elem	*token_elem;
+
+	if (!first_token)
+		return (false);
+	token_elem = first_token->content;
+	return (is_same_str("export", token_elem->word));
+}
+
+t_token_elem	*create_token_elem(char *word)
+{
+	t_token_elem	*new_token;
+
+	new_token = (t_token_elem *)malloc(sizeof(t_token_elem));
+	if (!new_token)
+	{
+		free_token_elem(new_token);
+		return (perror_ret_nullptr("malloc"));
+	}
+	new_token->word = word;
+	new_token->type = e_init;
+	new_token->is_connect_to_next_word = false;
+	new_token->is_quoted = false;
+	new_token->quote_chr = '\0';
+	new_token->subshell_depth = -1;
+	new_token->is_wildcard_quoted = false;
+	return (new_token);
+}
+
+t_list_bdi	*get_tokens_match_with_wildcard(const char *wildcard_str, DIR *dirp)
+{
+	bool			is_hidden_include;
+	struct dirent	*read_dir;
+	t_list_bdi		*strlist;
+	t_list_bdi		*newlist;
+	char			*getstr;
+	t_token_elem	*token_elem;
+
+	if (!wildcard_str || !dirp)
+		return (NULL);
+	is_hidden_include = check_is_hidden_include(wildcard_str);
+	strlist = NULL;
+	read_dir = readdir(dirp);
+	while (read_dir)
+	{
+		if (read_dir->d_name[0] == '.' && !is_hidden_include)
+		{
+			read_dir = readdir(dirp);
+			continue ;
+		}
+		if (is_matches_wildcard_and_target_str(wildcard_str, read_dir->d_name))
+		{
+			getstr = ft_strdup(read_dir->d_name);
+			token_elem = create_token_elem(getstr);
+			newlist = ft_lstnew_bdi(token_elem);
+			if (!getstr || !newlist || !token_elem)
+				return (perror_ret_nullptr("malloc"));// TODO: free
+			ft_lstadd_back_bdi(&strlist, newlist);
+		}
+		read_dir = readdir(dirp);
+	}
+	return (strlist);
+}
+
+int	get_wildcard_tokens(t_list_bdi **get_tokens_save_to, const char *wildcard_str)
+{
+	DIR 			*dirp;
+	char			*pwd_path;
+
+	if (!get_tokens_save_to || !wildcard_str)
 		return (FAILURE);
 
+	pwd_path = getcwd(NULL, 0);
+	if (!pwd_path)
+		return (perror_ret_int("getcwd", FAILURE));
+	dirp = opendir(pwd_path); // `.`でもOK？
+	if (!dirp)
+		return (perror_ret_int("opendir", FAILURE)); //TODO:free;
+	*get_tokens_save_to = get_tokens_match_with_wildcard(wildcard_str, dirp);
 
+	closedir(dirp);
+	free(pwd_path);
+
+//	debug_print_tokens(*get_tokens_save_to, "before sorted");
+	sort_ascending_strlist(get_tokens_save_to);
+//	debug_print_tokens(*get_tokens_save_to, "after sorted");
+	return (SUCCESS);
+}
+
+// * or "*"を判定し, *なら展開, "*"なら展開しない, ref token_elen->is_wildcard_quoted
+// *, "*"が混在するケースは考慮していない。むずい。有効な*を何かに置換するなどの操作が必要か？
+// もしくは結合前に、結合するグループを線型リストで保持しておき、
+// 各tokenがquoted, unquotedのフラグを持っている状態で判別する？
+int expanded_wildcard_to_token_list(t_list_bdi **token_list)
+{
+	t_list_bdi		*expanded_tokens;
+	t_list_bdi		*popped_node;
+	t_token_elem	*token_elem;
+	t_list_bdi		*wildcard_tokens;
+
+	if (!token_list)
+		return (FAILURE);
+	if (is_command_export(*token_list))
+		return (SUCCESS);
+	expanded_tokens = NULL;
+	while (*token_list)
+	{
+		popped_node = ft_lstpop_bdi(&(*token_list));
+		token_elem = popped_node->content;
+		if (is_expandable_wildcard_in_str(token_elem->word, !token_elem->is_wildcard_quoted))
+		{
+			wildcard_tokens = NULL;
+			if (get_wildcard_tokens(&wildcard_tokens, token_elem->word) == FAILURE)
+				return (FAILURE);
+			debug_print_tokens(wildcard_tokens, "wildcard tokens");
+			if (ft_lstsize_bdi(wildcard_tokens) != 0)
+			{
+				ft_lstclear_bdi(&popped_node, free_token_elem);
+				popped_node = wildcard_tokens;
+			}
+		}
+		ft_lstadd_back_bdi(&expanded_tokens, popped_node);
+	}
+	*token_list = expanded_tokens;
+//	debug_print_tokens(*token_list, "wildcard expanded");
 	return (SUCCESS);
 }
 

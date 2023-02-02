@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 11:41:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 13:26:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,13 +165,16 @@ int create_expanded_token_list(t_list_bdi **expanded_token_list, t_list_bdi **sr
 				return (FAILURE);
 		}
 
+		// Move
 		/* expand wildcard as space separated string */
+		/*
 		if (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted))
 		{
 			token_elem->word = get_expand_wildcard(token_elem->word);
 			if (!token_elem->word)
 				return (FAILURE);
 		}
+		 */
 		if (quote_removal_or_re_tokenize(expanded_token_list, popped_node) == FAILURE)
 			return (FAILURE);
 	}
@@ -208,8 +211,8 @@ int	expand_var_in_cmd_and_create_cmds_from_tokens(t_command_info **cmd_list, t_i
 	debug_print_tokens(expanded_token_list, "after connected");
 
 	//ここでwild card ?TODO
-//	if (expanded_wildcard_to_token_list(&expanded_token_list) == FAILURE)
-//		return (FAILURE);
+	if (expanded_wildcard_to_token_list(&expanded_token_list) == FAILURE)
+		return (FAILURE);
 
 //	while ((*cmd_list)->pipeline_token_list)
 //		if (create_expanded_token_list(&expanded_token_list, &(*cmd_list)->pipeline_token_list, info) == FAILURE)

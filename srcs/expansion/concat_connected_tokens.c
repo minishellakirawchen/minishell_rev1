@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 10:36:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 11:39:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 13:29:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,15 @@ void	get_connected_tokens(t_list_bdi **list_connected_from, t_list_bdi **list)
 		get_connected_tokens(list_connected_from, list);
 }
 
+bool	check_wildcard_quoted(t_list_bdi *token_node)
+{
+	t_token_elem	*token_elem;
+	if (!token_node)
+		return (false);
+	token_elem = token_node->content;
+	return (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted));
+}
+
 int	concat_connected_tokens(t_list_bdi **token_list)
 {
 	t_list_bdi		*node;
@@ -39,6 +48,7 @@ int	concat_connected_tokens(t_list_bdi **token_list)
 	while (node)
 	{
 		token_elem = node->content;
+		token_elem->is_wildcard_quoted = check_wildcard_quoted(node);
 		node = node->next;
 		if (!token_elem->is_connect_to_next_word)
 			continue ;
@@ -49,6 +59,7 @@ int	concat_connected_tokens(t_list_bdi **token_list)
 			token_elem->word = concat_dst_to_src(&token_elem->word, append_elem->word);
 			if (!token_elem->word)
 				return (perror_ret_int("malloc", FAILURE)); //TODO:free
+			token_elem->is_wildcard_quoted = check_wildcard_quoted(popped_node);
 			if (!append_elem->is_connect_to_next_word)
 				break ;
 			ft_lstclear_bdi(&popped_node, free_token_elem);
