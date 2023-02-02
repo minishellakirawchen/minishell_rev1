@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 17:30:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 22:20:22 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "expansion.h"
 # include "command_execution.h"
 # include "ft_builtin.h"
+# include "signal_handler.h"
 
 /* ************************** */
 /*           macro            */
