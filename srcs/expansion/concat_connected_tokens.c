@@ -6,25 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 10:36:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 13:29:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:19:39 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-
-void	get_connected_tokens(t_list_bdi **list_connected_from, t_list_bdi **list)
-{
-	t_list_bdi		*popped_node;
-	t_token_elem	*token_elem;
-
-	if (!list_connected_from)
-		return ;
-	popped_node = ft_lstpop_bdi(list_connected_from);
-	ft_lstadd_back_bdi(list, popped_node);
-	token_elem = popped_node->content;
-	if (token_elem->is_connect_to_next_word)
-		get_connected_tokens(list_connected_from, list);
-}
 
 bool	check_wildcard_quoted(t_list_bdi *token_node)
 {
@@ -35,6 +21,7 @@ bool	check_wildcard_quoted(t_list_bdi *token_node)
 	return (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted));
 }
 
+/* connect (*token_list)->content if "is_connect_to_next_word" */
 int	concat_connected_tokens(t_list_bdi **token_list)
 {
 	t_list_bdi		*node;
@@ -69,3 +56,19 @@ int	concat_connected_tokens(t_list_bdi **token_list)
 	}
 	return (SUCCESS);
 }
+
+/*
+void	get_connected_tokens(t_list_bdi **list_connected_from, t_list_bdi **list)
+{
+	t_list_bdi		*popped_node;
+	t_token_elem	*token_elem;
+
+	if (!list_connected_from)
+		return ;
+	popped_node = ft_lstpop_bdi(list_connected_from);
+	ft_lstadd_back_bdi(list, popped_node);
+	token_elem = popped_node->content;
+	if (token_elem->is_connect_to_next_word)
+		get_connected_tokens(list_connected_from, list);
+}
+*/

@@ -25,7 +25,8 @@ int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *i
 	while (cmd_list_node)
 	{
 		cmd_info = cmd_list_node->content;
-		cmd_info->commands = get_expanded_commands(&cmd_info->pipeline_token_list, info);
+		cmd_info->commands = create_expanded_commands(
+				&cmd_info->pipeline_token_list, info);
 		if (!cmd_info->commands)
 			return (FAILURE);
 		if (expand_var_in_redirect_filename(&cmd_info, info) == FAILURE)
@@ -95,7 +96,8 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 		redirect_info = redirect_list->content;
 		if (is_iotype_redirect(redirect_info->io_type))
 		{
-			expand_or_re_tokenized_chars = get_expanded_commands(&redirect_info->token_list, info);
+			expand_or_re_tokenized_chars = create_expanded_commands(
+					&redirect_info->token_list, info);
 			if (!expand_or_re_tokenized_chars)
 				return (FAILURE);
 			if (get_2darray_size(expand_or_re_tokenized_chars) != 1)

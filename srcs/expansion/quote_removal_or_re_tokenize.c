@@ -6,14 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:00:58 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 17:13:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:13:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
 static int	re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *popped_node);
-//static int	quote_removal_or_re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *popped_node);
 static int remove_quotes_in_word(char **token_word);
 
 /* re tokenizeでnode数が増える可能性あり。expanded_token_listに一時保管する */
@@ -75,7 +74,6 @@ int	remove_quote_in_tokens(t_list_bdi **list_head)
 
 	if (!list_head || !*list_head)
 		return (SUCCESS);
-
 	list_node = *list_head;
 	while (list_node)
 	{
