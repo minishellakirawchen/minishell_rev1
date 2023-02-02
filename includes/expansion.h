@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 11:16:42 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:14:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,9 @@ int		expand_var_in_tokens(t_list_bdi **list_head, t_info *info);
 int	concat_connected_tokens(t_list_bdi **token_list);
 
 int		remove_quotes(char **token_word);
-char	*get_expanded_str(char *src, t_info *info);
 
 /* get_expanded_str.c */
-char	*get_expanded_str(char *src, t_info *info);
+//char	*get_expanded_str(char *src, t_info *info);
 int		expand_var_in_str(char **src, t_info *info);
 char	*concat_dst_to_src(char **dst, char *src);
 char	*get_name_str(const char *str_start_with_dollar);

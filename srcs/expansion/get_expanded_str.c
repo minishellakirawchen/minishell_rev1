@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 16:00:36 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:15:24 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	expand_var_in_str(char **src, t_info *info)
 	idx = 0;
 	while ((*src)[idx])
 	{
-		printf("expand src[idx]:%s, idx:%zu\n", &(*src)[idx], idx);
+//		printf("expand src[idx]:%s, idx:%zu\n", &(*src)[idx], idx);
 		// $? or $nameまでidx++
 		skip = 0;
 //		printf("idx:%zu, src:%s\n", idx, &src[idx + skip]);
@@ -55,11 +55,8 @@ int	expand_var_in_str(char **src, t_info *info)
 		}
 		else
 		{
-
-			printf("idx:%zu, src[idx]:%s\n", idx, &(*src)[idx]);
 			key = get_name_str(&(*src)[idx]);
 			value = get_env_value(key, info->envlist_head);
-			printf("key:%s, value:%s\n", key, value);
 			if (!key | !value)
 				return (perror_ret_int("malloc", FAILURE));
 			expanded_str = concat_dst_to_src(&expanded_str, value);
@@ -67,74 +64,9 @@ int	expand_var_in_str(char **src, t_info *info)
 			key = free_1d_alloc(key);
 		}
 	}
-	printf("### before expand:%s\n", *src);
 	free(*src);
 	*src = expanded_str;
-	printf("### after expand:%s\n", *src);
 	return (SUCCESS);
-}
-
-
-// expandable_src is string start with $name or $?
-// $
-
-
-// "" removal
-char	*get_expanded_str(char *src, t_info *info)
-{
-	size_t	idx;
-	size_t	skip;
-	char	*expanded_str;
-	char	*key;
-	char	*value;
-	char	*skip_str;
-
-	if (!src || !info)
-		return (FAILURE);
-	expanded_str = ft_strdup("");
-	idx = 0;
-	while (src[idx])
-	{
-		// $? or $nameまでidx++
-		skip = 0;
-//		printf("idx:%zu, src:%s\n", idx, &src[idx + skip]);
-		while (src[idx + skip] && !is_expandable_str_with_dollar(&src[idx + skip]))
-			skip++;
-		if (skip)
-		{
-			// idx++した分をexpanded_strへ結合
-			skip_str = ft_substr(src, idx, skip);
-			expanded_str = concat_dst_to_src(&expanded_str, skip_str);
-			if (!skip_str || !expanded_str)
-				return (perror_ret_nullptr("malloc"));
-			skip_str = free_1d_alloc(skip_str);
-			idx += skip;
-		}
-		if (!src[idx])
-			break ;
-		// $? or $name のvalueをexpanded_strへ結合子、$? or $name分idx++
-		if (is_expandable_exit_status(&src[idx]))
-		{
-			if (expand_exit_status(&expanded_str, info->exit_status) == FAILURE)
-				return (NULL);
-			idx += 2; // $?
-		}
-		else
-		{
-//			printf("idx:%zu, src[idx]:%s\n", idx, &src[idx]);
-			key = get_name_str(&src[idx]);
-			value = get_env_value(key, info->envlist_head);
-//			printf("key:%s, value:%s\n", key, value);
-			if (!key | !value)
-				return (perror_ret_nullptr("malloc"));
-			expanded_str = concat_dst_to_src(&expanded_str, value);
-			idx += ft_strlen_ns(key); // $key
-			key = free_1d_alloc(key);
-		}
-		idx++;
-	}
-	free_1d_alloc(src);
-	return (expanded_str);
 }
 
 char	*get_name_str(const char *str_start_with_dollar)

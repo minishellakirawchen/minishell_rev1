@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:20:25 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 22:26:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:05:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool is_expandable_var_in_str(const char *str, char quote_chr)
 	return (false);
 }
 
-bool	is_str_expandable_(const char *str)
+bool	is_str_expandable(const char *str)
 {
 	if (!str)
 		return (false);
