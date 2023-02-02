@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:01 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 09:16:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 11:15:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 # include "minishell.h"
 
 /*          typedef           */
-typedef struct s_info		t_info;
-typedef struct s_token_elem	t_token_elem;
-typedef enum e_token_type	t_token_type;
+typedef struct s_info			t_info;
+typedef struct s_token_elem		t_token_elem;
+
+typedef enum e_token_type		t_token_type;
 
 
 /* ************************** */

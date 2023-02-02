@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 20:00:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 11:19:24 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,16 +214,15 @@ bool	is_expandable_wildcard_in_str(const char *word, bool is_quoted)
 
 
 
+int expanded_wildcard_to_token_list(t_list_bdi **expanded_token_list)
+{
+	//while node, pop-> == concat
+	if (!expanded_token_list)
+		return (FAILURE);
 
 
-
-
-
-
-
-
-
-
+	return (SUCCESS);
+}
 
 
 

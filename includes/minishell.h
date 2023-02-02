@@ -75,6 +75,7 @@ typedef struct s_redirect_info	t_redirect_info;
 /* enum */
 typedef enum e_token_type		t_token_type;
 typedef enum e_node_kind		t_node_kind;
+typedef enum e_tokenlist_kind	t_list_kind;
 
 enum e_token_type
 {
@@ -106,6 +107,12 @@ enum e_node_kind
 	e_node_pipeline,
 	e_node_commands,
 	e_node_init,
+};
+
+enum e_list_kind
+{
+	e_pipeline_token_list,
+	e_redirect_list,
 };
 
 

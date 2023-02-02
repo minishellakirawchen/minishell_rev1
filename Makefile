@@ -34,6 +34,7 @@ SRC		= main.c \
 		  expansion/is_expand.c \
 		  expansion/get_expanded_str.c \
 		  expansion/create_commands.c \
+		  expansion/concat_connected_tokens.c \
 		  expansion/is_matches_wildcard.c \
 		  expansion/expand_wildcard.c \
 		  command_execution/execute_execlist.c \
