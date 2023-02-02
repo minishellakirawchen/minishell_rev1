@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 17:18:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:18:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char	**create_expanded_commands(t_list_bdi **token_list, t_info *info)
 	if (remove_quote_or_re_tokenize_tokens(&*token_list) == FAILURE)
 		return (NULL);
 	debug_print_tokens(*token_list, "after quote removal/re tokenize");
+
 	if (concat_connected_tokens(&*token_list) == FAILURE)
 		return (NULL);
 	debug_print_tokens(*token_list, "after connect");

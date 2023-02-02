@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 17:21:04 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 20:13:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**create_expanded_commands(t_list_bdi **token_list, t_info *info);
 
 /* concat_connected_tokens.c */
 int		concat_connected_tokens(t_list_bdi **token_list);
-bool	check_wildcard_quoted(t_list_bdi *token_node);
+bool	check_valid_wildcard_in_word(t_token_elem *token);
 
 
 /* get_expanded_str.c */
@@ -89,10 +89,12 @@ bool	is_expandable_str_with_dollar(const char *str);
 
 /* expand_wildcard.c */
 bool	is_expandable_wildcard_in_str(const char *word, bool is_quoted);
-char	*get_expand_wildcard(char *wildcard_str);
+char	*get_expand_wildcard(char *wildcard_str, int *valid_list);
+
 int		expanded_wildcard_to_token_list(t_list_bdi **expanded_token_list);
 
 /* is_matches_wildcard.c */
-int		is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str);
+//int		is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str);
+int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str, const int *valid_table);
 
 #endif //EXPANSION_H

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 15:09:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 20:54:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ bool	check_is_hidden_include(const char *wildcard_str)
 	return (true);
 }
 
-t_list_bdi	*get_strlist_matching_wildcard(const char *wildcard_str, DIR *dirp)
+/*
+t_list_bdi	*get_strlist_matching_wildcard(const char *wildcard_str, DIR *dirp, int *valid_list)
 {
 	bool			is_hidden_include;
 	struct dirent	*read_dir;
@@ -78,7 +79,7 @@ t_list_bdi	*get_strlist_matching_wildcard(const char *wildcard_str, DIR *dirp)
 	t_list_bdi		*newlist;
 	char			*getstr;
 
-	if (!wildcard_str || !dirp)
+	if (!wildcard_str || !dirp || !valid_list)
 		return (NULL);
 	is_hidden_include = check_is_hidden_include(wildcard_str);
 	strlist = NULL;
@@ -90,10 +91,12 @@ t_list_bdi	*get_strlist_matching_wildcard(const char *wildcard_str, DIR *dirp)
 			read_dir = readdir(dirp);
 			continue ;
 		}
-		if (is_matches_wildcard_and_target_str(wildcard_str, read_dir->d_name))
+		if (is_matches_wildcard_and_target_str(wildcard_str, read_dir->d_name, valid_list))
 		{
+			printf("\n <wild card>\n");
+			debug_print_wildcard_valid_list(valid_list, wildcard_str);
 			getstr = ft_strdup(read_dir->d_name);
-			printf("get_str:%s\n", getstr);
+			printf(" @@ get_str:%s\n", getstr);
 			newlist = ft_lstnew_bdi(getstr);
 			if (!getstr || !newlist)
 				return (perror_ret_nullptr("malloc"));// TODO: free
@@ -103,14 +106,25 @@ t_list_bdi	*get_strlist_matching_wildcard(const char *wildcard_str, DIR *dirp)
 	}
 	return (strlist);
 }
+*/
+
+void	swap(void **content_a, void **content_b)
+{
+	void *tmp;
+
+	if (!content_a || !content_b)
+		return ;
+	tmp = *content_a;
+	*content_a = *content_b;
+	*content_b = tmp;
+}
 
 void	sort_ascending_strlist(t_list_bdi **list_head)
 {
-	t_list_bdi	*node_a;
-	t_list_bdi	*node_b;
-	char		*str_a;
-	char		*str_b;
-	char 		*tmp_str;
+	t_list_bdi		*node_a;
+	t_list_bdi		*node_b;
+	t_token_elem	*token_a;
+	t_token_elem	*token_b;
 
 	if (!list_head || !*list_head)
 		return ;
@@ -120,89 +134,19 @@ void	sort_ascending_strlist(t_list_bdi **list_head)
 		node_b = node_a->next;
 		while (node_b)
 		{
-			str_a = node_a->content;
-			str_b = node_b->content;
-			if (ft_strcmp_ns(str_a, str_b) > 0)
-			{
-				tmp_str = node_a->content;
-				node_a->content = node_b->content;
-				node_b->content = tmp_str;
-			}
+			token_a = node_a->content;
+			token_b = node_b->content;
+			if (ft_strcmp_ns(token_a->word, token_b->word) > 0)
+				swap(&node_a->content, &node_b->content);
 			node_b = node_b->next;
 		}
 		node_a = node_a->next;
 	}
 }
 
-char	*get_list_concat_str(t_list_bdi *list, char *separated_str)
-{
-	char	*concat_str;
-
-	if (!list)
-		return (NULL);
-	concat_str = ft_strdup("");
-	if (!concat_str)
-		return (perror_ret_nullptr("malloc"));
-
-	while (list)
-	{
-		concat_str = concat_dst_to_src(&concat_str, (char *)list->content);
-		if (!concat_str)
-			return (perror_ret_nullptr("malloc")); //TODO:free
-		list = list->next;
-		if (list && separated_str)
-		{
-			concat_str = concat_dst_to_src(&concat_str, separated_str);
-			if (!concat_str)
-				return (perror_ret_nullptr("malloc")); //TODO:free
-		}
-	}
-
-	return (concat_str);
-}
-
 void	print_list_str(void *content)
 {
 	printf("%s\n", (char *)content);
-}
-
-// 一致するstringがない場合、stringを返す
-char	*get_expand_wildcard(char *wildcard_str)
-{
-	DIR 			*dirp;
-	t_list_bdi		*strlist;
-	char			*pwd_path;
-	char			*expanded_str;
-
-	if (!wildcard_str)
-		return (NULL);
-	pwd_path = getcwd(NULL, 0);
-	if (!pwd_path)
-		return (perror_ret_nullptr("getcwd"));
-	dirp = opendir(pwd_path); // `.`でもOK？
-	if (!dirp)
-		return (perror_ret_nullptr("opendir")); //TODO:free;
-	strlist = get_strlist_matching_wildcard(wildcard_str, dirp);
-	closedir(dirp);
-	free(pwd_path);
-
-//	printf("\n## before sort\n");
-//	ft_lstiter_bdi(strlist, print_list_str);
-
-	if (ft_lstsize_bdi(strlist) == 0)
-		return (wildcard_str);
-
-	sort_ascending_strlist(&strlist);
-
-//	printf("\n## after sort\n");
-//	ft_lstiter_bdi(strlist, print_list_str);
-
-	expanded_str = get_list_concat_str(strlist, " ");
-	if (!expanded_str)
-		return (perror_ret_nullptr("malloc")); //TODO:free
-	ft_lstclear_bdi(&strlist, free);
-	free_1d_alloc(wildcard_str);
-	return (expanded_str);
 }
 
 bool	is_expandable_wildcard_in_str(const char *word, bool is_quoted)
@@ -238,11 +182,11 @@ t_token_elem	*create_token_elem(char *word)
 	new_token->is_quoted = false;
 	new_token->quote_chr = '\0';
 	new_token->subshell_depth = -1;
-	new_token->is_wildcard_quoted = false;
+	new_token->is_wildcard_expandable = false;
 	return (new_token);
 }
 
-t_list_bdi	*get_tokens_match_with_wildcard(const char *wildcard_str, DIR *dirp)
+t_list_bdi	*get_tokens_match_with_wildcard(const char *wildcard_str, DIR *dirp, const int *valid_list)
 {
 	bool			is_hidden_include;
 	struct dirent	*read_dir;
@@ -263,9 +207,10 @@ t_list_bdi	*get_tokens_match_with_wildcard(const char *wildcard_str, DIR *dirp)
 			read_dir = readdir(dirp);
 			continue ;
 		}
-		if (is_matches_wildcard_and_target_str(wildcard_str, read_dir->d_name))
+		if (is_matches_wildcard_and_target_str(wildcard_str, read_dir->d_name, valid_list))
 		{
 			getstr = ft_strdup(read_dir->d_name);
+			printf("getstr:%s\n", getstr);
 			token_elem = create_token_elem(getstr);
 			newlist = ft_lstnew_bdi(token_elem);
 			if (!getstr || !newlist || !token_elem)
@@ -277,12 +222,12 @@ t_list_bdi	*get_tokens_match_with_wildcard(const char *wildcard_str, DIR *dirp)
 	return (strlist);
 }
 
-int	get_wildcard_tokens(t_list_bdi **get_tokens_save_to, const char *wildcard_str)
+int	get_wildcard_tokens(t_list_bdi **get_tokens_save_to, const char *wildcard_str, const int *valid_list)
 {
 	DIR 			*dirp;
 	char			*pwd_path;
 
-	if (!get_tokens_save_to || !wildcard_str)
+	if (!get_tokens_save_to || !wildcard_str || !valid_list)
 		return (FAILURE);
 
 	pwd_path = getcwd(NULL, 0);
@@ -291,18 +236,18 @@ int	get_wildcard_tokens(t_list_bdi **get_tokens_save_to, const char *wildcard_st
 	dirp = opendir(pwd_path); // `.`でもOK？
 	if (!dirp)
 		return (perror_ret_int("opendir", FAILURE)); //TODO:free;
-	*get_tokens_save_to = get_tokens_match_with_wildcard(wildcard_str, dirp);
+	*get_tokens_save_to = get_tokens_match_with_wildcard(wildcard_str, dirp, valid_list);
 
 	closedir(dirp);
 	free(pwd_path);
 
-//	debug_print_tokens(*get_tokens_save_to, "before sorted");
-	sort_ascending_strlist(get_tokens_save_to);
-//	debug_print_tokens(*get_tokens_save_to, "after sorted");
+	debug_print_tokens(*get_tokens_save_to, "before sorted");
+	sort_ascending_strlist(&(*get_tokens_save_to));
+	debug_print_tokens(*get_tokens_save_to, "after sorted");
 	return (SUCCESS);
 }
 
-// * or "*"を判定し, *なら展開, "*"なら展開しない, ref token_elen->is_wildcard_quoted
+// * or "*"を判定し, *なら展開, "*"なら展開しない, ref token_elen->is_wildcard_expandable
 // *, "*"が混在するケースは考慮していない。むずい。有効な*を何かに置換するなどの操作が必要か？
 // もしくは結合前に、結合するグループを線型リストで保持しておき、
 // 各tokenがquoted, unquotedのフラグを持っている状態で判別する？
@@ -322,10 +267,13 @@ int expanded_wildcard_to_token_list(t_list_bdi **token_list)
 	{
 		popped_node = ft_lstpop_bdi(&(*token_list));
 		token_elem = popped_node->content;
-		if (is_expandable_wildcard_in_str(token_elem->word, !token_elem->is_wildcard_quoted))
+		printf("1\n");
+		if (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_wildcard_expandable))
 		{
+			printf("2\n");
+
 			wildcard_tokens = NULL;
-			if (get_wildcard_tokens(&wildcard_tokens, token_elem->word) == FAILURE)
+			if (get_wildcard_tokens(&wildcard_tokens, token_elem->word, token_elem->wildcard_valid_list) == FAILURE)
 				return (FAILURE);
 			debug_print_tokens(wildcard_tokens, "wildcard tokens");
 			if (ft_lstsize_bdi(wildcard_tokens) != 0)
@@ -342,7 +290,7 @@ int expanded_wildcard_to_token_list(t_list_bdi **token_list)
 }
 
 
-/*
+/* "*"と*が混在する文字列への対応 [hoge*"hoge*"huga]
  * これを作れば対応できる
  * 展開後, 結合前のtokenを操作する
  * もしくはtoken内にwild tableを持っておく

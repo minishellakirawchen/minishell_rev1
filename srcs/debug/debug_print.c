@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 13:32:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 20:27:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,24 @@ void	debug_print_redirect_info(t_list_bdi *head, char *str)
 	}
 }
 
+void	print_wildcard_valid_list(t_token_elem *token)
+{
+	size_t	len = ft_strlen_ns(token->word);
+	size_t	idx = 0;
+
+	if (!token->wildcard_valid_list)
+		return ;
+	ft_dprintf(STDERR_FILENO, "(");
+	while (token->wildcard_valid_list && idx < len)
+	{
+		ft_dprintf(STDERR_FILENO, "%d", token->wildcard_valid_list[idx]);
+		idx++;
+		if (idx < len)
+			ft_dprintf(STDERR_FILENO, ",");
+	}
+	ft_dprintf(STDERR_FILENO, ")");
+}
+
 void	debug_print_tokens(t_list_bdi *head, char *str)
 {
 	t_list_bdi		*node;
@@ -175,13 +193,14 @@ void	debug_print_tokens(t_list_bdi *head, char *str)
 			ft_dprintf(STDERR_FILENO, "\"");
 		if (token->quote_chr == CHR_SINGLE_QUOTE)
 			ft_dprintf(STDERR_FILENO, "\'");
-		if (!token->is_wildcard_quoted)
-			ft_dprintf(STDERR_FILENO, "*"); //expand wildcard
+//		if (!token->is_wildcard_expandable)
+//			ft_dprintf(STDERR_FILENO, "*"); //expand wildcard
+		print_wildcard_valid_list(token);
 		ft_dprintf(STDERR_FILENO, "%d", token->subshell_depth);
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
 		if (!token->is_connect_to_next_word && node->next)
-			ft_dprintf(STDERR_FILENO, ", ");
+			ft_dprintf(STDERR_FILENO, ",");
 		node= node->next;
 	}
 	ft_dprintf(STDERR_FILENO, "\n");
@@ -230,6 +249,21 @@ void	debug_print_command_info(t_command_info *command_info)
 		debug_print_redirect_info(command_info->redirect_list, NULL);
 		is_first_print = false;
 	}
+}
+
+void	debug_print_wildcard_valid_list(int *list, const char *word)
+{
+	size_t	idx = 0;
+
+	printf("(");
+	while (word[idx])
+	{
+		printf("%d", list[idx]);
+		idx++;
+		if (word[idx])
+			printf(",");
+	}
+	printf(")\n");
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 17:23:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:27:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 				return (FAILURE);
 //			printf("createe_redirect_list\n");
 //			debug_print_command_info(command_list);
-
 			command_list_node = command_list_node->next;
 		}
 		exec_list_node = exec_list_node->next;
@@ -54,8 +53,6 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 // [echo]->[hello]->[world]															{"echo", "hello", "world", NULL}
 // [$key]					->	[echo hello world]	->	[echo]->[hello]->[world]	->	{"echo", "hello", "world", NULL}
 // ["hello"]=[world]
-//
-//
 //
 //bash-3.2$ export e1="echo hello"world'huga'
 //bash-3.2$ echo $e1  # echo helloworldhuga
@@ -176,9 +173,9 @@ char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, bool *is_quoted, 
 	t_list_bdi		*popped_token_node;
 	t_token_elem	*token_elem;
 
-	*is_quoted = false;
 	if (!token_get_from || !*token_get_from)
 		return (NULL);
+	*is_quoted = false;
 	token_list = NULL;
 	while (*token_get_from)
 	{
