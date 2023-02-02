@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:39 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 22:53:11 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/03 00:49:50 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <signal.h>
 
+typedef void sigfunc(int);
 
 void	init_signal_in_prompt();
 
