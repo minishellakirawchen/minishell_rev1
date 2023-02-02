@@ -129,6 +129,6 @@ void	free_token_elem(void *content)
 	elem = content;
 	//	printf("#debug free_token:%s\n", elem->word);
 	elem->word = free_1d_alloc(elem->word);
-	elem->wildcard_valid_list = free_1d_alloc(elem->wildcard_valid_list);
+	elem->wildcard_valid_flag = free_1d_alloc(elem->wildcard_valid_flag);
 	free_1d_alloc(elem);
 }

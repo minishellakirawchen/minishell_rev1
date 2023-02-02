@@ -165,10 +165,9 @@ struct s_token_elem
 	bool			is_connect_to_next_word;
 	char			quote_chr;
 	bool			is_quoted;
-	bool			is_wildcard_expandable;
 	int				subshell_depth;
 
-	int 			*wildcard_valid_list;
+	int 			*wildcard_valid_flag;
 };
 
 // split

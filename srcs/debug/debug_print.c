@@ -160,12 +160,12 @@ void	print_wildcard_valid_list(t_token_elem *token)
 	size_t	len = ft_strlen_ns(token->word);
 	size_t	idx = 0;
 
-	if (!token->wildcard_valid_list)
+	if (!token->wildcard_valid_flag)
 		return ;
 	ft_dprintf(STDERR_FILENO, "(");
-	while (token->wildcard_valid_list && idx < len)
+	while (token->wildcard_valid_flag && idx < len)
 	{
-		ft_dprintf(STDERR_FILENO, "%d", token->wildcard_valid_list[idx]);
+		ft_dprintf(STDERR_FILENO, "%d", token->wildcard_valid_flag[idx]);
 		idx++;
 		if (idx < len)
 			ft_dprintf(STDERR_FILENO, ",");

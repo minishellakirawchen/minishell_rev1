@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 10:30:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 21:53:41 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 22:30:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static void	free_dp_array(int **dp, size_t row_size);
 
 int	*get_long_valid_table(const int *valid_table, size_t len_wildcard)
 {
-	size_t			idx;
 	const size_t	len = len_wildcard + 10;
+	size_t			idx;
 	int 			*long_table;
 
 	if (!valid_table)
@@ -33,7 +33,7 @@ int	*get_long_valid_table(const int *valid_table, size_t len_wildcard)
 		long_table[idx] = valid_table[idx];
 		idx++;
 	}
-	debug_print_wildcard_valid_list(long_table, len);
+//	debug_print_wildcard_valid_list(long_table, len);
 	return (long_table);
 }
 
@@ -77,10 +77,6 @@ static int	is_match(const char *wildcard_str, const char *target_str, int **dp, 
 		return (false);
 	dp[0][0] = 1;
 	i = 0;
-	printf("\n");
-	printf("START!!!\n");
-	printf("\n");
-
 	while (i < len_wildcard + 1)
 	{
 		j = 0;
@@ -90,16 +86,10 @@ static int	is_match(const char *wildcard_str, const char *target_str, int **dp, 
 				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
 			if (j > 0 && i > 0 && valid_table[i - 1] == 0 && wildcard_str[i - 1] == target_str[j - 1])
 				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
-			printf("j:%zu, len_target:%zu, targetstr:%s\n", j, len_target, target_str);
 			j++;
 		}
-		printf("i:%zu, len_wild:%zu, wildstr:%s\n", i, len_wildcard, wildcard_str);
 		i++;
 	}
-	printf("\n");
-	printf("END!!!\n");
-	printf("\n");
-
 	if (dp[len_wildcard][len_target] > 0)
 		return (true);
 	return (false);
