@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 10:31:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:25:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:03:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ int	ft_atoi(const char *str, bool *is_success)
 	long long	atol_num;
 	size_t		idx;
 
+	if (!str)
+	{
+		*is_success = false;
+		return (0);
+	}
 	*is_success = true;
 	atol_num = ft_strtol(str, &idx, is_success);
 	if (*is_success && (atol_num < INT_MIN || INT_MAX < atol_num))

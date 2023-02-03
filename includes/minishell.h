@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 21:23:39 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 21:58:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,23 +209,13 @@ struct s_redirect_info
 
 
 /* ************************** */
-/*          parsing           */
+/*            main            */
 /* ************************** */
 
-/* ************************** */
-/*         expansion          */
-/* ************************** */
+
 
 /* ************************** */
-/*     command execution      */
-/* ************************** */
-
-/* ************************** */
-/*       signal handler       */
-/* ************************** */
-
-/* ************************** */
-/*         ft_builtin         */
+/*           helper           */
 /* ************************** */
 
 /*         helper.c           */
@@ -241,11 +231,18 @@ void	free_command_info(void *content);
 void	free_redirect_info(void *content);
 void	clear_exec_list(t_exec_list **exec_list);
 
+int		update_shlvl(char **now_shlvl_str);
+int		add_initial_shlvl(t_list **env_list_head);
+
 
 /*         error_return.c           */
 void	*perror_ret_nullptr(char *err);
 int		perror_ret_int(char *err, int retno);
 
+
+/* ************************** */
+/*         debug print        */
+/* ************************** */
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
 void	debug_print_tokens(t_list_bdi *head, char *str);
