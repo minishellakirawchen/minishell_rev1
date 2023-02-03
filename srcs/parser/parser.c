@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 15:30:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 18:09:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 		ft_dprintf(STDERR_FILENO, "[#DEBUG]fail to create_operator_list\n");
 		return (PROCESS_ERROR);
 	}
+
 //	debug_print_exec_list(*execlist_head, "operator_list");
 //	delete_last_semicolon_node(execlist_head);
 //	debug_print_exec_list(info->execlist_head, "delete last ;");

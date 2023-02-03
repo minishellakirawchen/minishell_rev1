@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 18:17:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 18:51:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define CHDIR_FAILURE				1
 # define EXIT_TOO_MANY_ARGS			1
 # define FILE_OPEN_ERROR			1
-# define CMD_NOT_FOUND				1
+# define CMD_NOT_FOUND				127
 # define EXIT_SIGQUIT				131
 # define EXIT_NUMERIC_ARGS_REQUIRED	255
 # define SYNTAX_ERROR				258

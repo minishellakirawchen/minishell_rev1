@@ -6,12 +6,12 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 23:55:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 18:16:06 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
 #include "command_execution.h"
-//static int	create_heredoc_file(t_command_info **cmd_info, t_redirect_info **redirect_info, int cnt);
+
 static int	do_heredoc(int fd, t_redirect_info *redirect_info);
 static int	create_heredoc_file_in_command_info(t_command_info **cmd_info, int *heredoc_cnt);
 
@@ -32,7 +32,8 @@ int	execute_heredoc(t_exec_list **execlist_head)
 		while (command_list_node)
 		{
 			command_info = command_list_node->content;
-			create_heredoc_file_in_command_info(&command_info, &heredoc_cnt);
+			if (create_heredoc_file_in_command_info(&command_info, &heredoc_cnt) == FAILURE)
+				return (FAILURE);
 			command_list_node = command_list_node->next;
 		}
 		exec_node = exec_node->next;
@@ -46,6 +47,7 @@ static int	create_heredoc_file_in_command_info(t_command_info **cmd_info, int *h
 {
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*redirct_info;
+	int				heredoc_exit_status;
 
 	if (!cmd_info || !*cmd_info)
 		return (FAILURE);
@@ -62,10 +64,11 @@ static int	create_heredoc_file_in_command_info(t_command_info **cmd_info, int *h
 			(*cmd_info)->redirect_fd[FD_HEREDOC] = get_openfile_fd(redirct_info->filename, e_io_overwrite);
 			if ((*cmd_info)->redirect_fd[FD_HEREDOC] < 0)
 				return (perror_ret_int("open", FAILURE));
-			if (do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], redirct_info) == FAILURE)
-				return (FAILURE);
+			heredoc_exit_status = do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], redirct_info);
 			if (close((*cmd_info)->redirect_fd[FD_HEREDOC]) < 0)
 				return (perror_ret_int("close", FAILURE));
+			if (heredoc_exit_status == FAILURE)
+				return (FAILURE);
 			*heredoc_cnt += 1;
 		}
 		redirect_list = redirect_list->next;

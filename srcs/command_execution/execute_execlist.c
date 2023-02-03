@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 14:29:46 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 18:21:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,11 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 	int			exit_status;
 	t_exec_list	*exec_node;
 	t_exec_list	*pipeline_node;
-	bool		debug = true;
+	bool		debug = false;
 
 	if (!info || !execlist_head)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
-
 	exec_node = *execlist_head;
 
 	/* exec heredoc */
@@ -80,6 +79,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 			/* ^^^^^ debug mode: print command_info ^^^^^ */
 		}
 		printf("\nvvvvv execute vvvvv\n");
+
 		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
 		printf("^^^^^^^^^^^^^^^^^^^  ");

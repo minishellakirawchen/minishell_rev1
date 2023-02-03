@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 19:45:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 18:36:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 	char			**minishell_envp;
 	pid_t			pid;
 
-	if (!pipeline_cmds_head)
+	if (!pipeline_cmds_head || !pipeline_cmds_head->content)
 		return (PROCESS_ERROR);
 	command_info = pipeline_cmds_head->content;
 	if (is_single_builtin(pipeline_cmds_head))
