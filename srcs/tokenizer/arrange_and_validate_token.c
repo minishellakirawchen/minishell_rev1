@@ -6,10 +6,10 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 09:35:13 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:16:17 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
 #include "tokenizer.h"
 
 //static void	delete_empty_elem(t_list_bdi **tokenlist_head);
@@ -51,52 +51,10 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 	return (EXIT_SUCCESS);
 }
 
-//     ( () ( () () ) )
-// no  0 11 2 33 44 2 0
-// cnt 1 21 2 32 32 1 0
-
-// ( -> no=no; cnt++, no++
-// ) -> no=no; cnt--,
-
-
-// () () ()
-// 00 11 22
-// 0  1  2  no
-
-// ( () )
-// 0 11 0   no
-
-// ( () () )
-// 0 11 22 0
-
-
-//    ( () ( () () ) () )
-//no  0 11 2 33 44 2 55 0
-//    1 21 2 32 32 3 21 0  (+1, )-1
-//(   0 1  2 3  4    5
-//)      0    1  2 3  4 5
-
-//closeは後ろから
-//今までcloseしたnoを持っておく
-//0番目は閉じていないが2,3は閉じて、次に4を閉じて最後に0みたいなことがある
-
-
-
-// noを付与するときにcntもみる？
-
-//minishell $> () (() ()) (())
-//#input          :[() (() ()) (())]
-//#arranged       :( 0 ,) 0 ,( 1 ,( 2 ,[)]) 1 ,[(]( 3 ,[)]) 2 ,[)]) 3 ,[(]( 4 ,[(]( 5 ,[)]) 4 ,[)]) 5
-
-
-// TODO: 一旦これで妥協
-// (の番号と同じ最も近い)を探せば相方が見つかる
-// (の長さの配列を用意して、現在までみた(の数、とindexでcloseした)を管理すれば番号が付与できそう
-// () () ()
-// 00 00 00
-//
-// ( () ( () () ) )
-// 0 11 1 22 22 1 0
+/*
+ ( () ( () () ) )
+ 0 11 1 22 22 1 0
+*/
 static void	set_parenthesis_no(t_list_bdi **tokenlist_head)
 {
 	t_list_bdi		*node;
@@ -114,7 +72,6 @@ static void	set_parenthesis_no(t_list_bdi **tokenlist_head)
 		{
 			parentesis_no++;
 			token->subshell_depth = parentesis_no;
-//			printf("token:%s, subshell_depth:%d\n", token->word, parentesis_no);
 		}
 		else if (token->type == e_subshell_end)
 		{
@@ -123,22 +80,20 @@ static void	set_parenthesis_no(t_list_bdi **tokenlist_head)
 		}
 		else
 			token->subshell_depth = parentesis_no;
-//		printf("token:%s, subshell_depth:%d\n", token->word, parentesis_no);
 		node = node->next;
 	}
-//	debug_print_tokens(*tokenlist_head, "parenthesis no");
 }
 
-
-// TODO: separate set_elem_type_if_operator
+/*
+ validate control sign
+ error: <<<, ;;, |||, &&&, etc.
+*/
 static int	valid_control_operator(t_list_bdi **tokenlist_head)
 {
 	t_list_bdi			*node;
 	t_token_elem	*token;
 
 	node = *tokenlist_head;
-	// validate control sign
-	// error: <<<, ;;, |||, &&&, etc.
 	while (node)
 	{
 		token = node->content;
@@ -173,7 +128,6 @@ static void	set_elem_type_if_operator(t_list_bdi **tokenlist_head)
 	}
 }
 
-// echo hello > "hoge"huga
 static int	set_elem_type_if_word(t_list_bdi **tokenlist_head)
 {
 	t_list_bdi			*node;
@@ -208,43 +162,3 @@ static int	set_elem_type_if_word(t_list_bdi **tokenlist_head)
 	}
 	return (SUCCESS);
 }
-
-/*
-static void	delete_empty_elem(t_list_bdi **tokenlist_head)
-{
-	t_list_bdi			*node;
-	t_list_bdi			*prev;
-	t_token_elem	*token;
-	bool			del_this_node;
-
-	if (!tokenlist_head || !*tokenlist_head)
-		return ;
-	node = *tokenlist_head;
-	prev = NULL;
-	while (node)
-	{
-		del_this_node = false;
-		token = node->content;
-		if (token->is_quoted && ft_strlen_ns(token->word) == 2)
-			del_this_node = true;
-		if (ft_strlen_ns(token->word) == 0)
-			del_this_node = true;
-		if (!del_this_node)
-		{
-			prev = node;
-			node = node->next;
-			continue ;
-		}
-		if (prev)
-			prev->next = node->next;
-		else
-			*tokenlist_head = node->next;
-		ft_lstdelone_bdi(&node, free_token_elem);
-		if (prev)
-			node = prev->next;
-		else
-			node = *tokenlist_head;
-
-	}
-}
-*/

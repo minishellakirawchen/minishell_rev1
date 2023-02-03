@@ -6,19 +6,16 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:36:28 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 22:29:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:05:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
 #include "tokenizer.h"
 
 static t_split_info	init_split_info(const char *src, const char *delim, const char *setchars);
 static t_token_elem	*create_word_token_from_src(t_split_info *s_info);
 static char			*get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len, bool *is_connect2next, bool *is_quoted);
 
-// !delim  -> return (src)
-// !setchars -> just split by delim
-// 切り取るwordのhead, sizeをget, listにappendする
 t_list_bdi	*get_delim_splitted_tokenlist(const char *src, const char *delim, const char *setchars)
 {
 	t_list_bdi		*tokenlist_head;
@@ -33,9 +30,15 @@ t_list_bdi	*get_delim_splitted_tokenlist(const char *src, const char *delim, con
 	while (src[s_info.head_idx])
 	{
 		new_token = create_word_token_from_src(&s_info);
-		new_list = ft_lstnew_bdi((void *)new_token);
-		if (!new_token || !new_list)
+		if (!new_token)
 		{
+			ft_lstclear_bdi(&tokenlist_head, free_token_elem);
+			return (perror_ret_nullptr("malloc"));
+		}
+		new_list = ft_lstnew_bdi((void *)new_token);
+		if (!new_list)
+		{
+			free_token_elem(new_token);
 			ft_lstclear_bdi(&tokenlist_head, free_token_elem);
 			return (perror_ret_nullptr("malloc"));
 		}
@@ -44,6 +47,7 @@ t_list_bdi	*get_delim_splitted_tokenlist(const char *src, const char *delim, con
 	return (tokenlist_head);
 }
 
+/* explain here */
 static t_token_elem	*create_word_token_from_src(t_split_info *split)
 {
 	t_token_elem	*new_token;
@@ -109,7 +113,6 @@ static char *get_trimmed_word(const char *src, const char *delim, const char *se
 		return (perror_ret_nullptr("malloc"));
 	return (word);
 }
-
 
 static t_split_info	init_split_info(const char *src, const char *delim, const char *setchars)
 {

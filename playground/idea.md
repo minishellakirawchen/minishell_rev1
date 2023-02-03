@@ -688,21 +688,128 @@ a4=
 
 ```
 
+### parenthesis no
+```shell
+
+//     ( () ( () () ) )
+// no  0 11 2 33 44 2 0
+// cnt 1 21 2 32 32 1 0
+
+// ( -> no=no; cnt++, no++
+// ) -> no=no; cnt--,
+
+
+// () () ()
+// 00 11 22
+// 0  1  2  no
+
+// ( () )
+// 0 11 0   no
+
+// ( () () )
+// 0 11 22 0
+
+
+//    ( () ( () () ) () )
+//no  0 11 2 33 44 2 55 0
+//    1 21 2 32 32 3 21 0  (+1, )-1
+//(   0 1  2 3  4    5
+//)      0    1  2 3  4 5
+
+//closeは後ろから
+//今までcloseしたnoを持っておく
+//0番目は閉じていないが2,3は閉じて、次に4を閉じて最後に0みたいなことがある
+
+
+
+// noを付与するときにcntもみる？
+
+//minishell $> () (() ()) (())
+//#input          :[() (() ()) (())]
+//#arranged       :( 0 ,) 0 ,( 1 ,( 2 ,[)]) 1 ,[(]( 3 ,[)]) 2 ,[)]) 3 ,[(]( 4 ,[(]( 5 ,[)]) 4 ,[)]) 5
+
+
+// TODO: 一旦これで妥協
+// (の番号と同じ最も近い)を探せば相方が見つかる
+// (の長さの配列を用意して、現在までみた(の数、とindexでcloseした)を管理すれば番号が付与できそう
+// () () ()
+// 00 00 00
+//
+// ( () ( () () ) )
+// 0 11 1 22 22 1 0
+```
+
+
+### operator_split.c
+```shell
+//echo hello && (cd /bin && pwd && ls) || cat <infile >outfile
+
+// $a1
+// a1="echo hello world | cat Makefile"
+// "echo hello world | cat Makefile" <- echo command
+// {"echo", "hello", "world", "|", "cat", "Makefile", NULL} -nも有効
+
+// $a2
+// a2="hoge       hello world"
+// echo $a2 -> hoge hello world
+// env      -> a2=echo       hello world
+
+// expansionは全て区切ったあとに実施しなければ、引数との判別ができなくなる
+
+// char *word = list->token_elem->word
+// word = "cat<infile|ls>>out&&test;cat<file|grep"
+// split before/after operator
+//   "cat"
+//   "<"
+//   "infile"
+//   "|"
+//   "ls"
+//   ">>"
+//   "out"
+//   "&&"
+//   "test"
+//   ";"
+//   "cat"
+//   "<"
+//   "file"
+//   "|"
+//   "grep"
+
+// quotedは既に分離済み
+// 既に付与している結合フラグを壊したくない
+// 難しいぞ？->そんなことないかも
+// 結合フラグは文字列、qupte間のみでは？そんなことはない 面倒かも...
+//
+//
+// ["hello world"]=['good bye']=[|cat]->[Makefile>out]=['hoge']
+//                         keep^ ^^             ^^^   ^keep
+//                               split         split
+// connect_to_nextなので、last elemにフラグを立てる
+
+//TODO: quote is space? unused isquoted??
+
+
+```
 
 
 
 
 
 
+## Parsing
 
+### parsing token list
+```shell
 
+	//quote_removal_in_heredoc, exec_heredocのために""の結合とremovalが必要
+	//redirect_listをまず作成、fileのexpandはあとで実施（heredoc eofはexpandなし）
 
+	// fileのexpansionをあとで実行すると, "'$key'" vs '$key'の判別がつかなくなる
+	// redirect_listを作成し、redirect_info->token_listに保管しておく
+	// heredocは結合してheredoc_eofを作成する
+	// fileの展開、結合はあとで実施する
 
-
-
-
-
-
+```
 
 
 

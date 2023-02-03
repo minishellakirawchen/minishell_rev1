@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:20:42 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 08:42:49 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:12:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,11 @@ int validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
 	return (FAILURE);
 }
 
-// OK echo hello; < infile
-// OK echo hello; > outfile
-// validate relationship now and next
+/*
+ check now and next token type
+ OK echo hello; < infile
+ OK echo hello; > outfile
+*/
 int validate_syntax_operators(t_list_bdi *tokenlist_head)
 {
 	t_list_bdi		*node;

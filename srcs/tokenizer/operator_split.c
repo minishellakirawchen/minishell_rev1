@@ -6,56 +6,18 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:41:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:07:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
+// TODO: Norminette
 #include "tokenizer.h"
 
-//echo hello && (cd /bin && pwd && ls) || cat <infile >outfile
-
-// $a1
-// a1="echo hello world | cat Makefile"
-// "echo hello world | cat Makefile" <- echo command
-// {"echo", "hello", "world", "|", "cat", "Makefile", NULL} -nも有効
-
-// $a2
-// a2="hoge       hello world"
-// echo $a2 -> hoge hello world
-// env      -> a2=echo       hello world
-
-// expansionは全て区切ったあとに実施しなければ、引数との判別ができなくなる
-
-// char *word = list->token_elem->word
-// word = "cat<infile|ls>>out&&test;cat<file|grep"
-// split before/after operator
-//   "cat"
-//   "<"
-//   "infile"
-//   "|"
-//   "ls"
-//   ">>"
-//   "out"
-//   "&&"
-//   "test"
-//   ";"
-//   "cat"
-//   "<"
-//   "file"
-//   "|"
-//   "grep"
-
-// quotedは既に分離済み
-// 既に付与している結合フラグを壊したくない
-// 難しいぞ？->そんなことないかも
-// 結合フラグは文字列、qupte間のみでは？そんなことはない 面倒かも...
-//
-//
-// ["hello world"]=['good bye']=[|cat]->[Makefile>out]=['hoge']
-//                         keep^ ^^             ^^^   ^keep
-//                               split         split
-// connect_to_nextなので、last elemにフラグを立てる
-
+/*
+ ["hello world"]=['good bye']=[|cat]->[Makefile>out]=['hoge']
+                         keep^ ^^             ^^^   ^keep
+                               split         split
+*/
 //TODO: quote is space? unused isquoted??
 t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char *quote)
 {
@@ -176,9 +138,6 @@ int	split_by_operators(t_list_bdi **token_head)
 				ft_lstclear_bdi(token_head, free_token_elem);
 				return (FAILURE);
 			}
-
-//			debug_print_tokens(splitted_list_head, "split head");
-
 			if (prev)
 				prev->next = splitted_list_head;
 			else
@@ -189,14 +148,12 @@ int	split_by_operators(t_list_bdi **token_head)
 			last_token->is_connect_to_next_word = token_elem->is_connect_to_next_word;
 
 			last_node->next = now_node->next;
-
 			ft_lstdelone_bdi(&now_node, free_token_elem);
 			now_node = last_node;
 		}
 		prev = now_node;
 		now_node = now_node->next;
 	}
-
 	return (SUCCESS);
 }
 
