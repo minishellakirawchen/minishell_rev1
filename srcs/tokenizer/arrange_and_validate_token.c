@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:57 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 15:16:17 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:48:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* FREE OK */
@@ -23,9 +23,7 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 {
 	if (!tokenlist_head || !*tokenlist_head)
 		return (PROCESS_ERROR);
-
 //	debug_print_tokens(*tokenlist_head, "before arrange");
-
 	if (valid_control_operator(tokenlist_head) == FAILURE)
 		return (SYNTAX_ERROR);
 	set_elem_type_if_operator(tokenlist_head);
@@ -33,21 +31,14 @@ int	arrange_and_validate_token_list(t_list_bdi **tokenlist_head)
 		return (SYNTAX_ERROR);
 	if (validate_syntax_parenthesis_pairs(*tokenlist_head) == FAILURE)
 		return (SYNTAX_ERROR);
-
 	set_parenthesis_no(tokenlist_head);
-
 	if (validate_syntax_operators(*tokenlist_head) == FAILURE)
 		return (SYNTAX_ERROR);
-
 //	debug_print_tokens(*tokenlist_head, "validated");
-
 	set_elem_type_if_word(tokenlist_head);
-
 	if (ft_lstsize_bdi(*tokenlist_head) == 0)
 		return (PROCESS_ERROR);
-
 //	debug_print_tokens(*tokenlist_head, "set word type");
-
 	return (EXIT_SUCCESS);
 }
 

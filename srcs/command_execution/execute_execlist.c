@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:40:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:47:24 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,14 @@
 static void	move_to_next_exec_node(t_exec_list **exec_list_start_with_operator, int exit_status);
 
 /*
- * pipeline_node
- * pipeline_node &&
- * pipeline_node ||
- *
  * pipelie1 || pipeline2 || .. || pipeline_n; pipeline_n+1 &&
- *  ^ false     ^ not execu        ^not exec   ^ EXEC
- *
- * exec to next ; or NULL
- * if next_operator == &&
- * if next_operator_ == ||
- *
- *
- * bash 0$ echo hello a1=$a1 && export a1=a1dayo && echo hello a1=$a1
- * hello a1=
- * hello a1=a1dayo
- *
+ *  ^ EXEC      ^ not exec         ^not exec    ^ nextEXEC
+ *     ^ if false >_____________________________|
  *
  * pipeline_i = cmd_i1 | cmd_i2 | cmd_i3 .. cmd_in
  * 		pipeline_i : t_list_bdi
  * 		cmd_ij : t_command_info
- *
  * */
-// pipelien_commands cmd1 | cmd2 | cmd3
 
 int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 {

@@ -261,6 +261,20 @@ bash: *: command not found
 
 ```
 
+# Exec
+
+### execute_execlist.c
+```shell
+
+ * exec to next ; or NULL
+ * if next_operator == &&
+ * if next_operator_ == ||
+ *
+ * bash 0$ echo hello a1=$a1 && export a1=a1dayo && echo hello a1=$a1
+ * hello a1=
+ * hello a1=a1dayo
+```
+
 
 
 

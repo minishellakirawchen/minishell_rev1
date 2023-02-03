@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:01 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 11:15:02 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:59:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ int			validate_operator_sign(t_token_elem *now_token);
 int			validate_syntax_operators(t_list_bdi *tokenlist_head);;
 int			validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head);
 
-int	validate_operator_tokens(t_token_elem *now_token, t_token_elem *next_token, bool is_head);
+int			validate_operator_tokens(t_token_elem *now_token, t_token_elem *next_token, bool is_head);
+
+t_token_elem	*create_token_elem(char *word);
 
 
 int			is_tokentype_operator(t_token_type type);

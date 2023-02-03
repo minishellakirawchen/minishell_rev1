@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 16:36:28 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 15:05:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:54:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* FREE OK */
@@ -83,7 +83,7 @@ static t_token_elem	*create_word_token_from_src(t_split_info *split)
 	return (new_token);
 }
 
-// topがdelimでないsrcから、次のdelimまでを切り取る
+/* cut src starting with not delim until next delim */
 static char *get_trimmed_word(const char *src, const char *delim, const char *setchars, size_t *len, bool *is_connect2next, bool *is_quoted)
 {
 	char	*word;

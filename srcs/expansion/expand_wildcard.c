@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 22:54:42 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 23:06:03 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,11 @@
 
 /* return true if string consist of `.` and `*`,
  * `.` is the first half and `*` in the second half */
-bool	check_is_hidden_include(const char *wildcard_str)
+bool	is_wildcard_includes_hidden(const char *wildcard_str)
 {
-
-	if (!wildcard_str || wildcard_str[0] != '.')
-		return (false);
-	return (true);
+	if (wildcard_str && wildcard_str[0] == '.')
+		return (true);
+	return (false);
 }
 
 void	swap(void **content_a, void **content_b)
@@ -111,25 +110,6 @@ bool	is_not_expandable_command(t_list_bdi *first_token)
 	return (is_same_str("export", token_elem->word));
 }
 
-t_token_elem	*create_token_elem(char *word)
-{
-	t_token_elem	*new_token;
-
-	new_token = (t_token_elem *)malloc(sizeof(t_token_elem));
-	if (!new_token)
-	{
-		free_token_elem(new_token);
-		return (perror_ret_nullptr("malloc"));
-	}
-	new_token->word = word;
-	new_token->type = e_init;
-	new_token->is_connect_to_next_word = false;
-	new_token->is_quoted = false;
-	new_token->quote_chr = '\0';
-	new_token->subshell_depth = -1;
-	new_token->wildcard_valid_flag = NULL;
-	return (new_token);
-}
 
 int	get_tokens_match_with_wildcard(t_list_bdi **save, const char *wildcard_str, t_list_bdi *dirlist, const int *valid_list)
 {
@@ -144,7 +124,7 @@ int	get_tokens_match_with_wildcard(t_list_bdi **save, const char *wildcard_str, 
 	{
 		popped_node = ft_lstpop_bdi(&dirlist);
 		name = popped_node->content;
-		if (name[0] == '.' && wildcard_str[0] == '.')
+		if (!is_wildcard_includes_hidden(wildcard_str) && name && name[0] == '.')
 		{
 			ft_lstdelone_bdi(&popped_node, free);
 			continue ;
@@ -161,7 +141,7 @@ int	get_tokens_match_with_wildcard(t_list_bdi **save, const char *wildcard_str, 
 		else
 			ft_lstdelone_bdi(&popped_node, free);
 	}
-	debug_print_tokens(*save, "wildcard_tokens");
+//	debug_print_tokens(*save, "wildcard_tokens");
 	return (SUCCESS);
 }
 
@@ -236,11 +216,9 @@ int expanded_wildcard_to_token_list(t_list_bdi **token_list)
 
 		if (check_valid_wildcard_in_word(token_elem))
 		{
-
 			if (get_wildcard_tokens(&wildcard_match_tokens, token_elem->word, token_elem->wildcard_valid_flag) == FAILURE)
 				return (FAILURE);
-			debug_print_tokens(wildcard_match_tokens, "wildcard tokens");
-
+//			debug_print_tokens(wildcard_match_tokens, "wildcard tokens");
 			if (ft_lstsize_bdi(wildcard_match_tokens) != 0)
 			{
 				ft_lstdelone_bdi(&popped_node, free_token_elem);

@@ -100,6 +100,9 @@ t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char 
 	return (splitted_list_head);
 }
 
+
+
+
 // quote
 
 // while(now)
