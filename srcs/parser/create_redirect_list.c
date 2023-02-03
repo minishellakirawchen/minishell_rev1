@@ -6,14 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 17:27:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 23:08:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
 /* prototype declaration */
-static t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **token_list);
 static int				create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list);
 static t_list_bdi		*get_filename_or_eof_tokenlist(t_list_bdi **token_get_from);
 static int				create_heredoc_eof_from_tokens(t_command_info **cmd_list, t_info *info);
@@ -121,7 +120,7 @@ static t_list_bdi	*get_filename_or_eof_tokenlist(t_list_bdi **token_get_from)
 	return (token_list);
 }
 
-static t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **token_list)
+t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **token_list)
 {
 	t_redirect_info	*redirect_info;
 

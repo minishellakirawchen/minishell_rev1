@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 20:13:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/02 23:04:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_token_elem		t_token_elem;
 typedef struct s_split_info		t_split_info;
 typedef struct s_exec_list		t_exec_list;
 typedef struct s_command_info	t_command_info;
+typedef struct s_redirect_info	t_redirect_info;
 
 typedef enum e_token_type		t_token_type;
 typedef enum e_syntax_err		t_syntax_err;
@@ -59,6 +60,7 @@ int		do_expansion_in_heredoc(char *filename, t_info *info);
 /* create_commands.c */
 
 char	**create_expanded_commands(t_list_bdi **token_list, t_info *info);
+char	**create_commands_from_token_list(t_list_bdi **token_list);
 
 
 /* concat_connected_tokens.c */
@@ -96,5 +98,9 @@ int		expanded_wildcard_to_token_list(t_list_bdi **expanded_token_list);
 /* is_matches_wildcard.c */
 //int		is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str);
 int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str, const int *valid_table);
+
+
+
+t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **token_list);
 
 #endif //EXPANSION_H

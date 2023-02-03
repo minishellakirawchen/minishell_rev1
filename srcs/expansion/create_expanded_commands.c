@@ -93,7 +93,7 @@ char	**create_expanded_commands(t_list_bdi **token_list, t_info *info)
 //$key  :not split
 //"$key":split
 
-static char	**create_commands_from_token_list(t_list_bdi **token_list)
+char	**create_commands_from_token_list(t_list_bdi **token_list)
 {
 	t_list_bdi		*popped_list;
 	t_token_elem	*token_elem;
