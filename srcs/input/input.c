@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 13:57:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 20:20:14 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int	prompt_loop(t_info *info)
 		prompt = ft_strjoin(tmp, " $> ");
 		free(tmp);
 		free(exit_status_string);
+
+//		debug_print_env(info->envlist_head);
 
 		is_return_input = false;
 		/* input */

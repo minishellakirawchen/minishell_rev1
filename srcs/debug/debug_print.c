@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 21:53:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 20:17:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	debug_print_exec_list(t_exec_list *node, char *str)
 {
 	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
-	t_list_bdi		*pipeline;
+	t_list_bdi	*pipeline;
 
 	ft_dprintf(STDERR_FILENO, "\n[#DEBUG print] %s %s", str ? str : "", "\n");
 	if (!node)
@@ -267,9 +267,27 @@ void	debug_print_wildcard_valid_list(int *list, size_t len)
 }
 
 
+void	debug_print_env(t_list *envlist)
+{
+	t_env_elem	*env_elem;
 
-
-
-
+	printf("\n[@@ degug print]envlist\n");
+	printf("envlist pointer:%p\n", envlist);
+	if (!envlist)
+	{
+		printf("(null)\n");
+		return ;
+	}
+	while (envlist)
+	{
+		env_elem = envlist->content;
+		printf("envelem pointer:%p\n", env_elem);
+		if (!env_elem)
+			printf("content: (null)\n");
+		else
+			printf("key: %s, value:%s\n", env_elem->key, env_elem->value);
+		envlist = envlist->next;
+	}
+}
 
 

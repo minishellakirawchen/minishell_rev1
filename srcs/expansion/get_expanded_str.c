@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 16:53:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 20:24:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ char	*get_name_str(const char *str_start_with_dollar)
 	return (name_str);
 }
 
+/* return value if key exists. otherwise return '' */
+/* if value is null or has not print flag, return '' */
 char *get_env_value(const char *search_key, t_list *env_list_head)
 {
 	const size_t	search_key_len = ft_strlen_ns(search_key);
