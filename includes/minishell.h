@@ -219,12 +219,14 @@ struct s_redirect_info
 /* ************************** */
 
 /*         helper.c           */
-void	print_key_value(void *content);
+t_list		*get_envlist(void);
+t_env_elem	*create_new_envelem(char *key, char *value, int not_print);
+void		print_key_value(void *content);
+
 
 void	*free_1d_alloc(void *alloc);
 void	**free_2d_alloc(void **alloc);
 void	*free_info(t_info **info);
-t_list	*get_envlist(void);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
 void	free_command_info(void *content);

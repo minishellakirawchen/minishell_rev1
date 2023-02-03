@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 20:17:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:30:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,13 +266,12 @@ void	debug_print_wildcard_valid_list(int *list, size_t len)
 	printf(")\n");
 }
 
-
 void	debug_print_env(t_list *envlist)
 {
 	t_env_elem	*env_elem;
 
-	printf("\n[@@ degug print]envlist\n");
-	printf("envlist pointer:%p\n", envlist);
+//	printf("\n[@@ degug print]envlist\n");
+//	printf("envlist pointer:%p\n", envlist);
 	if (!envlist)
 	{
 		printf("(null)\n");
@@ -281,7 +280,7 @@ void	debug_print_env(t_list *envlist)
 	while (envlist)
 	{
 		env_elem = envlist->content;
-		printf("envelem pointer:%p\n", env_elem);
+//		printf("envelem pointer:%p\n", env_elem);
 		if (!env_elem)
 			printf("content: (null)\n");
 		else
