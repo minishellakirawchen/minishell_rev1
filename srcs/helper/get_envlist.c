@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:13:19 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:32:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:34:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ t_list	*get_envlist(void)
 		ft_lstclear(&env_list_head, free_env_elem);
 		return (NULL);
 	}
-	debug_print_env(env_list_head);
 	return (env_list_head);
 }
 

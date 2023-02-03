@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 20:21:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:40:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 			}
 			/* ^^^^^ debug mode: print command_info ^^^^^ */
 		}
-		printf("\nvvvvv execute vvvvv\n");
+//		printf("vvvvv execute vvvvv\n");
 
 		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
-		printf("^^^^^^^^^^^^^^^^^^^  ");
+//		printf("^^^^^^^^^^^^^^^^^^^  ");
 		if (exit_status == PROCESS_ERROR)
 			return (PROCESS_ERROR);
 		/* get next pipeline node */
@@ -99,7 +99,7 @@ static void	move_to_next_exec_node(t_exec_list **exec_list_start_with_operator, 
 	t_exec_list	*next_operator_node;
 	bool		debug = false;
 
-	printf("exit_status:%d\n", exit_status);
+//	printf("exit_status:%d\n", exit_status);
 
 	if (!exec_list_start_with_operator || !*exec_list_start_with_operator)
 		return ;
