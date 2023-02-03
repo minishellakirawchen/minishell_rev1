@@ -12,9 +12,8 @@
 
 #include "expansion.h"
 
-static char		**create_commands_from_token_list(t_list_bdi **token_list);
 static size_t	get_commands_size(t_list_bdi *list);
-
+static char		**create_commands_from_token_list(t_list_bdi **token_list);
 
 // expand var
 //  ↓
@@ -23,32 +22,81 @@ static size_t	get_commands_size(t_list_bdi *list);
 // expand wildcard
 //  ↓
 // create char **commands
-char	**create_expanded_commands(t_list_bdi **token_list, t_info *info)
+//char	**create_expanded_commands(t_list_bdi **token_list, t_info *info)
+//{
+//	char	**commands;
+//
+//	if (!token_list || !info)
+//		return (NULL);
+////	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
+//	debug_print_tokens(*token_list, "before expand");
+//	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
+//		return (NULL);
+//	debug_print_tokens(*token_list, "after expand");
+//	if (remove_quote_or_re_tokenize_tokens(&*token_list) == FAILURE)
+//		return (NULL);
+//	debug_print_tokens(*token_list, "after quote removal/re tokenize");
+//
+//	if (concat_connected_tokens(&*token_list) == FAILURE)
+//		return (NULL);
+//	debug_print_tokens(*token_list, "after connect");
+//	if (expanded_wildcard_to_token_list(&*token_list) == FAILURE)
+//		return (NULL);
+//	debug_print_tokens(*token_list, "after wildcard expand");
+//	commands = create_commands_from_token_list(&*token_list);
+//	if (!commands)
+//		return (NULL);
+//	return (commands);
+//}
+
+char	**create_expanded_commands(t_list_bdi **token_list, t_info *info, char **concat_str)
 {
 	char	**commands;
 
 	if (!token_list || !info)
 		return (NULL);
-//	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
-	debug_print_tokens(*token_list, "before expand");
+
+	debug_print_tokens(*token_list, "1) create_expanded_commands");
+
+	if (remove_quote_in_tokens(&*token_list) == FAILURE)
+		return (NULL);
+	debug_print_tokens(*token_list, "2) create_expanded_commands - remove quote");
+
+	if (concat_str)
+	{
+		*concat_str = create_string_by_concat_tokens(*token_list);
+		if (!*concat_str)
+			return (NULL);
+	}
+	printf("3) create_expanded_commands - concat_str:%s", concat_str ? *concat_str : NULL);
+
 	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
 		return (NULL);
-	debug_print_tokens(*token_list, "after expand");
-	if (remove_quote_or_re_tokenize_tokens(&*token_list) == FAILURE)
+
+	debug_print_tokens(*token_list, "3) create_expanded_commands - expand var");
+
+	if (re_tokenize_tokens(&*token_list) == FAILURE)
 		return (NULL);
-	debug_print_tokens(*token_list, "after quote removal/re tokenize");
+
+	debug_print_tokens(*token_list, "2) create_expanded_commands - re tokenize");
 
 	if (concat_connected_tokens(&*token_list) == FAILURE)
 		return (NULL);
-	debug_print_tokens(*token_list, "after connect");
+
+	debug_print_tokens(*token_list, "2) create_expanded_commands - concat");
+
 	if (expanded_wildcard_to_token_list(&*token_list) == FAILURE)
 		return (NULL);
-	debug_print_tokens(*token_list, "after wildcard expand");
+
+	debug_print_tokens(*token_list, "2) create_expanded_commands - expand wildcard");
+
 	commands = create_commands_from_token_list(&*token_list);
 	if (!commands)
 		return (NULL);
 	return (commands);
 }
+
+
 
 // pipeline_token_list
 // expand & split -> append expanded_tokens
@@ -93,7 +141,7 @@ char	**create_expanded_commands(t_list_bdi **token_list, t_info *info)
 //$key  :not split
 //"$key":split
 
-char	**create_commands_from_token_list(t_list_bdi **token_list)
+static char	**create_commands_from_token_list(t_list_bdi **token_list)
 {
 	t_list_bdi		*popped_list;
 	t_token_elem	*token_elem;

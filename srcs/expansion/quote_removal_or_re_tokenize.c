@@ -43,6 +43,31 @@ int remove_quote_or_re_tokenize_tokens(t_list_bdi **src_tokens)
 	return (SUCCESS);
 }
 
+int re_tokenize_tokens(t_list_bdi **src_tokens)
+{
+	t_list_bdi		*popped_node;
+	t_list_bdi		*expanded_token_list;
+	t_token_elem	*token_elem;
+
+	if (!src_tokens)
+		return (FAILURE);
+	expanded_token_list = NULL;
+	while (*src_tokens)
+	{
+		popped_node = ft_lstpop_bdi(src_tokens);
+		token_elem = popped_node->content;
+		if (token_elem->is_quoted)
+		{
+			ft_lstadd_back_bdi(&expanded_token_list, popped_node);
+			continue ;
+		}
+		if (re_tokenize(&expanded_token_list, popped_node) == FAILURE)
+			return (FAILURE);
+	}
+	*src_tokens = expanded_token_list;
+	return (SUCCESS);
+}
+
 static int	re_tokenize(t_list_bdi **expanded_token_list, t_list_bdi *popped_node)
 {
 	t_token_elem	*splitted_token;

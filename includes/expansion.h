@@ -58,9 +58,9 @@ int		do_expansion_in_heredoc(char *filename, t_info *info);
 
 
 /* create_commands.c */
-
-char	**create_expanded_commands(t_list_bdi **token_list, t_info *info);
-char	**create_commands_from_token_list(t_list_bdi **token_list);
+char	**create_expanded_commands(t_list_bdi **token_list, t_info *info, char **concat_str);
+//char	**create_expanded_commands(t_list_bdi **token_list, t_info *info);
+//char	**create_commands_from_token_list(t_list_bdi **token_list);
 
 
 /* concat_connected_tokens.c */
@@ -80,6 +80,7 @@ int		expand_exit_status(char **expanded_str, int exit_status);
 int		remove_quote_or_re_tokenize_tokens(t_list_bdi **src_tokens);
 int		remove_quote_in_tokens(t_list_bdi **list_head);
 
+int		re_tokenize_tokens(t_list_bdi **src_tokens);
 
 
 

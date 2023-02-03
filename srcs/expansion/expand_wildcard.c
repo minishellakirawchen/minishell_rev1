@@ -229,37 +229,26 @@ int expanded_wildcard_to_token_list(t_list_bdi **token_list)
 	if (is_not_expandable_command(*token_list))
 		return (SUCCESS);
 	expanded_tokens = NULL;
-	printf("2-1\n");
 	while (*token_list)
 	{
-		printf("2-2\n");
-
 		popped_node = ft_lstpop_bdi(&(*token_list));
 		token_elem = popped_node->content;
-		printf("2-3\n");
 
 		if (check_valid_wildcard_in_word(token_elem))
 		{
-			printf("2-4\n");
 
 			if (get_wildcard_tokens(&wildcard_match_tokens, token_elem->word, token_elem->wildcard_valid_flag) == FAILURE)
 				return (FAILURE);
 			debug_print_tokens(wildcard_match_tokens, "wildcard tokens");
-			printf("2-5\n");
 
 			if (ft_lstsize_bdi(wildcard_match_tokens) != 0)
 			{
-				printf("2-6\n");
 				ft_lstdelone_bdi(&popped_node, free_token_elem);
 				popped_node = wildcard_match_tokens;
 			}
 		}
-		printf("2-7\n");
 		ft_lstadd_back_bdi(&expanded_tokens, popped_node);
-		printf("2-8\n");
 	}
-	printf("2-9\n");
-
 	*token_list = expanded_tokens;
 //	debug_print_tokens(*token_list, "wildcard expanded");
 	return (SUCCESS);
