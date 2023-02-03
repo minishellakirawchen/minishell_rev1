@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 23:13:11 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/03 19:38:46 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int								free_cdinfo_ret_status(t_cd_info *cd_info,
 									int exit_status);
 int								cd_error_handler(t_cd_info *cd_info,
 									char **cmds);
+void							init_key_value(t_export_info *e_info);
 int								judge_chr_key(char *key);
 t_key_type						judge_info_key(t_export_info *e_info);
 t_key_type						judge_value(t_export_info *e_info);

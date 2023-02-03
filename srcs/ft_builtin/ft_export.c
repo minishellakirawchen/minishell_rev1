@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/01 01:06:12 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/03 19:42:56 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,9 @@ static int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: export: `%s': not a valid identifier\n", *cmds);
-		exit_status = EXIT_FAILURE;
-		if (e_info->value != NULL)
-		{
-			e_info->key = free_1d_alloc(e_info->key);
-			e_info->value = free_1d_alloc(e_info->value);
-		}
+		e_info->key = free_1d_alloc(e_info->key);
+		e_info->value = free_1d_alloc(e_info->value);
+		return (EXIT_FAILURE);
 	}
 	if (is_same_str(e_info->key, "PWD") || is_same_str(e_info->key,
 			"OLDPWD") || is_same_str(e_info->key, "PWD+"))
@@ -109,14 +106,11 @@ int	ft_export(t_info *info, char **cmds)
 		return (EXIT_FAILURE);
 	cmds++;
 	if (*cmds == NULL)
-	{
-		ft_sort_env(info);
-		exit_status = EXIT_SUCCESS;
-	}
+		exit_status = ft_sort_env(info);
 	while (*cmds != NULL)
 	{
 		exit_status += export_cmd(info, e_info, cmds);
-		e_info->value = NULL;
+		init_key_value(e_info);
 		cmds++;
 	}
 	e_info = free_1d_alloc(e_info);
