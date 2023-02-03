@@ -6,21 +6,21 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:36 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/01 01:08:58 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/03 21:04:17 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	unset_elem(t_list *pre_node, t_list *cur_node)
+static int	unset_elem(t_list *pre_node, t_list *cur_node, t_info *info)
 {
-	t_list	*temp_node;
+	t_list	*next_node;
 
 	if (pre_node == NULL)
 	{
-		temp_node = cur_node;
-		cur_node = cur_node->next;
-		ft_lstdelone(temp_node, free_env_elem);
+		next_node = cur_node->next;
+		ft_lstdelone(cur_node, free_env_elem);
+		info->envlist_head = next_node;
 	}
 	else
 	{
@@ -54,7 +54,7 @@ static int	unset_env(t_info *info, char *cmd)
 		{
 			if (is_same_str("PWD", cmd) || is_same_str("OLDPWD", cmd))
 				return (unset_pwd(env_node->content));
-			return (unset_elem(pre_node, env_node));
+			return (unset_elem(pre_node, env_node, info));
 		}
 		pre_node = env_node;
 		env_node = env_node->next;
