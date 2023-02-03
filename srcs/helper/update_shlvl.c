@@ -6,14 +6,17 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 21:56:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:04:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 08:52:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	get_new_shlvl_num(int now_shlvl_num, bool is_atoi_success);
+static int	is_new_shlvl_over_flow(int now_shlvl_num, bool is_atoi_success);
 
+/* return value		: SUCCESS or FAILURE of the process. */
+/* new SHLVL string	: update *now_shlvl_str passed in the argument **now_shlvl_str. */
 int update_shlvl(char **now_shlvl_str)
 {
 	int		now_shlvl_num;
@@ -30,9 +33,12 @@ int update_shlvl(char **now_shlvl_str)
 		*now_shlvl_str = ft_strdup("");
 		return (SUCCESS);
 	}
-	if (1000 <= now_shlvl_num)
-		ft_dprintf(STDERR_FILENO, "minishell: warning: shell level (%d) too high, resetting to 1", now_shlvl_num + 1);
 	new_shlvl_num = get_new_shlvl_num(now_shlvl_num, is_atoi_success);
+	if (1000 < new_shlvl_num)
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: warning: shell level (%d) too high, resetting to 1", new_shlvl_num);
+		new_shlvl_num = 1;
+	}
 	new_shlvl_str = ft_itoa(new_shlvl_num);
 	if (!new_shlvl_str)
 		return (perror_ret_int("malloc", FAILURE));
@@ -45,8 +51,6 @@ int update_shlvl(char **now_shlvl_str)
 static int	get_new_shlvl_num(int now_shlvl_num, bool is_atoi_success)
 {
 	if (!is_atoi_success)
-		return (1);
-	if (now_shlvl_num <= 0 || (1000 <= now_shlvl_num && now_shlvl_num < INT_MAX))
 		return (1);
 	if (now_shlvl_num == INT_MAX)
 		return (0);

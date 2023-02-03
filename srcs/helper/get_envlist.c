@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:13:19 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:34:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 08:58:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,6 @@ static t_env_elem	*get_env_elem(const char *environ_i, bool *is_shlvl)
 	t_env_elem		*elem;
 	char			*key;
 	char			*value;
-	int				not_print;
 
 	if (!environ_i)
 		return (NULL);
@@ -128,10 +127,7 @@ static t_env_elem	*get_env_elem(const char *environ_i, bool *is_shlvl)
 	value = NULL;
 	if (get_key_value_from_environ(environ_i, &key, &value) == FAILURE)
 		return (NULL);
-	not_print = 0;
-	if (!value)
-		not_print = 1;
-	elem = create_new_envelem(key, value, not_print);
+	elem = create_new_envelem(key, value, 0);
 	if (!elem)
 	{
 		free(key);
