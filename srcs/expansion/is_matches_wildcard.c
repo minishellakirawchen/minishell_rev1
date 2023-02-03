@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 10:30:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 22:30:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 23:08:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,6 @@ static int **get_dp_table(size_t row, size_t col);
 static int	is_match(const char *wildcard_str, const char *target_str, int **dp, const int *valid_table);
 static void	free_dp_array(int **dp, size_t row_size);
 
-int	*get_long_valid_table(const int *valid_table, size_t len_wildcard)
-{
-	const size_t	len = len_wildcard + 10;
-	size_t			idx;
-	int 			*long_table;
-
-	if (!valid_table)
-		return (NULL);
-	long_table = (int *)ft_calloc(sizeof(int), len);
-	if (!long_table)
-		return (perror_ret_nullptr("malloc"));
-	idx = 0;
-	while (idx < len_wildcard)
-	{
-		long_table[idx] = valid_table[idx];
-		idx++;
-	}
-//	debug_print_wildcard_valid_list(long_table, len);
-	return (long_table);
-}
-
 /* return true if wildcard_str matches str */
 /* dp[i][j] : wildcardのi文字目, targetのj文字目まで見て文字列が成立すれば1, 成立しなければ0*/
 int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str, const int *valid_table)
@@ -45,19 +24,14 @@ int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *tar
 	const size_t	len_target = ft_strlen_ns(target_str);
 	int				**dp;
 	int				ans;
-	int				*valid_table_long;
 
 	if (!target_str || !wildcard_str || !valid_table)
 		return (false);
 	dp = get_dp_table(len_wildcard + 1, len_target + 1);
 	if (!dp)
 		return (PROCESS_ERROR);
-	valid_table_long = get_long_valid_table(valid_table, len_wildcard);
-	if (!valid_table_long)
-		return (PROCESS_ERROR);
-	ans = is_match(wildcard_str, target_str, dp, valid_table_long);
+	ans = is_match(wildcard_str, target_str, dp, valid_table);
 	free_dp_array(dp, len_wildcard + 1);
-	free(valid_table_long);
 	return (ans);
 }
 

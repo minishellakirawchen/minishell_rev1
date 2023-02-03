@@ -5,6 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 09:09:14 by takira            #+#    #+#             */
+/*   Updated: 2023/02/03 23:09:58 by takira           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   concat_connected_tokens_and_create_wildcard_valid_list.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 10:36:47 by takira            #+#    #+#             */
 /*   Updated: 2023/02/02 22:28:20 by takira           ###   ########.fr       */
 /*                                                                            */
@@ -60,7 +72,7 @@ int get_wildcard_valid_lsit(t_token_elem **token_elem)
 	if (!token_elem || !*token_elem ||  !(*token_elem)->word)
 		return (FAILURE);
 	word_len = ft_strlen_ns((*token_elem)->word);
-	(*token_elem)->wildcard_valid_flag = (int *)ft_calloc(sizeof(int), word_len);
+	(*token_elem)->wildcard_valid_flag = (int *)ft_calloc(sizeof(int), word_len + 1);
 	if (!(*token_elem)->wildcard_valid_flag)
 		return (perror_ret_int("malloc", FAILURE));
 	if ((*token_elem)->is_quoted)
@@ -87,8 +99,8 @@ int	concat_wildcard_valid_list(t_token_elem **dst, t_token_elem *src)
 		return (FAILURE);
 	dst_len = ft_strlen_ns((*dst)->word);
 	src_len = ft_strlen_ns(src->word);
-	printf("dst:%s, src:%s\n", (*dst)->word, src->word);
-	flag = (int *)ft_calloc(sizeof(int), dst_len + src_len);
+//	printf("dst:%s, src:%s\n", (*dst)->word, src->word);
+	flag = (int *)ft_calloc(sizeof(int), dst_len + src_len + 1);
 	dst_idx = 0;
 	while (dst_idx < dst_len)
 	{
@@ -110,7 +122,7 @@ int	concat_wildcard_valid_list(t_token_elem **dst, t_token_elem *src)
 }
 
 /* connect (*token_list)->content if "is_connect_to_next_word" */
-int	concat_connected_tokens(t_list_bdi **token_list)
+int	concat_connected_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list)
 {
 	t_list_bdi		*node;
 	t_list_bdi		*popped_node;

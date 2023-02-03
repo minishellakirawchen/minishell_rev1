@@ -66,8 +66,8 @@ char	**create_expanded_commands(t_list_bdi **token_list, t_info *info, char **co
 //char	**create_commands_from_token_list(t_list_bdi **token_list);
 
 
-/* concat_connected_tokens.c */
-int		concat_connected_tokens(t_list_bdi **token_list);
+/* concat_connected_tokens_and_create_wildcard_valid_list.c */
+int		concat_connected_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list);
 bool	check_valid_wildcard_in_word(t_token_elem *token);
 
 
