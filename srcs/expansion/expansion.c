@@ -174,16 +174,14 @@ static int	expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *in
 				return (FAILURE);
 			if (!ambiguous_word)
 				return (FAILURE);
-			if (get_2darray_size(expand_or_re_tokenized_chars) != 1)
+			if (get_2darray_size(expand_or_re_tokenized_chars) != 1 || ft_strlen_ns(expand_or_re_tokenized_chars[0]) == 0)
 			{
 				redirect_info->is_ambiguous = true;
 				redirect_info->filename = ft_strdup(ambiguous_word);
 				ambiguous_word = free_1d_alloc(ambiguous_word);
 			}
 			else
-			{
 				redirect_info->filename = ft_strdup(expand_or_re_tokenized_chars[0]);
-			}
 			if (!redirect_info->filename)
 				return (perror_ret_int("malloc", FAILURE));//TODO:free
 			free_2d_alloc((void **)expand_or_re_tokenized_chars);
