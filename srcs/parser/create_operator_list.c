@@ -6,24 +6,19 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:06:20 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:40:57 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:42:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
 #include "parser.h"
 
 static t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_exec_list **prev, t_exec_list **next);
 
-// echo hello | echo world && cat Makefile | grep a || (cd /bin && ls) > out; cat <infile;
-// A && B || C ; D
-// [root]
-//   |
-//  [pipeline_commands]:echo hello | echo world
-//  [&&]
-//  [pipeline_commands]:echo hello | echo world
-
-// 初めはpipelineを作る
-// operatorがきたらpipeline->operator
+/*
+ A && B || C ; D
+ operator:&&, ||, ;
+ command :A, B, C, D
+ */
 
 static bool	is_pipeline_token(t_token_elem *token_elem, ssize_t	subshell_depth)
 {
@@ -79,7 +74,7 @@ int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec
 		return (FAILURE);
 	*operator_node = create_execlist_operator_node(&pipeline_node, &popped_node, token_elem);
 	if (!*operator_node)
-		return (perror_ret_int("malloc", FAILURE)); // TODO:all free
+		return (perror_ret_int("malloc", FAILURE));
 	delete_operator_token(&popped_node);
 	if (!(*tokenlist))
 	{
@@ -91,7 +86,6 @@ int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec
 
 /* create and connect t_exec_list, node type is pipeline and operator */
 /* pipeline->operator->pipeline->... */
-
 int	create_operator_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head)
 {
 	t_token_elem	*token_elem;
@@ -122,12 +116,12 @@ int	create_operator_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_hea
 			return (FAILURE);
 		pipeline_node = create_execlist_node(e_node_pipeline, NULL, &operator_node, NULL);
 		if (!pipeline_node)
-			return (perror_ret_int("malloc", FAILURE)); // TODO:all free
+			return (perror_ret_int("malloc", FAILURE));
 	}
 	return (SUCCESS);
 }
 
-t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_exec_list **prev, t_exec_list **next)
+static t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_exec_list **prev, t_exec_list **next)
 {
 	t_exec_list	*new_node;
 	t_exec_list	*set_prev;
@@ -152,7 +146,7 @@ t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_ex
 	new_node->node_kind = kind;
 	new_node->token_list_head = token_head;
 	new_node->pipeline_commands = NULL;
-	new_node->token_type = e_init; //tmp
+	new_node->token_type = e_init;
 	new_node->prev = set_prev;
 	new_node->next = set_next;
 	return (new_node);

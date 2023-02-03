@@ -6,10 +6,10 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 23:08:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 18:07:41 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
 #include "expansion.h"
 
 /* prototype declaration */
@@ -85,9 +85,18 @@ static int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list)
 		if (is_tokentype_redirection(token_elem->type))
 		{
 			redirect_info = create_redirect_info(token_elem->type, &(*cmd_list)->pipeline_token_list);
-			new_redirect_list = ft_lstnew_bdi(redirect_info);
-			if (!redirect_info || !new_redirect_list)
+			if (!redirect_info)
+			{
+				ft_lstdelone_bdi(&popped_node, free_token_elem);
 				return (FAILURE); //TODO:free
+			}
+			new_redirect_list = ft_lstnew_bdi(redirect_info);
+			if (!new_redirect_list)
+			{
+				ft_lstdelone_bdi(&popped_node, free_token_elem);
+				ft_lstdelone_bdi(&new_redirect_list, free_redirect_info);
+				return (FAILURE);
+			}
 			ft_lstdelone_bdi(&popped_node, free_token_elem);
 			ft_lstadd_back_bdi(&(*cmd_list)->redirect_list, new_redirect_list);
 			continue ;
@@ -182,17 +191,27 @@ char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, bool *is_quoted, 
 		token_elem = popped_token_node->content;
 		if (is_expand && is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
 			if (expand_var_in_str(&token_elem->word, info) == FAILURE)
+			{
+				ft_lstdelone_bdi(&popped_token_node, free_token_elem);
+				ft_lstclear_bdi(&token_list, free_token_elem);
 				return (FAILURE);
+			}
 		ft_lstadd_back_bdi(&token_list, popped_token_node);
 		*is_quoted |= token_elem->is_quoted;
 		if (!token_elem->is_connect_to_next_word)
 			break ;
 	}
 	if (remove_quote_in_tokens(&token_list) == FAILURE)
+	{
+		ft_lstclear_bdi(&token_list, free_token_elem);
 		return (NULL);
+	}
 	str_concatted_token = create_string_by_concat_tokens(token_list);
 	if (!str_concatted_token)
+	{
+		ft_lstclear_bdi(&token_list, free_token_elem);
 		return (NULL);
+	}
 	ft_lstclear_bdi(&token_list, free_token_elem);
 	return (str_concatted_token);
 }
