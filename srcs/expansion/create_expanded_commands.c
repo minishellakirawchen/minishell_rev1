@@ -6,141 +6,72 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 17:18:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 13:55:51 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
 #include "expansion.h"
 
-static size_t	get_commands_size(t_list_bdi *list);
+/* prototype declaration */
+static size_t	get_connected_token_size(t_list_bdi *list);
 static char		**create_commands_from_token_list(t_list_bdi **token_list);
 
-// expand var
-//  ↓
-// concat ["hello"]=[world] = [helloworld]
-//  ↓
-// expand wildcard
-//  ↓
-// create char **commands
-//char	**create_expanded_commands(t_list_bdi **token_list, t_info *info)
-//{
-//	char	**commands;
-//
-//	if (!token_list || !info)
-//		return (NULL);
-////	debug_print_tokens((*cmd_list)->pipeline_token_list, "before expanded token");
-//	debug_print_tokens(*token_list, "before expand");
-//	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
-//		return (NULL);
-//	debug_print_tokens(*token_list, "after expand");
-//	if (remove_quote_or_re_tokenize_tokens(&*token_list) == FAILURE)
-//		return (NULL);
-//	debug_print_tokens(*token_list, "after quote removal/re tokenize");
-//
-//	if (concat_connected_tokens(&*token_list) == FAILURE)
-//		return (NULL);
-//	debug_print_tokens(*token_list, "after connect");
-//	if (expanded_wildcard_to_token_list(&*token_list) == FAILURE)
-//		return (NULL);
-//	debug_print_tokens(*token_list, "after wildcard expand");
-//	commands = create_commands_from_token_list(&*token_list);
-//	if (!commands)
-//		return (NULL);
-//	return (commands);
-//}
+/* functions */
 
+/*
+ quote removal("')		["hello"] -> [hello]
+  v
+ expand var(except')	[$key] -> [var1  var2]
+  v
+ re tokenize(except"')	[var1  var2] -> [var1],[var2]
+  v
+ concat	tokens(by"')	[hello]=[world] -> [helloworld]
+  v
+ expand wildcard		[wi*] -> [wildcard],[window],...
+  v
+ create commands		[echo],[hello] -> {"echo", "hello", NULL}
+*/
+
+/* token list is freed in function */
+/* *concat_str need free in call function even if error occurred */
+/*
+	debug_print_tokens(*token_list, "1) create_expanded_commands");
+	debug_print_tokens(*token_list, "2) create_expanded_commands - remove quote");
+	printf("3) create_expanded_commands - concat_str:%s", concat_str ? *concat_str : NULL);
+	debug_print_tokens(*token_list, "4) create_expanded_commands - expand var");
+	debug_print_tokens(*token_list, "5) create_expanded_commands - re tokenize");
+	debug_print_tokens(*token_list, "6) create_expanded_commands - concat");
+	debug_print_tokens(*token_list, "7) create_expanded_commands - expand wildcard");
+*/
 char	**create_expanded_commands(t_list_bdi **token_list, t_info *info, char **concat_str)
 {
 	char	**commands;
 
 	if (!token_list || !info)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "1) create_expanded_commands");
-
 	if (remove_quote_in_tokens(&*token_list) == FAILURE)
 		return (NULL);
-	debug_print_tokens(*token_list, "2) create_expanded_commands - remove quote");
-
 	if (concat_str)
 	{
 		*concat_str = create_string_by_concat_tokens(*token_list);
 		if (!*concat_str)
 			return (NULL);
 	}
-	printf("3) create_expanded_commands - concat_str:%s", concat_str ? *concat_str : NULL);
-
 	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "3) create_expanded_commands - expand var");
-
 	if (re_tokenize_tokens(&*token_list) == FAILURE)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "2) create_expanded_commands - re tokenize");
-
 	if (concat_connected_tokens(&*token_list) == FAILURE)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "2) create_expanded_commands - concat");
-
 	if (expanded_wildcard_to_token_list(&*token_list) == FAILURE)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "2) create_expanded_commands - expand wildcard");
-
 	commands = create_commands_from_token_list(&*token_list);
 	if (!commands)
 		return (NULL);
 	return (commands);
 }
 
-
-
-// pipeline_token_list
-// expand & split -> append expanded_tokens
-
-//bash-3.2$ export a2="cho hello        world"
-//bash-3.2$ echo $a2
-//cho hello world
-//bash-3.2$ e$a2
-//hello world
-//bash-3.2$
-
-// e$key = echo
-
-//bash-3.2$ e"cho" hello	//hello				-> {"echo", "hello"}
-//bash-3.2$ e"cho hoge"	//bash: echo hoge: command not found				-> {"echo hoge"}
-
-//bash-3.2$ echo $a1		//hoge huga			-> {"echo", "[hoge huga]"}
-//bash-3.2$ e"cho $a1"		//bash: echo hoge    huga : command not found	-> "e[cho $a1]={"echo hoge   huga"}
-
-//bash-3.2$ export a2="cho hello        world"
-//bash-3.2$ echo $a2		//cho hello world	-> {"echo", "[cho hello        world]"}
-
-//bash-3.2$ export a3="echo hello world"
-//bash-3.2$ $a3				//hello world		-> {"echo", "hello", "world"}
-
-//bash-3.2$ export a3="echo hello world"
-//bash-3.2$ echo $a3		//hello world
-//bash-3.2$ echo "$a3"		//hello      world
-
-//bash-3.2$ $a3				//bash: hello: command not found
-//bash-3.2$ "$a3"			//bash: hello      world: command not found
-
-//bash-3.2$ export a4="cho     hello       world"
-//bash-3.2$ e$a4			//hello world
-//bash-3.2$ e"$a4"			//bash: echo     hello       world: command not found
-
-
-//bash-3.2$ echo abc$b1"ABC   DEF"$b2	//abc123ABC   DEFtest test
-//
-//abc$b1 ABC   DEF $b2
-
-//$key  :not split
-//"$key":split
-
+/* token:[echo],[hello],[world] -> commands:{"echo", "hello", "world", NULL} */
 static char	**create_commands_from_token_list(t_list_bdi **token_list)
 {
 	t_list_bdi		*popped_list;
@@ -152,7 +83,7 @@ static char	**create_commands_from_token_list(t_list_bdi **token_list)
 	if (!token_list || !*token_list)
 		return (NULL);
 
-	size = get_commands_size(*token_list);
+	size = get_connected_token_size(*token_list);
 	commands = (char **)ft_calloc(sizeof(char *), size + 1);
 	if (!commands)
 		return (perror_ret_nullptr("malloc"));
@@ -163,15 +94,19 @@ static char	**create_commands_from_token_list(t_list_bdi **token_list)
 		token_elem = popped_list->content;
 		commands[idx] = concat_dst_to_src(&commands[idx], token_elem->word);
 		if (!commands[idx])
-			return (perror_ret_nullptr("malloc")); // TODO: free
+		{
+			free_2d_alloc((void **)commands);
+			return (perror_ret_nullptr("malloc"));
+		}
 		idx++;
 		ft_lstdelone_bdi(&popped_list, free_token_elem);
 	}
 	return (commands);
 }
 
-// hoge=huga, piyo <-2
-static size_t	get_commands_size(t_list_bdi *list)
+/* input:["hello"world]
+ * token:["hello"]=[world] <- size=2 */
+static size_t	get_connected_token_size(t_list_bdi *list)
 {
 	size_t			size;
 	t_token_elem	*token_elem;

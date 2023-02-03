@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 14:19:51 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 14:29:46 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 		/* expansion */
 		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
 			return (PROCESS_ERROR);
-
 		if (debug)
 		{
 				/* vvvvv debug mode: print command_info vvvvv */

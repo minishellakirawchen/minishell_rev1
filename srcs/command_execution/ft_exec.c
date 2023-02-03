@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 19:45:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 14:40:06 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 	if (!command_info || !minishell_envp || !info)
 		return (FAILURE);
 
-//	debug_print_2d_arr(command_info->commands, "<execute command>");
+//	debug_print_2d_arr(command_info->commands, "<DEBUG>execute command");
 
 	/* exec redirect */
 	if (execute_redirect(command_info, info) == FAILURE)
@@ -33,7 +33,7 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 
 	/* is_subshell */
 	if (command_info->subshell_token_list)
-		return (execute_subshell(&command_info->subshell_token_list, info));
+		exit (execute_subshell(&command_info->subshell_token_list, info));
 	/* execute commands (other than builtin) */
 	if (is_path(command_info->commands[0]))
 		execve(command_info->commands[0], command_info->commands, minishell_envp);

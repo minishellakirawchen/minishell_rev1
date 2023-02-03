@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 20:51:32 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/03 13:58:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@ t_info	*init_info(void)
 	return (info);
 }
 
+static void	display_ascii_art(void)
+{
+	ft_printf("           _       _      _          _ _ \n" \
+	" _ __ ___ (_)_ __ (_)___ | |__   ___| | |\n" \
+	"| '_ ` _ \\| | '_ \\| / __|| '_ \\ / _ \\ | |\n" \
+	"| | | | | | | | | | \\__ \\| | | |  __/ | |\n" \
+	"|_| |_| |_|_|_| |_|_|___/|_| |_|\\___|_|_|\n" \
+	"                        By: takira, wchen\n");
+}
+
 int	main(int argc, char **argv)
 {
 	int		exit_status;
@@ -46,6 +56,7 @@ int	main(int argc, char **argv)
 	info = init_info();
 	if (!info)
 		return (FAILURE);
+	display_ascii_art();
 	// prompt loop
 	exit_status = prompt_loop(info);
 	// free param

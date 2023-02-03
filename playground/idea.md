@@ -46,6 +46,7 @@ hoge
 
 
 bash-3.2 1 $ ls *
+
 in1     in2     ngfile  out
 
 bash-3.2 0 $ ls in*
@@ -65,6 +66,112 @@ bash-3.2 0 $ echo ****a
 
 ```
 リダイレクトもwildcard展開する
+
+
+```shell
+
+
+# redirect fileへの展開
+
+//bash3.2 0 $ echo "$a1"	//hoge    hoge
+//bash3.2 0 $ echo $a1		//hoge hoge
+
+//bash3.2 0 $ echo hello>$a1
+//bash: $a1: ambiguous redirect
+
+//bash3.2 1 $ echo hello>"$a1"
+//bash3.2 0 $ ls
+//hoge    hoge
+
+//bash3.2 0 $ echo hello >'$a1'
+//bash3.2 0 $ ls
+//$a1
+
+// command_list->redirect_list = heredoc->io->io->heredoc->...
+// if type=io, expand and create filename from redirect_list->content=redirect_info->token_list
+
+// echo hello>"$a1"	->$a1 = "hoge    huga"
+// echo hello>"a1	->$a1 = "hoge", "huga" -> ambiguous error
+
+
+
+
+// どの状態のものを警告に出せば良いんだ？？わからなくなってきた
+//bash3.2 1 $ export x="hello world"
+//bash3.2 0 $ echo hello>"$x"	//file "hello world"
+//bash3.2 0 $ echo hello>$x		//bash: $x: ambiguous redirect
+//bash3.2 0 $ echo hello>"**"	//file "**"
+//bash3.2 0 $ echo hello>'**'	// file "**"
+//bash3.2 0 $ echo hello>**		//bash: **: ambiguous redirect
+
+//bash3.2 0 $ echo hello >$xhoge	//bash: $xhoge: ambiguous redirect
+//bash3.2 1 $ echo hello >$x"hoge"	//bash: $x"hoge": ambiguous redirect
+//bash3.2 1 $ echo $xhoge			//
+//bash3.2 0 $ echo >""				//bash: : No such file or directory
+//>"" と >$nothing は"" vs NULL？
+
+//declare -x a=""
+//declare -x b
+//bash3.2 0 $ echo hello >$a	//bash: $a: ambiguous redirect
+//bash3.2 1 $ echo hello >$b	//bash: $b: ambiguous redirect
+//うん？
+// expandによる""と、文字列""を識別する必要がありそう
+
+// after concat, before expand wildcardの状態が欲しい
+// concatされてone wordのはず
+
+
+// redirectはconcat->expandか?
+// commandはexpand->concat
+//bash-3.2-2 0 $ export b1="$"
+//bash-3.2-2 0 $ export b2="b3"
+//bash-3.2-2 0 $ export b3=b3dayo
+//bash-3.2-2 0 $ echo $b1$b2
+//$b3
+//
+//redirectも同様にconcat->expandだった
+//bash-3.2-2 0 $ echo hello>$b1$b2
+//bash-3.2-2 0 $ ls
+//$b3             dir1            hello  world    out             outout
+//bash-3.2-2 0 $
+
+//echo hello >"hello"'world'	= helloworld
+//echo hello >"hello"'  world'	= hello   world
+
+//bash-3.2-2 0 $ echo $a1	//hello world
+//bash-3.2-2 0 $ echo "$a1"	//hello  world
+//bash-3.2-2 0 $ echo "$a2"	//hello
+//bash-3.2-2 0 $ echo "$a3"	//world
+
+//bash-3.2-2 0 $ echo hello >$a1	//bash: $a1: ambiguous redirect
+//bash-3.2-2 1 $ echo hello >$a2$a3	//helloworld
+//bash-3.2-2 0 $ echo $a2$a3
+//helloworld
+//bash-3.2-2 0 $ echo "$a2$a3"
+//helloworld
+//bash-3.2-2 0 $ echo hello >$a1$a2$a3		//bash: $a1$a2$a3: ambiguous redirect
+//bash-3.2-2 1 $ echo hello >"$a1$a2$a3"	//hello  worldhelloworld
+
+//bash-3.2-2 0 $ export c1="*"
+//bash-3.2-2 0 $ echo hello>$c1		//bash: $c1: ambiguous redirect
+//bash-3.2-2 1 $ echo hello>"$c1"	//file:*
+
+//concatteed filename
+//
+
+//filenameはone wordで受け取る。""''も含む
+//""''はone wordとしてexpansion and quote removal, $hogeはspace split
+// one wordならfilename, multi wordならambiguous
+
+
+//unquoted && connectした文字列を保持
+
+```
+
+
+
+
+
 
 
 
@@ -98,6 +205,59 @@ bash-3.2-2 1 $ echo *
 
 bash-3.2-2 0 $ *
 bash: *: command not found
+
+```
+
+
+
+
+
+### create_expanded_comamnds
+```shell
+
+// pipeline_token_list
+// expand & split -> append expanded_tokens
+
+//bash-3.2$ export a2="cho hello        world"
+//bash-3.2$ echo $a2
+//cho hello world
+//bash-3.2$ e$a2
+//hello world
+//bash-3.2$
+
+// e$key = echo
+
+//bash-3.2$ e"cho" hello	//hello				-> {"echo", "hello"}
+//bash-3.2$ e"cho hoge"	//bash: echo hoge: command not found				-> {"echo hoge"}
+
+//bash-3.2$ echo $a1		//hoge huga			-> {"echo", "[hoge huga]"}
+//bash-3.2$ e"cho $a1"		//bash: echo hoge    huga : command not found	-> "e[cho $a1]={"echo hoge   huga"}
+
+//bash-3.2$ export a2="cho hello        world"
+//bash-3.2$ echo $a2		//cho hello world	-> {"echo", "[cho hello        world]"}
+
+//bash-3.2$ export a3="echo hello world"
+//bash-3.2$ $a3				//hello world		-> {"echo", "hello", "world"}
+
+//bash-3.2$ export a3="echo hello world"
+//bash-3.2$ echo $a3		//hello world
+//bash-3.2$ echo "$a3"		//hello      world
+
+//bash-3.2$ $a3				//bash: hello: command not found
+//bash-3.2$ "$a3"			//bash: hello      world: command not found
+
+//bash-3.2$ export a4="cho     hello       world"
+//bash-3.2$ e$a4			//hello world
+//bash-3.2$ e"$a4"			//bash: echo     hello       world: command not found
+
+
+//bash-3.2$ echo abc$b1"ABC   DEF"$b2	//abc123ABC   DEFtest test
+//
+//abc$b1 ABC   DEF $b2
+
+//$key  :not split
+//"$key":split
+
 
 ```
 

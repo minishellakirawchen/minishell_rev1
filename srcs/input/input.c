@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 15:09:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 13:57:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,18 @@ int	prompt_loop(t_info *info)
 	bool	is_return_input;
 	char	*prompt;
 	char	*tmp;
-	char	*itoa;
+	char	*exit_status_string;
 
 	if (!info)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 	while (true)
 	{
-		itoa = ft_itoa(exit_status);
-		tmp = ft_strjoin("minishell ", itoa);
+		exit_status_string = ft_itoa(exit_status);
+		tmp = ft_strjoin("minishell ", exit_status_string);
 		prompt = ft_strjoin(tmp, " $> ");
 		free(tmp);
-		free(itoa);
+		free(exit_status_string);
 
 		is_return_input = false;
 		/* input */

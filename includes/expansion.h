@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 23:04:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 13:25:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,19 @@ typedef enum e_tokenlist_kind	t_list_kind;
 /* ************************** */
 
 /* expansion.c */
-int		expand_var_and_create_commands_from_tokens(t_exec_list **pipeline, t_info *info);
+int		expand_var_and_create_commands_from_tokens(t_exec_list **pipeline_node, t_info *info);
 
 
-/* expand_var_in_tokens.c */
+/* expand_in_tokens.c */
 char	*create_string_by_concat_tokens(t_list_bdi *list_head);
 int		expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info);
 
 
-/* expand_var_in_heredoc.c */
+/* expand_in_heredoc.c */
 int		do_expansion_in_heredoc(char *filename, t_info *info);
+
+/* expand_in_filename.c */
+int		expand_var_in_redirect_filename(t_command_info **cmd_list, t_info *info);
 
 
 /* create_commands.c */
