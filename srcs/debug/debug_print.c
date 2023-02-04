@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 17:14:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 22:30:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	debug_print_exec_list(t_exec_list *node, char *str)
 {
 	const char	*type[] = {";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", "file", "eof", "word", "init", NULL};
-	t_list_bdi		*pipeline;
+	t_list_bdi	*pipeline;
 
 	ft_dprintf(STDERR_FILENO, "\n[#DEBUG print] %s %s", str ? str : "", "\n");
 	if (!node)
@@ -143,16 +143,34 @@ void	debug_print_redirect_info(t_list_bdi *head, char *str)
 	{
 		info = node->content;
 		ft_dprintf(STDERR_FILENO, "%s[", type[info->io_type]);
-		if (info->filename)
-			ft_dprintf(STDERR_FILENO, "filename:%s]", info->filename);
+		if (info->io_type == e_heredoc)
+			ft_dprintf(STDERR_FILENO, "heredoc eof:%s, file:%s]%s", info->heredoc_eof, info->filename, info->is_expansion ? "y" : "n");
 		else
-			ft_dprintf(STDERR_FILENO, "heredoc:%s]%s", info->heredoc_eof, info->is_expansion ? "y" : "n");
+			ft_dprintf(STDERR_FILENO, "filename:%s]", info->filename);
 		node = node->next;
 		if (node)
 			ft_dprintf(STDERR_FILENO, ", ");
 		else
 			ft_dprintf(STDERR_FILENO, "\n");
 	}
+}
+
+void	print_wildcard_valid_list(t_token_elem *token)
+{
+	size_t	len = ft_strlen_ns(token->word);
+	size_t	idx = 0;
+
+	if (!token->wildcard_valid_flag)
+		return ;
+	ft_dprintf(STDERR_FILENO, "(");
+	while (token->wildcard_valid_flag && idx < len)
+	{
+		ft_dprintf(STDERR_FILENO, "%d", token->wildcard_valid_flag[idx]);
+		idx++;
+		if (idx < len)
+			ft_dprintf(STDERR_FILENO, ",");
+	}
+	ft_dprintf(STDERR_FILENO, ")");
 }
 
 void	debug_print_tokens(t_list_bdi *head, char *str)
@@ -175,14 +193,14 @@ void	debug_print_tokens(t_list_bdi *head, char *str)
 			ft_dprintf(STDERR_FILENO, "\"");
 		if (token->quote_chr == CHR_SINGLE_QUOTE)
 			ft_dprintf(STDERR_FILENO, "\'");
-//		ft_dprintf(STDERR_FILENO, "%c", token->quote_chr);
-//		if (token->subshell_depth >= 0)
-//			ft_dprintf(STDERR_FILENO, "%zd", token->subshell_depth);
+//		if (!token->is_wildcard_expandable)
+//			ft_dprintf(STDERR_FILENO, "*"); //expand wildcard
+		print_wildcard_valid_list(token);
 		ft_dprintf(STDERR_FILENO, "%d", token->subshell_depth);
 		if (token->is_connect_to_next_word && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
 		if (!token->is_connect_to_next_word && node->next)
-			ft_dprintf(STDERR_FILENO, ", ");
+			ft_dprintf(STDERR_FILENO, ",");
 		node= node->next;
 	}
 	ft_dprintf(STDERR_FILENO, "\n");
@@ -233,10 +251,42 @@ void	debug_print_command_info(t_command_info *command_info)
 	}
 }
 
+void	debug_print_wildcard_valid_list(int *list, size_t len)
+{
+	size_t	idx = 0;
 
+	printf("(");
+	while (idx < len)
+	{
+		printf("%d", list[idx]);
+		idx++;
+		if (idx < len)
+			printf(",");
+	}
+	printf(")\n");
+}
 
+void	debug_print_env(t_list *envlist)
+{
+	t_env_elem	*env_elem;
 
-
-
+//	printf("\n[@@ degug print]envlist\n");
+//	printf("envlist pointer:%p\n", envlist);
+	if (!envlist)
+	{
+		printf("(null)\n");
+		return ;
+	}
+	while (envlist)
+	{
+		env_elem = envlist->content;
+//		printf("envelem pointer:%p\n", env_elem);
+		if (!env_elem)
+			printf("content: (null)\n");
+		else
+			printf("key: %s, value:%s\n", env_elem->key, env_elem->value);
+		envlist = envlist->next;
+	}
+}
 
 

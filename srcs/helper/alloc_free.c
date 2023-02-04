@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/01/31 22:00:39 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/02 18:33:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,5 +129,6 @@ void	free_token_elem(void *content)
 	elem = content;
 	//	printf("#debug free_token:%s\n", elem->word);
 	elem->word = free_1d_alloc(elem->word);
+	elem->wildcard_valid_flag = free_1d_alloc(elem->wildcard_valid_flag);
 	free_1d_alloc(elem);
 }

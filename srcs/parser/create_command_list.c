@@ -6,13 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:02:36 by takira            #+#    #+#             */
-/*   Updated: 2023/01/29 22:08:13 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:47:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+/* FREE OK */
 #include "parser.h"
 
-static int				create_command_info_from_pipeline_node(t_exec_list **exec_pipeline_node);
+static int				create_command_info_from_pipeline_node(t_exec_list **exec_pipe_node);
 static t_command_info	*create_command_info(void);
 int						connect_command_info_to_execlist(t_list_bdi **connect_to, t_command_info *command_info);
 
@@ -37,7 +37,7 @@ int	create_command_list(t_exec_list **exec_list_head)
 	{
 		if (node->node_kind == e_node_pipeline)
 			if (create_command_info_from_pipeline_node(&node) == FAILURE)
-				return (FAILURE); //TODO:free?
+				return (FAILURE);
 		node = node->next;
 	}
 	return (SUCCESS);
@@ -65,42 +65,39 @@ int	create_command_list(t_exec_list **exec_list_head)
 // command_list[3]->pipeline_token_list	: >> out2 < in1
 */
 
-// exec_pipeline_node=exec_list
+// exec_pipe_node=exec_list
 // node_kind=pipeline_commands(!=operator)
-int create_command_info_from_pipeline_node(t_exec_list **exec_pipeline_node)
+int create_command_info_from_pipeline_node(t_exec_list **exec_pipe_node)
 {
 	t_token_elem	*token_elem;
 	t_list_bdi		*popped_token;
-	t_command_info	*command_info;
+	t_command_info	*cmd_info;
 
-	if (!exec_pipeline_node || !*exec_pipeline_node || !(*exec_pipeline_node)->token_list_head)
+	if (!exec_pipe_node || !*exec_pipe_node || !(*exec_pipe_node)->token_list_head)
 		return (FAILURE);
-	command_info = create_command_info();
-	if (!command_info)
+	cmd_info = create_command_info();
+	if (!cmd_info)
 		return (FAILURE);
-	while ((*exec_pipeline_node)->token_list_head)
+	while ((*exec_pipe_node)->token_list_head)
 	{
-		popped_token = ft_lstpop_bdi(&(*exec_pipeline_node)->token_list_head);
+		popped_token = ft_lstpop_bdi(&(*exec_pipe_node)->token_list_head);
 		token_elem = popped_token->content;
 		/* subshell or commands */
 		if (token_elem->type != e_ope_pipe)
 		{
-			move_tokens_to_command_info(&(*exec_pipeline_node)->token_list_head,
-										&command_info, popped_token);
+			move_tokens_to_command_info(&(*exec_pipe_node)->token_list_head, &cmd_info, popped_token);
 			continue ;
 		}
 		/* pipe */
-		if (connect_command_info_to_execlist(
-				&(*exec_pipeline_node)->pipeline_commands, command_info) == FAILURE)
+		if (connect_command_info_to_execlist(&(*exec_pipe_node)->pipeline_commands, cmd_info) == FAILURE)
 			return (FAILURE);
 		ft_lstdelone_bdi(&popped_token, free_token_elem); // delete '|'
-		command_info = create_command_info();
-		if (!command_info)
+		cmd_info = create_command_info();
+		if (!cmd_info)
 			return (FAILURE);
 	}
 	/* last command line */
-	if (connect_command_info_to_execlist(
-			&(*exec_pipeline_node)->pipeline_commands, command_info) == FAILURE)
+	if (connect_command_info_to_execlist(&(*exec_pipe_node)->pipeline_commands, cmd_info) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }

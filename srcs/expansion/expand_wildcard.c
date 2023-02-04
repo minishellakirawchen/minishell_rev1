@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 20:00:45 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 10:44:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 
 // tokenを検索, *が展開できれば置換する
 // wildcard_str is one word
-
+\
 // sort as a to z
 // echo  * :隠しファイルは表示しない
 // echo .* :                する
@@ -52,64 +52,30 @@
 
 /* return true if string consist of `.` and `*`,
  * `.` is the first half and `*` in the second half */
-bool	check_is_hidden_include(const char *wildcard_str)
+bool	is_wildcard_includes_hidden(const char *wildcard_str)
 {
-	size_t	idx;
-
-	if (!wildcard_str || wildcard_str[0] != '.')
-		return (false);
-	idx = 0;
-	while (wildcard_str[idx] && wildcard_str[idx] == '.')
-		idx++;
-	if (wildcard_str[idx] && wildcard_str[idx] != '*')
-		return (false);
-	while (wildcard_str[idx] && wildcard_str[idx] == '*')
-		idx++;
-	if (wildcard_str[idx])
-		return (false);
-	return (true);
+	if (wildcard_str && wildcard_str[0] == '.')
+		return (true);
+	return (false);
 }
 
-t_list_bdi	*get_strlist_matching_wildcard(const char *wildcard_str, DIR *dirp)
+void	swap(void **content_a, void **content_b)
 {
-	bool			is_hidden_include;
-	struct dirent	*read_dir;
-	t_list_bdi		*strlist;
-	t_list_bdi		*newlist;
-	char			*getstr;
+	void *tmp;
 
-	if (!wildcard_str || !dirp)
-		return (NULL);
-	is_hidden_include = check_is_hidden_include(wildcard_str);
-	strlist = NULL;
-	read_dir = readdir(dirp);
-	while (read_dir)
-	{
-		if (read_dir->d_name[0] == '.' && !is_hidden_include)
-		{
-			read_dir = readdir(dirp);
-			continue ;
-		}
-		if (is_matches_wildcard_and_target_str(wildcard_str, read_dir->d_name))
-		{
-			getstr = ft_strdup(read_dir->d_name);
-			newlist = ft_lstnew_bdi(getstr);
-			if (!getstr || !newlist)
-				return (perror_ret_nullptr("malloc"));// TODO: free
-			ft_lstadd_back_bdi(&strlist, newlist);
-		}
-		read_dir = readdir(dirp);
-	}
-	return (strlist);
+	if (!content_a || !content_b)
+		return ;
+	tmp = *content_a;
+	*content_a = *content_b;
+	*content_b = tmp;
 }
 
 void	sort_ascending_strlist(t_list_bdi **list_head)
 {
-	t_list_bdi	*node_a;
-	t_list_bdi	*node_b;
-	char		*str_a;
-	char		*str_b;
-	char 		*tmp_str;
+	t_list_bdi		*node_a;
+	t_list_bdi		*node_b;
+	t_token_elem	*token_a;
+	t_token_elem	*token_b;
 
 	if (!list_head || !*list_head)
 		return ;
@@ -119,45 +85,14 @@ void	sort_ascending_strlist(t_list_bdi **list_head)
 		node_b = node_a->next;
 		while (node_b)
 		{
-			str_a = node_a->content;
-			str_b = node_b->content;
-			if (ft_strcmp_ns(str_a, str_b) > 0)
-			{
-				tmp_str = node_a->content;
-				node_a->content = node_b->content;
-				node_b->content = tmp_str;
-			}
+			token_a = node_a->content;
+			token_b = node_b->content;
+			if (ft_strcmp_ns(token_a->word, token_b->word) > 0)
+				swap(&node_a->content, &node_b->content);
 			node_b = node_b->next;
 		}
 		node_a = node_a->next;
 	}
-}
-
-char	*get_list_concat_str(t_list_bdi *list, char *separated_str)
-{
-	char	*concat_str;
-
-	if (!list)
-		return (NULL);
-	concat_str = ft_strdup("");
-	if (!concat_str)
-		return (perror_ret_nullptr("malloc"));
-
-	while (list)
-	{
-		concat_str = concat_dst_to_src(&concat_str, (char *)list->content);
-		if (!concat_str)
-			return (perror_ret_nullptr("malloc")); //TODO:free
-		list = list->next;
-		if (list && separated_str)
-		{
-			concat_str = concat_dst_to_src(&concat_str, separated_str);
-			if (!concat_str)
-				return (perror_ret_nullptr("malloc")); //TODO:free
-		}
-	}
-
-	return (concat_str);
 }
 
 void	print_list_str(void *content)
@@ -165,83 +100,134 @@ void	print_list_str(void *content)
 	printf("%s\n", (char *)content);
 }
 
-// 一致するstringがない場合、stringを返す
-char	*get_expand_wildcard(char *wildcard_str)
+bool	is_not_expandable_command(t_list_bdi *first_token)
 {
-	DIR 			*dirp;
-	t_list_bdi		*strlist;
-	char			*pwd_path;
-	char			*expanded_str;
+	t_token_elem	*token_elem;
 
-	if (!wildcard_str)
-		return (NULL);
+	if (!first_token)
+		return (false);
+	token_elem = first_token->content;
+	return (is_same_str("export", token_elem->word));
+}
+
+
+int	get_tokens_match_with_wildcard(t_list_bdi **save, const char *wildcard_str, t_list_bdi *dirlist, const int *valid_list)
+{
+	t_list_bdi		*newlist;
+	t_token_elem	*token_elem;
+	char			*name;
+	t_list_bdi		*popped_node;
+
+	if (!wildcard_str || !dirlist || !save)
+		return (FAILURE);
+	while (dirlist)
+	{
+		popped_node = ft_lstpop_bdi(&dirlist);
+		name = popped_node->content;
+		if (!is_wildcard_includes_hidden(wildcard_str) && name && name[0] == '.')
+		{
+			ft_lstdelone_bdi(&popped_node, free);
+			continue ;
+		}
+		if (is_matches_wildcard_and_target_str(wildcard_str, name, valid_list))
+		{
+			token_elem = create_token_elem(name, false, false, '\0');
+			newlist = ft_lstnew_bdi(token_elem);
+			if (!newlist || !token_elem)
+				return (perror_ret_int("malloc", FAILURE));// TODO: free
+			ft_lstadd_back_bdi(&(*save), newlist);
+			ft_lstdelone_bdi(&popped_node, NULL);
+		}
+		else
+			ft_lstdelone_bdi(&popped_node, free);
+	}
+//	debug_print_tokens(*save, "wildcard_tokens");
+	return (SUCCESS);
+}
+
+t_list_bdi	*get_read_dir_list(void)
+{
+	DIR 			*dir;
+	char			*pwd_path;
+	struct dirent	*dirent;
+	t_list_bdi		*save_list;
+	t_list_bdi		*new_node;
+	char			*name;
+
+	errno = 0;
 	pwd_path = getcwd(NULL, 0);
 	if (!pwd_path)
 		return (perror_ret_nullptr("getcwd"));
-	dirp = opendir(pwd_path); // `.`でもOK？
-	if (!dirp)
+	dir = opendir(pwd_path); // `.`でもOK？
+	if (!dir)
 		return (perror_ret_nullptr("opendir")); //TODO:free;
-	strlist = get_strlist_matching_wildcard(wildcard_str, dirp);
-	closedir(dirp);
+	save_list = NULL;
+	dirent = readdir(dir);
+	while (dirent)
+	{
+		name = ft_strdup(dirent->d_name);
+		new_node = ft_lstnew_bdi(name);
+		if (!name || !new_node)
+			return (perror_ret_nullptr("malloc"));
+		ft_lstadd_back_bdi(&save_list, new_node);
+		dirent = readdir(dir);
+	}
 	free(pwd_path);
-
-//	printf("\n## before sort\n");
-//	ft_lstiter_bdi(strlist, print_list_str);
-
-	if (ft_lstsize_bdi(strlist) == 0)
-		return (wildcard_str);
-
-	sort_ascending_strlist(&strlist);
-
-//	printf("\n## after sort\n");
-//	ft_lstiter_bdi(strlist, print_list_str);
-
-	expanded_str = get_list_concat_str(strlist, " ");
-	if (!expanded_str)
-		return (perror_ret_nullptr("malloc")); //TODO:free
-	ft_lstclear_bdi(&strlist, free);
-	free_1d_alloc(wildcard_str);
-	return (expanded_str);
+	closedir(dir);
+	return (save_list);
 }
 
-bool	is_expandable_wildcard_in_str(const char *word, bool is_quoted)
+int	get_wildcard_tokens(t_list_bdi **get_tokens_save_to, const char *wildcard_str, const int *valid_list)
 {
-	if (cnt_chr_in_str('*', word) == 0 || is_quoted)
-		return (false);
-	return (true);
+	t_list_bdi	*dirlist;
+
+	if (!get_tokens_save_to || !wildcard_str || !valid_list)
+		return (FAILURE);
+	dirlist = get_read_dir_list();
+	if (!dirlist)
+		return (FAILURE);
+	*get_tokens_save_to = NULL;
+	if (get_tokens_match_with_wildcard(get_tokens_save_to, wildcard_str, dirlist, valid_list) == FAILURE)
+		return (FAILURE);
+	sort_ascending_strlist(&(*get_tokens_save_to));
+	return (SUCCESS);
 }
 
+// * or "*"を判定し, *なら展開, "*"なら展開しない, ref token_elen->is_wildcard_expandable
+// *, "*"が混在するケースは考慮していない。むずい。有効な*を何かに置換するなどの操作が必要か？
+// もしくは結合前に、結合するグループを線型リストで保持しておき、
+// 各tokenがquoted, unquotedのフラグを持っている状態で判別する？
+int expanded_wildcard_to_token_list(t_list_bdi **token_list)
+{
+	t_list_bdi		*expanded_tokens;
+	t_list_bdi		*popped_node;
+	t_token_elem	*token_elem;
+	t_list_bdi		*wildcard_match_tokens;
 
+	if (!token_list)
+		return (FAILURE);
+	if (is_not_expandable_command(*token_list))
+		return (SUCCESS);
+	expanded_tokens = NULL;
+	while (*token_list)
+	{
+		popped_node = ft_lstpop_bdi(&(*token_list));
+		token_elem = popped_node->content;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		if (check_valid_wildcard_in_word(token_elem))
+		{
+			if (get_wildcard_tokens(&wildcard_match_tokens, token_elem->word, token_elem->wildcard_valid_flag) == FAILURE)
+				return (FAILURE);
+//			debug_print_tokens(wildcard_match_tokens, "wildcard tokens");
+			if (ft_lstsize_bdi(wildcard_match_tokens) != 0)
+			{
+				ft_lstdelone_bdi(&popped_node, free_token_elem);
+				popped_node = wildcard_match_tokens;
+			}
+		}
+		ft_lstadd_back_bdi(&expanded_tokens, popped_node);
+	}
+	*token_list = expanded_tokens;
+//	debug_print_tokens(*token_list, "wildcard expanded");
+	return (SUCCESS);
+}

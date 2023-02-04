@@ -19,7 +19,11 @@ SRC		= main.c \
 		  tokenizer/validate_quote.c \
 		  tokenizer/validate_syntax.c \
 		  tokenizer/validate_operator.c \
-		  tokenizer/arrange_token.c \
+		  tokenizer/check_operator_syntax.c \
+		  tokenizer/arrange_and_validate_token.c \
+		  tokenizer/create_token_elem.c \
+		  tokenizer/create_splitted_word_token.c \
+		  tokenizer/get_trimmed_word.c \
 		  parser/parser.c \
 		  parser/create_operator_list.c \
 		  parser/create_command_list.c \
@@ -28,13 +32,16 @@ SRC		= main.c \
 		  parser/tree_operation.c \
 		  parser/tree_helper.c \
 		  expansion/expansion.c \
-		  expansion/expand_var_in_tokens.c \
-		  expansion/expand_var_in_heredoc.c \
+		  expansion/expand_in_tokens.c \
+		  expansion/expand_in_filename.c \
+		  expansion/expand_in_heredoc.c \
 		  expansion/is_expand.c \
 		  expansion/get_expanded_str.c \
-		  expansion/create_commands.c \
+		  expansion/create_expanded_commands.c \
+		  expansion/concat_connected_tokens.c \
 		  expansion/is_matches_wildcard.c \
 		  expansion/expand_wildcard.c \
+		  expansion/quote_removal_or_re_tokenize.c \
 		  command_execution/execute_execlist.c \
 		  command_execution/execute_pipeline.c \
 		  command_execution/execute_redirect.c \
@@ -65,6 +72,7 @@ SRC		= main.c \
 		  helper/check_dir_exist.c \
 		  helper/ft_lst_ascsort.c \
 		  helper/chdir_setpath.c \
+		  helper/update_shlvl.c \
 		  debug/debug_print.c \
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))

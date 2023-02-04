@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 17:30:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 10:02:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <stdbool.h>
+# include <errno.h>
 
 # include "./../libs/include/libft.h"
 
@@ -52,7 +53,7 @@
 # define CONTINUE	2
 # define BREAK		3
 
-# define PROCESS_ERROR	-1
+# define PROCESS_ERROR		-1
 
 # define EXIT_TOO_MANY_ARGS			1
 # define EXIT_NUMERIC_ARGS_REQUIRED	255
@@ -75,6 +76,7 @@ typedef struct s_redirect_info	t_redirect_info;
 /* enum */
 typedef enum e_token_type		t_token_type;
 typedef enum e_node_kind		t_node_kind;
+typedef enum e_tokenlist_kind	t_list_kind;
 
 enum e_token_type
 {
@@ -91,8 +93,8 @@ enum e_token_type
 	e_file = 10,			//
 	e_heredoc_eof = 11,		//
 	e_word = 12,			//
-	e_init = 13,			// init
-	e_nothing
+	e_init = 13,			// init=word
+	e_null
 };
 
 enum e_node_kind
@@ -106,6 +108,12 @@ enum e_node_kind
 	e_node_pipeline,
 	e_node_commands,
 	e_node_init,
+};
+
+enum e_list_kind
+{
+	e_pipeline_token_list,
+	e_redirect_list,
 };
 
 
@@ -136,8 +144,8 @@ struct s_exec_list
 
 	// create_command_list
 	t_list_bdi		*token_list_head;	// content=command_list, tmp_save
-	t_list	*envlist_head;
-	t_list	*tokenlist_head;
+	t_list			*envlist_head;
+	t_list			*tokenlist_head;
 };
 
 
@@ -159,17 +167,23 @@ struct s_token_elem
 	char			quote_chr;
 	bool			is_quoted;
 	int				subshell_depth;
+
+	int 			*wildcard_valid_flag;
 };
 
 // split
 struct s_split_info
 {
+	size_t			head_idx;
+	size_t			word_len;
+
 	const char		*src;
 	const char 		*delim;
 	const char 		*setchars;
+
 	bool			is_connect_to_next_word;  // hello"world"->[hello]=["world"]
-	size_t			head_idx;
-	size_t			word_len;
+	bool			is_quoted;
+	char 			quote_chr;
 };
 
 // exec_list->pipeline_commands->content
@@ -200,43 +214,42 @@ struct s_redirect_info
 
 
 /* ************************** */
-/*          parsing           */
+/*            main            */
 /* ************************** */
 
-/* ************************** */
-/*         expansion          */
-/* ************************** */
+
 
 /* ************************** */
-/*     command execution      */
-/* ************************** */
-
-/* ************************** */
-/*       signal handler       */
-/* ************************** */
-
-/* ************************** */
-/*         ft_builtin         */
+/*           helper           */
 /* ************************** */
 
 /*         helper.c           */
-void	print_key_value(void *content);
+t_list		*get_envlist(void);
+t_env_elem	*create_new_envelem(char *key, char *value, int not_print);
+void		print_key_value(void *content);
+
 
 void	*free_1d_alloc(void *alloc);
 void	**free_2d_alloc(void **alloc);
 void	*free_info(t_info **info);
-t_list	*get_envlist(void);
 void	free_env_elem(void *content);
 void	free_token_elem(void *content);
 void	free_command_info(void *content);
 void	free_redirect_info(void *content);
 void	clear_exec_list(t_exec_list **exec_list);
 
+int		update_shlvl(char **current_shlvl_str);
+int		add_initial_shlvl(t_list **env_list_head);
+
 
 /*         error_return.c           */
 void	*perror_ret_nullptr(char *err);
 int		perror_ret_int(char *err, int retno);
 
+
+/* ************************** */
+/*         debug print        */
+/* ************************** */
 void	debug_print_2d_arr(char **arr, char *str);
 void	debug_print(const char *fmt,...);
 void	debug_print_tokens(t_list_bdi *head, char *str);
@@ -246,5 +259,8 @@ void	debug_print_exec_nodetype(t_exec_list *node);
 void	debug_print_redirect_info(t_list_bdi *head, char *str);
 void	debug_print_command_info(t_command_info *command_info);
 //void	debug_print_command_info(t_command_info *command_info, bool subshell, bool token_cmds, bool cmds, bool redirect)
+void	debug_print_wildcard_valid_list(int *list, size_t len);
+void	debug_print_env(t_list *envlist);
+
 
 #endif //MINISHELL_H

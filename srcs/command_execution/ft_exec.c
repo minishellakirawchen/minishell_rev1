@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 19:45:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 22:33:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,30 +19,31 @@ static char	*get_execute_path(char *path, char *file);
 int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 {
 	if (!command_info || !minishell_envp || !info)
-		return (FAILURE);
+		exit (PROCESS_ERROR);
 
-//	debug_print_2d_arr(command_info->commands, "<execute command>");
+//	debug_print_2d_arr(command_info->commands, "<DEBUG>execute command");
 
 	/* exec redirect */
 	if (execute_redirect(command_info, info) == FAILURE)
-		return (FAILURE);
+		exit (FILE_OPEN_ERROR);
 
 	/* is_builtin -> execute_builtin */
 	if (is_builtin(command_info->commands))
-		return (execute_builtin(info, command_info->commands));
+		exit (execute_builtin(info, command_info->commands));
 
 	/* is_subshell */
 	if (command_info->subshell_token_list)
-		return (execute_subshell(&command_info->subshell_token_list, info));
+		exit (execute_subshell(&command_info->subshell_token_list, info));
 	/* execute commands (other than builtin) */
 	if (is_path(command_info->commands[0]))
 		execve(command_info->commands[0], command_info->commands, minishell_envp);
 	else
-		ft_execvp(command_info->commands, minishell_envp, info->envlist_head);
+		if (ft_execvp(command_info->commands, minishell_envp, info->envlist_head) == PROCESS_ERROR)
+			exit (PROCESS_ERROR);
 
 	/* if command not fount */
 	ft_dprintf(STDERR_FILENO, "command not found: %s\n", command_info->commands[0]);
-	return (CMD_NOT_FOUND);
+	exit (CMD_NOT_FOUND);
 }
 
 static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
@@ -53,26 +54,27 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 	char 		*path;
 
 	if (!commands)
-		return (FAILURE);
+		return (PROCESS_ERROR);
 	errno = 0;
-
 	env_paths = get_env_value(PATH, envlist);
 	splitted_paths = ft_split(env_paths, CHA_PATH_DELIM);
 	if (!splitted_paths)
-		return (perror_ret_int("malloc", FAILURE));
-
+		return (perror_ret_int("malloc", PROCESS_ERROR));
 	idx = 0;
 	while (splitted_paths[idx])
 	{
 		path = get_execute_path(splitted_paths[idx], commands[0]);
 		if (!path)
-			return (perror_ret_int("malloc", FAILURE));
+		{
+			free_2d_alloc((void **)splitted_paths);
+			return (perror_ret_int("malloc", PROCESS_ERROR));
+		}
 		execve(path, commands, minishell_envp);
 		free_1d_alloc(path);
 		idx++;
 	}
 	free_2d_alloc((void **)splitted_paths);
-	return (CMD_NOT_FOUND);
+	return (CMD_NOT_FOUND);//意味ない
 }
 
 static char	*get_execute_path(char *path, char *file)

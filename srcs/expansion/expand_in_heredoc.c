@@ -49,7 +49,9 @@ static int	expand_var_save_to_list(t_list_bdi **savelist, char *filename, t_info
 		line = get_next_line(fd, true);
 		if (!line)
 			break;
-		line = get_expanded_str(line, info);
+//		line = get_expanded_str(line, info);
+		if (expand_var_in_str(&line, info) == FAILURE)
+			return (FAILURE);
 		list_node = ft_lstnew_bdi(line);
 		if (!line || !list_node)
 			return (perror_and_return_int("malloc", FAILURE));

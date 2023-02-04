@@ -14,7 +14,9 @@
 !playground/*.md
 
 /objs/
+/libs/objs/
 /testdir/
+#/playground/
 /.idea/
 #cmake-build-*
 #cmake-build-debug/*

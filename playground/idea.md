@@ -46,6 +46,7 @@ hoge
 
 
 bash-3.2 1 $ ls *
+
 in1     in2     ngfile  out
 
 bash-3.2 0 $ ls in*
@@ -65,6 +66,112 @@ bash-3.2 0 $ echo ****a
 
 ```
 リダイレクトもwildcard展開する
+
+
+```shell
+
+
+# redirect fileへの展開
+
+//bash3.2 0 $ echo "$a1"	//hoge    hoge
+//bash3.2 0 $ echo $a1		//hoge hoge
+
+//bash3.2 0 $ echo hello>$a1
+//bash: $a1: ambiguous redirect
+
+//bash3.2 1 $ echo hello>"$a1"
+//bash3.2 0 $ ls
+//hoge    hoge
+
+//bash3.2 0 $ echo hello >'$a1'
+//bash3.2 0 $ ls
+//$a1
+
+// command_list->redirect_list = heredoc->io->io->heredoc->...
+// if type=io, expand and create filename from redirect_list->content=redirect_info->token_list
+
+// echo hello>"$a1"	->$a1 = "hoge    huga"
+// echo hello>"a1	->$a1 = "hoge", "huga" -> ambiguous error
+
+
+
+
+// どの状態のものを警告に出せば良いんだ？？わからなくなってきた
+//bash3.2 1 $ export x="hello world"
+//bash3.2 0 $ echo hello>"$x"	//file "hello world"
+//bash3.2 0 $ echo hello>$x		//bash: $x: ambiguous redirect
+//bash3.2 0 $ echo hello>"**"	//file "**"
+//bash3.2 0 $ echo hello>'**'	// file "**"
+//bash3.2 0 $ echo hello>**		//bash: **: ambiguous redirect
+
+//bash3.2 0 $ echo hello >$xhoge	//bash: $xhoge: ambiguous redirect
+//bash3.2 1 $ echo hello >$x"hoge"	//bash: $x"hoge": ambiguous redirect
+//bash3.2 1 $ echo $xhoge			//
+//bash3.2 0 $ echo >""				//bash: : No such file or directory
+//>"" と >$nothing は"" vs NULL？
+
+//declare -x a=""
+//declare -x b
+//bash3.2 0 $ echo hello >$a	//bash: $a: ambiguous redirect
+//bash3.2 1 $ echo hello >$b	//bash: $b: ambiguous redirect
+//うん？
+// expandによる""と、文字列""を識別する必要がありそう
+
+// after concat, before expand wildcardの状態が欲しい
+// concatされてone wordのはず
+
+
+// redirectはconcat->expandか?
+// commandはexpand->concat
+//bash-3.2-2 0 $ export b1="$"
+//bash-3.2-2 0 $ export b2="b3"
+//bash-3.2-2 0 $ export b3=b3dayo
+//bash-3.2-2 0 $ echo $b1$b2
+//$b3
+//
+//redirectも同様にconcat->expandだった
+//bash-3.2-2 0 $ echo hello>$b1$b2
+//bash-3.2-2 0 $ ls
+//$b3             dir1            hello  world    out             outout
+//bash-3.2-2 0 $
+
+//echo hello >"hello"'world'	= helloworld
+//echo hello >"hello"'  world'	= hello   world
+
+//bash-3.2-2 0 $ echo $a1	//hello world
+//bash-3.2-2 0 $ echo "$a1"	//hello  world
+//bash-3.2-2 0 $ echo "$a2"	//hello
+//bash-3.2-2 0 $ echo "$a3"	//world
+
+//bash-3.2-2 0 $ echo hello >$a1	//bash: $a1: ambiguous redirect
+//bash-3.2-2 1 $ echo hello >$a2$a3	//helloworld
+//bash-3.2-2 0 $ echo $a2$a3
+//helloworld
+//bash-3.2-2 0 $ echo "$a2$a3"
+//helloworld
+//bash-3.2-2 0 $ echo hello >$a1$a2$a3		//bash: $a1$a2$a3: ambiguous redirect
+//bash-3.2-2 1 $ echo hello >"$a1$a2$a3"	//hello  worldhelloworld
+
+//bash-3.2-2 0 $ export c1="*"
+//bash-3.2-2 0 $ echo hello>$c1		//bash: $c1: ambiguous redirect
+//bash-3.2-2 1 $ echo hello>"$c1"	//file:*
+
+//concatteed filename
+//
+
+//filenameはone wordで受け取る。""''も含む
+//""''はone wordとしてexpansion and quote removal, $hogeはspace split
+// one wordならfilename, multi wordならambiguous
+
+
+//unquoted && connectした文字列を保持
+
+```
+
+
+
+
+
 
 
 
@@ -104,7 +211,115 @@ bash: *: command not found
 
 
 
+
+### create_expanded_comamnds
+```shell
+
+// pipeline_token_list
+// expand & split -> append expanded_tokens
+
+//bash-3.2$ export a2="cho hello        world"
+//bash-3.2$ echo $a2
+//cho hello world
+//bash-3.2$ e$a2
+//hello world
+//bash-3.2$
+
+// e$key = echo
+
+//bash-3.2$ e"cho" hello	//hello				-> {"echo", "hello"}
+//bash-3.2$ e"cho hoge"	//bash: echo hoge: command not found				-> {"echo hoge"}
+
+//bash-3.2$ echo $a1		//hoge huga			-> {"echo", "[hoge huga]"}
+//bash-3.2$ e"cho $a1"		//bash: echo hoge    huga : command not found	-> "e[cho $a1]={"echo hoge   huga"}
+
+//bash-3.2$ export a2="cho hello        world"
+//bash-3.2$ echo $a2		//cho hello world	-> {"echo", "[cho hello        world]"}
+
+//bash-3.2$ export a3="echo hello world"
+//bash-3.2$ $a3				//hello world		-> {"echo", "hello", "world"}
+
+//bash-3.2$ export a3="echo hello world"
+//bash-3.2$ echo $a3		//hello world
+//bash-3.2$ echo "$a3"		//hello      world
+
+//bash-3.2$ $a3				//bash: hello: command not found
+//bash-3.2$ "$a3"			//bash: hello      world: command not found
+
+//bash-3.2$ export a4="cho     hello       world"
+//bash-3.2$ e$a4			//hello world
+//bash-3.2$ e"$a4"			//bash: echo     hello       world: command not found
+
+
+//bash-3.2$ echo abc$b1"ABC   DEF"$b2	//abc123ABC   DEFtest test
+//
+//abc$b1 ABC   DEF $b2
+
+//$key  :not split
+//"$key":split
+
+
+```
+
+# Exec
+
+### execute_execlist.c
+```shell
+
+ * exec to next ; or NULL
+ * if next_operator == &&
+ * if next_operator_ == ||
+ *
+ * bash 0$ echo hello a1=$a1 && export a1=a1dayo && echo hello a1=$a1
+ * hello a1=
+ * hello a1=a1dayo
+```
+
+
+
+
 # Expansion
+
+## from ide
+### expansion.c
+// operator && || ;のように、区切りまでのexpansionにしなければならない
+// && || ;がexpandにより生成されることはあるか？
+// なければ execution内でexpansion->command_executionする ...(1)
+// vvv
+//bash-3.2$ export test="echo hello && echo world"
+//bash-3.2$ $test           //hello && echo world
+// 文字列として展開されるだけ(1)で良さそう
+
+/* expand variable. working example following:
+* ex) [$key]        ->[value]
+*     ["hello"world]->[helloworld]
+*     [good'   bye']->[good   bye]
+*     ["$key$key"]  ->[valuevalue]
+*     ['$key']      ->['$key']
+*     ["'$key'"]    ->['value']
+*     ['"$key"']    ->["$key"]
+* where key=value in environment parameter.
+* */
+  /* call this function in execution part before command_execute */
+
+// input for expand_var_and_create_commands_from_tokens is "pipeline"
+//  t_exec_list pipeline, node_lind=pipeline
+//    pipeline1->pipeline2->pipeline3->... ($> pipeline1 &&/||/; pipeline2 &&/||/; pipeline3 ..)
+//  t_list pipeline_commands = command_list1->command_list2->.. (command_list1 | command_list2 | ....)
+
+//  commant_list assign content of t_list
+//    t_command_info command_list
+//      t_list pipeline_token_list  : token list, echo(word)->hello(word)->world(word)->NULL
+//      char **commands             : expanded commands {"echo" "hello", "world", NULL} <-create this by token_list, and clear tokens
+
+// input pipeline is type=pipeline
+// type=subshell is expanded in execution->parsing process
+
+
+
+
+
+## memo
 
 ```shell
 
@@ -138,6 +353,8 @@ bash-3.2$ export a=b
 bash-3.2$ export c=d$a
 bash-3.2$ export e=c"$a"
 bash-3.2$ env
+
+
 a=b
 c=db
 e=cb
@@ -485,19 +702,128 @@ a4=
 
 ```
 
+### parenthesis no
+```shell
+
+//     ( () ( () () ) )
+// no  0 11 2 33 44 2 0
+// cnt 1 21 2 32 32 1 0
+
+// ( -> no=no; cnt++, no++
+// ) -> no=no; cnt--,
+
+
+// () () ()
+// 00 11 22
+// 0  1  2  no
+
+// ( () )
+// 0 11 0   no
+
+// ( () () )
+// 0 11 22 0
+
+
+//    ( () ( () () ) () )
+//no  0 11 2 33 44 2 55 0
+//    1 21 2 32 32 3 21 0  (+1, )-1
+//(   0 1  2 3  4    5
+//)      0    1  2 3  4 5
+
+//closeは後ろから
+//今までcloseしたnoを持っておく
+//0番目は閉じていないが2,3は閉じて、次に4を閉じて最後に0みたいなことがある
+
+
+
+// noを付与するときにcntもみる？
+
+//minishell $> () (() ()) (())
+//#input          :[() (() ()) (())]
+//#arranged       :( 0 ,) 0 ,( 1 ,( 2 ,[)]) 1 ,[(]( 3 ,[)]) 2 ,[)]) 3 ,[(]( 4 ,[(]( 5 ,[)]) 4 ,[)]) 5
+
+
+// TODO: 一旦これで妥協
+// (の番号と同じ最も近い)を探せば相方が見つかる
+// (の長さの配列を用意して、現在までみた(の数、とindexでcloseした)を管理すれば番号が付与できそう
+// () () ()
+// 00 00 00
+//
+// ( () ( () () ) )
+// 0 11 1 22 22 1 0
+```
+
+
+### operator_split.c
+```shell
+//echo hello && (cd /bin && pwd && ls) || cat <infile >outfile
+
+// $a1
+// a1="echo hello world | cat Makefile"
+// "echo hello world | cat Makefile" <- echo command
+// {"echo", "hello", "world", "|", "cat", "Makefile", NULL} -nも有効
+
+// $a2
+// a2="hoge       hello world"
+// echo $a2 -> hoge hello world
+// env      -> a2=echo       hello world
+
+// expansionは全て区切ったあとに実施しなければ、引数との判別ができなくなる
+
+// char *word = list->token_elem->word
+// word = "cat<infile|ls>>out&&test;cat<file|grep"
+// split before/after operator
+//   "cat"
+//   "<"
+//   "infile"
+//   "|"
+//   "ls"
+//   ">>"
+//   "out"
+//   "&&"
+//   "test"
+//   ";"
+//   "cat"
+//   "<"
+//   "file"
+//   "|"
+//   "grep"
+
+// quotedは既に分離済み
+// 既に付与している結合フラグを壊したくない
+// 難しいぞ？->そんなことないかも
+// 結合フラグは文字列、qupte間のみでは？そんなことはない 面倒かも...
+//
+//
+// ["hello world"]=['good bye']=[|cat]->[Makefile>out]=['hoge']
+//                         keep^ ^^             ^^^   ^keep
+//                               split         split
+// connect_to_nextなので、last elemにフラグを立てる
+
+//TODO: quote is space? unused isquoted??
+
+
+```
 
 
 
 
 
 
+## Parsing
 
+### parsing token list
+```shell
 
+	//quote_removal_in_heredoc, exec_heredocのために""の結合とremovalが必要
+	//redirect_listをまず作成、fileのexpandはあとで実施（heredoc eofはexpandなし）
 
+	// fileのexpansionをあとで実行すると, "'$key'" vs '$key'の判別がつかなくなる
+	// redirect_listを作成し、redirect_info->token_listに保管しておく
+	// heredocは結合してheredoc_eofを作成する
+	// fileの展開、結合はあとで実施する
 
-
-
-
+```
 
 
 

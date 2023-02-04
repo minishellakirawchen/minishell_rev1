@@ -6,37 +6,41 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 10:30:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 11:25:57 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 23:08:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
 static int **get_dp_table(size_t row, size_t col);
-static int	is_match(const char *wildcard_str, const char *target_str, int **dp);
+static int	is_match(const char *wildcard_str, const char *target_str, int **dp, const int *valid_table);
 static void	free_dp_array(int **dp, size_t row_size);
 
 /* return true if wildcard_str matches str */
 /* dp[i][j] : wildcardのi文字目, targetのj文字目まで見て文字列が成立すれば1, 成立しなければ0*/
-int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str)
+int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str, const int *valid_table)
 {
 	const size_t	len_wildcard = ft_strlen_ns(wildcard_str);
 	const size_t	len_target = ft_strlen_ns(target_str);
 	int				**dp;
 	int				ans;
 
-//	if (!target_str || !wildcard_str || len_wildcard == 0 || len_target == 0)
-	if (!target_str || !wildcard_str)
+	if (!target_str || !wildcard_str || !valid_table)
 		return (false);
 	dp = get_dp_table(len_wildcard + 1, len_target + 1);
 	if (!dp)
 		return (PROCESS_ERROR);
-	ans = is_match(wildcard_str, target_str, dp);
+	ans = is_match(wildcard_str, target_str, dp, valid_table);
 	free_dp_array(dp, len_wildcard + 1);
 	return (ans);
 }
 
-static int	is_match(const char *wildcard_str, const char *target_str, int **dp)
+//文字列"*" と * は一致しないと仮定
+// wild   "hoge*"
+//         ^   ^
+// target "hoge*"
+//         ^
+static int	is_match(const char *wildcard_str, const char *target_str, int **dp, const int *valid_table)
 {
 	const size_t	len_wildcard = ft_strlen_ns(wildcard_str);
 	const size_t	len_target = ft_strlen_ns(target_str);
@@ -52,9 +56,9 @@ static int	is_match(const char *wildcard_str, const char *target_str, int **dp)
 		j = 0;
 		while (j < len_target + 1)
 		{
-			if (wildcard_str[i - 1] == '*')
+			if (i > 0 && valid_table[i - 1] == 1)
 				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-			if ((j > 0) && (wildcard_str[i - 1] == target_str[j - 1]))
+			if (j > 0 && i > 0 && valid_table[i - 1] == 0 && wildcard_str[i - 1] == target_str[j - 1])
 				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
 			j++;
 		}

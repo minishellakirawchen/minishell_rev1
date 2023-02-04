@@ -6,71 +6,88 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:19:06 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 19:25:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/03 20:24:22 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-// expandable_src is string start with $name or $?
-// $
-
-// "" removal
-char	*get_expanded_str(char *src, t_info *info)
+int	expand_exit_status_or_env_var(char **src, t_info *info, size_t	*idx, char **expanded_str)
 {
-	size_t	idx;
-	size_t	skip;
-	char	*expanded_str;
 	char	*key;
 	char	*value;
+
+	if (!src || !info || !idx || !expanded_str)
+		return (FAILURE);
+	if (is_expandable_exit_status(&(*src)[*idx]))
+	{
+		if (expand_exit_status(expanded_str, info->exit_status) == FAILURE)
+			return (FAILURE);
+		*idx += 2; // $?
+	}
+	else
+	{
+		key = get_name_str(&(*src)[*idx]);
+		value = get_env_value(key, info->envlist_head);
+		if (!key | !value)
+			return (perror_ret_int("malloc", FAILURE));
+		*expanded_str = concat_dst_to_src(expanded_str, value);
+		if (!*expanded_str)
+			return (FAILURE); //TODO:free
+		*idx += ft_strlen_ns(key) + 1; // $key
+		key = free_1d_alloc(key);
+	}
+	return (SUCCESS);
+}
+
+int	skip_to_expandable_str(char **src, size_t *idx, char **expanded_str)
+{
+	size_t	skip;
 	char	*skip_str;
 
-	if (!src || !info)
+	if (!src || !expanded_str)
+		return (FAILURE);
+	// $? or $nameまでidx++
+	skip = 0;
+	while ((*src)[*idx + skip] && !is_expandable_str_with_dollar(&(*src)[*idx + skip]))
+		skip++;
+	if (skip > 0)
+	{
+		// idx++した分をexpanded_strへ結合
+		skip_str = ft_substr(*src, *idx, skip);
+		if (!skip_str)
+			return (perror_ret_int("malloc", FAILURE));
+		*expanded_str = concat_dst_to_src(expanded_str, skip_str);
+		if (!*expanded_str)
+			return (FAILURE);
+		free_1d_alloc(skip_str);
+		*idx += skip;
+	}
+	return (SUCCESS);
+}
+
+int	expand_var_in_str(char **src, t_info *info)
+{
+	size_t	idx;
+	char	*expanded_str;
+
+	if (!src || !*src || !info)
 		return (FAILURE);
 	expanded_str = ft_strdup("");
 	idx = 0;
-	while (src[idx])
+	while ((*src)[idx])
 	{
-		// $? or $nameまでidx++
-		skip = 0;
-//		printf("idx:%zu, src:%s\n", idx, &src[idx + skip]);
-		while (src[idx + skip] && !is_expandable_str_with_dollar(&src[idx + skip]))
-			skip++;
-		if (skip)
-		{
-			// idx++した分をexpanded_strへ結合
-			skip_str = ft_substr(src, idx, skip);
-			expanded_str = concat_dst_to_src(&expanded_str, skip_str);
-			if (!skip_str || !expanded_str)
-				return (perror_ret_nullptr("malloc"));
-			skip_str = free_1d_alloc(skip_str);
-			idx += skip;
-		}
-		if (!src[idx])
+		if (skip_to_expandable_str(src, &idx, &expanded_str) == FAILURE)
+			return (FAILURE);
+		if (!(*src)[idx])
 			break ;
 		// $? or $name のvalueをexpanded_strへ結合子、$? or $name分idx++
-		if (is_expandable_exit_status(&src[idx]))
-		{
-			if (expand_exit_status(&expanded_str, info->exit_status) == FAILURE)
-				return (NULL);
-			idx += 2; // $?
-		}
-		else
-		{
-//			printf("idx:%zu, src[idx]:%s\n", idx, &src[idx]);
-			key = get_name_str(&src[idx]);
-			value = get_env_value(key, info->envlist_head);
-//			printf("key:%s, value:%s\n", key, value);
-			if (!key | !value)
-				return (perror_ret_nullptr("malloc"));
-			expanded_str = concat_dst_to_src(&expanded_str, value);
-			idx += ft_strlen_ns(key); // $key
-			key = free_1d_alloc(key);
-		}
-		idx++;
+		if (expand_exit_status_or_env_var(src, info, &idx, &expanded_str) == FAILURE)
+			return (FAILURE);
 	}
-	free_1d_alloc(src);
-	return (expanded_str);
+	free(*src);
+	*src = expanded_str;
+	return (SUCCESS);
 }
 
 char	*get_name_str(const char *str_start_with_dollar)
@@ -94,6 +111,8 @@ char	*get_name_str(const char *str_start_with_dollar)
 	return (name_str);
 }
 
+/* return value if key exists. otherwise return '' */
+/* if value is null or has not print flag, return '' */
 char *get_env_value(const char *search_key, t_list *env_list_head)
 {
 	const size_t	search_key_len = ft_strlen_ns(search_key);
@@ -106,7 +125,11 @@ char *get_env_value(const char *search_key, t_list *env_list_head)
 		elem = env_list_head->content;
 		if ((ft_strlen_ns(elem->key) == search_key_len) \
 		&& (ft_strncmp_ns(elem->key, search_key, search_key_len) == 0))
+		{
+			if (!elem->value)
+				return ("");
 			return (elem->value);
+		}
 		env_list_head = env_list_head->next;
 	}
 	return ("");
