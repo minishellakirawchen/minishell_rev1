@@ -6,13 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 17:46:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 22:59:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-//static void	delete_last_semicolon_node(t_exec_list **exec_list_head);
 
 /* order of execute : heredoc -> redirect -> command */
 /* order of expand  : heredoc = redirect = command */
@@ -24,7 +22,8 @@
  *               [redirect_list]
  */
 
-int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head, t_info *info)
+int	parsing_token_list(
+		t_list_bdi **tokenlist_head, t_exec_list **execlist_head, t_info *info)
 {
 	if (!tokenlist_head || !execlist_head || !info)
 		return (PROCESS_ERROR);
@@ -34,12 +33,9 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 		return (PROCESS_ERROR);
 	if (create_redirect_list(execlist_head, info) == FAILURE)
 		return (PROCESS_ERROR);
-
 	debug_print_exec_list(*execlist_head, "parsing fin");
-
 	return (EXIT_SUCCESS);
 }
-
 //	debug_print_exec_list(*execlist_head, "parsing fin");
 //	debug_print_exec_list(*execlist_head, "operator_list");
 //	delete_last_semicolon_node(execlist_head);

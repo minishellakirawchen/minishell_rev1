@@ -6,59 +6,35 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:06:20 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 15:42:54 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 08:44:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* FREE OK */
+
 #include "parser.h"
 
-static t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_exec_list **prev, t_exec_list **next);
-
-/*
- A && B || C ; D
- operator:&&, ||, ;
- command :A, B, C, D
- */
-
-static bool	is_pipeline_token(t_token_elem *token_elem, ssize_t	subshell_depth)
-{
-	if (!token_elem)
-		return (false);
-	if (!(is_tokentype_operator(token_elem->type) && token_elem->subshell_depth == subshell_depth))
-		return (true);
-	return (false);
-}
-
-t_exec_list	*create_execlist_operator_node(t_exec_list **prev_pipeline, t_list_bdi **popped_node, t_token_elem *token_elem)
+static t_exec_list	*create_execlist_operator_node(\
+t_exec_list **prev_pipe, t_list_bdi **popped, t_token_elem *tok_elem)
 {
 	t_exec_list		*operator_node;
 	t_node_kind		node_kind;
 
-	if (!popped_node || !*popped_node)
+	if (!popped || !*popped)
 		return (NULL);
-	if (token_elem->type == e_semicolon)
+	if (tok_elem->type == e_semicolon)
 		node_kind = e_node_semicolon;
-	else if (token_elem->type == e_ope_and)
+	else if (tok_elem->type == e_ope_and)
 		node_kind = e_node_and;
 	else
 		node_kind = e_node_or;
-	operator_node = create_execlist_node(node_kind, NULL, prev_pipeline, NULL);
+	operator_node = create_execlist_node(node_kind, NULL, prev_pipe, NULL);
 	if (!operator_node)
 		return (perror_ret_nullptr("malloc"));
-	operator_node->token_type = token_elem->type; //for debug print
+	operator_node->token_type = tok_elem->type;
 	return (operator_node);
 }
 
-
-void	delete_operator_token(t_list_bdi **operator_token)
-{
-	if (!operator_token || !*operator_token)
-		return ;
-	ft_lstdelone_bdi(operator_token, free_token_elem);
-	*operator_token = NULL;
-}
-
-int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec_list **operator_node, ssize_t subshell_depth)
+static int	handle_each_token(t_list_bdi **tokenlist, \
+t_exec_list *pipeline_node, t_exec_list **operator_node, ssize_t subshell_depth)
 {
 	t_list_bdi		*popped_node;
 	t_token_elem	*token_elem;
@@ -68,11 +44,12 @@ int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec
 	if (is_pipeline_token(token_elem, subshell_depth))
 	{
 		ft_lstadd_back_bdi(&(pipeline_node->token_list_head), popped_node);
-		return (CONTINUE) ;
+		return (CONTINUE);
 	}
 	if (!operator_node)
 		return (FAILURE);
-	*operator_node = create_execlist_operator_node(&pipeline_node, &popped_node, token_elem);
+	*operator_node = create_execlist_operator_node(\
+	&pipeline_node, &popped_node, token_elem);
 	if (!*operator_node)
 		return (perror_ret_int("malloc", FAILURE));
 	delete_operator_token(&popped_node);
@@ -84,70 +61,49 @@ int handle_each_token(t_list_bdi **tokenlist, t_exec_list *pipeline_node, t_exec
 	return (SUCCESS);
 }
 
-/* create and connect t_exec_list, node type is pipeline and operator */
-/* pipeline->operator->pipeline->... */
-int	create_operator_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head)
+static int	setting_params(t_list_bdi **tokenlst_head, \
+t_exec_list **execlst_head, t_exec_list **pipeline, int *subshell_depth)
 {
 	t_token_elem	*token_elem;
-	int				subshell_depth;
-	t_exec_list		*pipeline_node;
-	t_exec_list		*operator_node;
-	int				handle_result;
 
-	errno = 0;
-	if (!tokenlist_head || !*tokenlist_head || !execlist_head)
+	if (!tokenlst_head || !*tokenlst_head || !execlst_head || !pipeline)
 		return (FAILURE);
-	*execlist_head = create_execlist_node(e_node_pipeline, NULL, NULL, NULL);
-	if (!*execlist_head)
-		return (FAILURE); //TODO:all free
-	token_elem = (*tokenlist_head)->content;
-	subshell_depth = token_elem->subshell_depth;
+	*execlst_head = create_execlist_node(e_node_pipeline, NULL, NULL, NULL);
+	if (!*execlst_head)
+		return (FAILURE);
+	token_elem = (*tokenlst_head)->content;
+	*subshell_depth = token_elem->subshell_depth;
 	if (token_elem->type == e_subshell_start)
-		subshell_depth--;
-	pipeline_node = *execlist_head;
-	while (*tokenlist_head)
+		*subshell_depth -= 1;
+	*pipeline = *execlst_head;
+	return (SUCCESS);
+}
+
+/* create and connect t_exec_list, node type is pipeline and operator */
+/* pipeline->operator->pipeline->... */
+int	create_operator_list(t_list_bdi **tokenlst_head, t_exec_list **execlst_head)
+{
+	int				subshell_depth;
+	int				handle_result;
+	t_exec_list		*pipeline;
+	t_exec_list		*operator;
+
+	if (setting_params(\
+	tokenlst_head, execlst_head, &pipeline, &subshell_depth) == FAILURE)
+		return (FAILURE);
+	while (*tokenlst_head)
 	{
-		handle_result = handle_each_token(tokenlist_head, pipeline_node, &operator_node, subshell_depth);
+		handle_result = handle_each_token(\
+		tokenlst_head, pipeline, &operator, subshell_depth);
 		if (handle_result == CONTINUE)
 			continue ;
 		if (handle_result == BREAK)
 			break ;
 		if (handle_result == FAILURE)
 			return (FAILURE);
-		pipeline_node = create_execlist_node(e_node_pipeline, NULL, &operator_node, NULL);
-		if (!pipeline_node)
+		pipeline = create_execlist_node(e_node_pipeline, NULL, &operator, NULL);
+		if (!pipeline)
 			return (perror_ret_int("malloc", FAILURE));
 	}
 	return (SUCCESS);
-}
-
-static t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_head, t_exec_list **prev, t_exec_list **next)
-{
-	t_exec_list	*new_node;
-	t_exec_list	*set_prev;
-	t_exec_list	*set_next;
-
-	errno = 0;
-	new_node = (t_exec_list *)malloc(sizeof(t_exec_list));
-	if (!new_node)
-		return (perror_ret_nullptr("malloc"));
-	set_prev = NULL;
-	set_next = NULL;
-	if (prev && *prev)
-	{
-		set_prev = *prev;
-		(*prev)->next = new_node;
-	}
-	if (next && *next)
-	{
-		set_next = *next;
-		(*next)->prev = new_node;
-	}
-	new_node->node_kind = kind;
-	new_node->token_list_head = token_head;
-	new_node->pipeline_commands = NULL;
-	new_node->token_type = e_init;
-	new_node->prev = set_prev;
-	new_node->next = set_next;
-	return (new_node);
 }

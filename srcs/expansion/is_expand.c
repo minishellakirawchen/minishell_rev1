@@ -35,7 +35,7 @@ bool	is_name(const char *str)
 }
 
 // return true if $? or $name in str, do not depend on validate $name
-bool is_expandable_var_in_str(const char *str, char quote_chr)
+bool is_expandable_var(const char *str, char quote_chr)
 {
 	size_t	idx;
 

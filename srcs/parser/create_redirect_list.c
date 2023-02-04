@@ -6,16 +6,16 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:13:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 18:07:41 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 23:26:38 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* FREE OK */
 #include "expansion.h"
 
 /* prototype declaration */
-static int				create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list);
-static t_list_bdi		*get_filename_or_eof_tokenlist(t_list_bdi **token_get_from);
-static int				create_heredoc_eof_from_tokens(t_command_info **cmd_list, t_info *info);
+static int			create_redirect_list_by_pipeline(t_command_info **cmd_list);
+static t_list_bdi	*get_filename_or_eof_tokenlist(t_list_bdi **token_get_from);
+static int			create_heredoc_eof(t_command_info **cmd_list, t_info *info);
 
 /* functions */
 int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
@@ -23,7 +23,6 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 	t_list_bdi		*command_list_node;
 	t_command_info	*command_list;
 	t_exec_list		*exec_list_node;
-
 
 	if (!exexlist_head || !*exexlist_head)
 		return (FAILURE);
@@ -34,12 +33,10 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 		while (command_list_node)
 		{
 			command_list = command_list_node->content;
-			if (create_redirect_list_from_pipeline_tokens(&command_list) == FAILURE)
+			if (create_redirect_list_by_pipeline(&command_list) == FAILURE)
 				return (FAILURE);
-			if (create_heredoc_eof_from_tokens(&command_list, info) == FAILURE)
+			if (create_heredoc_eof(&command_list, info) == FAILURE)
 				return (FAILURE);
-//			printf("createe_redirect_list\n");
-//			debug_print_command_info(command_list);
 			command_list_node = command_list_node->next;
 		}
 		exec_list_node = exec_list_node->next;
@@ -47,25 +44,8 @@ int	create_redirect_list(t_exec_list **exexlist_head, t_info *info)
 	return (SUCCESS);
 }
 
-// pipeline_token_list		->	expand				->	split					->	char **commands
-// ------------------------------------------------------------------------------------------------------------------------
-// [echo]->[hello]->[world]															{"echo", "hello", "world", NULL}
-// [$key]					->	[echo hello world]	->	[echo]->[hello]->[world]	->	{"echo", "hello", "world", NULL}
-// ["hello"]=[world]
-//
-//bash-3.2$ export e1="echo hello"world'huga'
-//bash-3.2$ echo $e1  # echo helloworldhuga
-//;
-//bash-3.2$ export e2="test   a  $e1'hogehoge'"
-//bash-3.2$ echo $e2  # test a echo helloworldhuga'hogehoge'
-//
-//bash-3.2$ export x1=ech"o hello"
-//bash-3.2$ $x1       # hello
-
 /* redirect token node clear in function */
-
-// tokenをredirect_info->token_listに入れていく
-static int	create_redirect_list_from_pipeline_tokens(t_command_info **cmd_list)
+static int	create_redirect_list_by_pipeline(t_command_info **cmd_list)
 {
 	t_list_bdi		*popped_node;
 	t_token_elem	*token_elem;
@@ -129,7 +109,8 @@ static t_list_bdi	*get_filename_or_eof_tokenlist(t_list_bdi **token_get_from)
 	return (token_list);
 }
 
-t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **token_list)
+t_redirect_info	*create_redirect_info(
+		t_token_type io_type, t_list_bdi **token_list)
 {
 	t_redirect_info	*redirect_info;
 
@@ -148,10 +129,11 @@ t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **token_l
 	return (redirect_info);
 }
 
-static int	create_heredoc_eof_from_tokens(t_command_info **cmd_list, t_info *info)
+static int	create_heredoc_eof(
+		t_command_info **cmd_list, t_info *info)
 {
 	t_list_bdi		*node;
-	t_redirect_info	*redirect_info;
+	t_redirect_info	*r_info;
 	bool			is_quoted;
 
 	if (!cmd_list || !*cmd_list)
@@ -159,48 +141,63 @@ static int	create_heredoc_eof_from_tokens(t_command_info **cmd_list, t_info *inf
 	node = (*cmd_list)->redirect_list;
 	while (node)
 	{
-		redirect_info = node->content;
-		if (redirect_info->io_type == e_heredoc)
+		r_info = node->content;
+		if (r_info->io_type == e_heredoc)
 		{
-			redirect_info->heredoc_eof = get_filename_or_heredoc_eof(&redirect_info->token_list, &is_quoted, false, info);
-			if (!redirect_info->heredoc_eof)
+			r_info->heredoc_eof = get_filename_or_heredoc_eof(\
+			&r_info->token_list, &is_quoted, false, info);
+			if (!r_info->heredoc_eof)
 				return (FAILURE);
 			if (is_quoted)
-				redirect_info->is_expansion = false;
+				r_info->is_expansion = false;
 		}
 		node = node->next;
 	}
 	return (SUCCESS);
 }
 
-/* token node filename or heredoc eof is cleared in function */
-char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, bool *is_quoted, bool is_expand, t_info *info)
+t_list_bdi	*get_expanded_tokenlist(
+		t_list_bdi **token_get_from, bool *quoted, bool is_expand, t_info *info)
 {
-	char			*str_concatted_token;
-	t_list_bdi		*token_list;
 	t_list_bdi		*popped_token_node;
-	t_token_elem	*token_elem;
+	t_token_elem	*tok_elem;
+	t_list_bdi		*token_list;
 
-	if (!token_get_from || !*token_get_from)
-		return (NULL);
-	*is_quoted = false;
+	*quoted = false;
 	token_list = NULL;
 	while (*token_get_from)
 	{
 		popped_token_node = ft_lstpop_bdi(token_get_from);
-		token_elem = popped_token_node->content;
-		if (is_expand && is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
-			if (expand_var_in_str(&token_elem->word, info) == FAILURE)
+		tok_elem = popped_token_node->content;
+		if (is_expand && is_expandable_var(tok_elem->word, tok_elem->quote_chr))
+		{
+			if (expand_var_in_str(&tok_elem->word, info) == FAILURE)
 			{
 				ft_lstdelone_bdi(&popped_token_node, free_token_elem);
 				ft_lstclear_bdi(&token_list, free_token_elem);
 				return (FAILURE);
 			}
+		}
 		ft_lstadd_back_bdi(&token_list, popped_token_node);
-		*is_quoted |= token_elem->is_quoted;
-		if (!token_elem->is_connect_to_next_word)
+		*quoted |= tok_elem->is_quoted;
+		if (!tok_elem->is_connect_to_next_word)
 			break ;
 	}
+	return (token_list);
+}
+
+/* token node filename or heredoc eof is cleared in function */
+char	*get_filename_or_heredoc_eof(
+		t_list_bdi **token_get_frm, bool *quoted, bool is_expand, t_info *info)
+{
+	char			*str_concatted_token;
+	t_list_bdi		*token_list;
+
+	if (!token_get_frm || !*token_get_frm)
+		return (NULL);
+	token_list = get_expanded_tokenlist(token_get_frm, quoted, is_expand, info);
+	if (!token_list)
+		return (NULL);
 	if (remove_quote_in_tokens(&token_list) == FAILURE)
 	{
 		ft_lstclear_bdi(&token_list, free_token_elem);

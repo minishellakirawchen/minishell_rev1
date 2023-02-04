@@ -88,7 +88,7 @@ int		re_tokenize_tokens(t_list_bdi **src_tokens);
 
 
 /* is_expand.c */
-bool	is_expandable_var_in_str(const char *str, char quote_chr);
+bool	is_expandable_var(const char *str, char quote_chr);
 bool	is_name(const char *str);
 bool	is_expandable_exit_status(const char *str);
 bool	is_expandable_str_with_dollar(const char *str);
@@ -105,6 +105,6 @@ int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *tar
 
 
 
-t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **token_list);
+t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **tok_list);
 
 #endif //EXPANSION_H

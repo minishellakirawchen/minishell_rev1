@@ -6,99 +6,20 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:02:36 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 15:47:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 08:56:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* FREE OK */
 #include "parser.h"
 
-static int				create_command_info_from_pipeline_node(t_exec_list **exec_pipe_node);
-static t_command_info	*create_command_info(void);
-int						connect_command_info_to_execlist(t_list_bdi **connect_to, t_command_info *command_info);
-
-// operatorなら飛ばす
-// そうでなければlist=create_command_list(node->tokenlist)でpipeをnextとする線形リストを作成
-// node->command_list_head = command_list;
-// node->redirect_list_head = redirect_list;
-// echo hello > out (subshell) これは不可？
-// (subshell) > out
-// | (subshell) | これは問題なさそう
-// (hoge; huga && piyo)
-// subshellはforkするからpipeと同じ扱いとする
-// (内)は整形せず、subshellフラグを立てて、parsing->execへ渡す
-int	create_command_list(t_exec_list **exec_list_head)
+static int	connect_cmd_info_to_execlist(
+		t_list_bdi **connect_to, t_command_info *command_info)
 {
-	t_exec_list	*node;
+	t_list_bdi	*new_pipeline;
 
-	if (!exec_list_head || !*exec_list_head)
+	new_pipeline = ft_lstnew_bdi(command_info);
+	if (!new_pipeline)
 		return (FAILURE);
-	node = *exec_list_head;
-	while (node)
-	{
-		if (node->node_kind == e_node_pipeline)
-			if (create_command_info_from_pipeline_node(&node) == FAILURE)
-				return (FAILURE);
-		node = node->next;
-	}
-	return (SUCCESS);
-}
-
-
-/* create_command_info_from_pipeline_node(t_exec_list **pipeline_node) */
-/*
-// command_list->subshell_token_list : token list in subshell w/o ( and ) which same subshell_depth
-// command_list->pipeline_token_list : token list in until pipe
-
-// exec_list->token_list[i]				: cat Makefile    |  grep a       | (echo hello) > out1 | (pwd && (cd /bin && pwd) || echo hoge) >> out2 < in1
-// exec_list->token_list[i]->pipeline_commands	: command_list[0]->command_list[1]->command_list[2]    ->command_list[3]
-
-// command_list[0]->subshell_token_list	: NULL
-// command_list[0]->pipeline_token_list	: cat Makefile
-
-// command_list[1]->subshell_token_list	: NULL
-// command_list[1]->pipeline_token_list	: grep a
-
-// command_list[2]->subshell_token_list	: echo hello
-// command_list[2]->pipeline_token_list	: > out1
-
-// command_list[3]->subshell_token_list	: pwd && (cd /bin && pwd) || echo hoge
-// command_list[3]->pipeline_token_list	: >> out2 < in1
-*/
-
-// exec_pipe_node=exec_list
-// node_kind=pipeline_commands(!=operator)
-int create_command_info_from_pipeline_node(t_exec_list **exec_pipe_node)
-{
-	t_token_elem	*token_elem;
-	t_list_bdi		*popped_token;
-	t_command_info	*cmd_info;
-
-	if (!exec_pipe_node || !*exec_pipe_node || !(*exec_pipe_node)->token_list_head)
-		return (FAILURE);
-	cmd_info = create_command_info();
-	if (!cmd_info)
-		return (FAILURE);
-	while ((*exec_pipe_node)->token_list_head)
-	{
-		popped_token = ft_lstpop_bdi(&(*exec_pipe_node)->token_list_head);
-		token_elem = popped_token->content;
-		/* subshell or commands */
-		if (token_elem->type != e_ope_pipe)
-		{
-			move_tokens_to_command_info(&(*exec_pipe_node)->token_list_head, &cmd_info, popped_token);
-			continue ;
-		}
-		/* pipe */
-		if (connect_command_info_to_execlist(&(*exec_pipe_node)->pipeline_commands, cmd_info) == FAILURE)
-			return (FAILURE);
-		ft_lstdelone_bdi(&popped_token, free_token_elem); // delete '|'
-		cmd_info = create_command_info();
-		if (!cmd_info)
-			return (FAILURE);
-	}
-	/* last command line */
-	if (connect_command_info_to_execlist(&(*exec_pipe_node)->pipeline_commands, cmd_info) == FAILURE)
-		return (FAILURE);
+	ft_lstadd_back_bdi(connect_to, new_pipeline);
 	return (SUCCESS);
 }
 
@@ -122,13 +43,63 @@ static t_command_info	*create_command_info(void)
 	return (command_info);
 }
 
-int	connect_command_info_to_execlist(t_list_bdi **connect_to, t_command_info *command_info)
+static int	create_cmd_info_from_pipeline(\
+t_exec_list **pipe_node, t_command_info *cmd_info)
 {
-	t_list_bdi	*new_pipeline;
+	t_token_elem	*token_elem;
+	t_list_bdi		*popped_token;
 
-	new_pipeline = ft_lstnew_bdi(command_info);
-	if (!new_pipeline)
-		return (FAILURE); //TODO
-	ft_lstadd_back_bdi(connect_to, new_pipeline);
+	if (!pipe_node || !*pipe_node || !(*pipe_node)->token_list_head)
+		return (FAILURE);
+	while ((*pipe_node)->token_list_head)
+	{
+		popped_token = ft_lstpop_bdi(&(*pipe_node)->token_list_head);
+		token_elem = popped_token->content;
+		if (token_elem->type != e_ope_pipe)
+		{
+			move_tokens_to_cmd_info(\
+			&(*pipe_node)->token_list_head, &cmd_info, popped_token);
+			continue ;
+		}
+		if (connect_cmd_info_to_execlist(\
+		&(*pipe_node)->pipeline_commands, cmd_info) == FAILURE)
+			return (FAILURE);
+		ft_lstdelone_bdi(&popped_token, free_token_elem);
+		cmd_info = create_command_info();
+		if (!cmd_info)
+			return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
+/*
+ * skip if node is operator
+ * otherwise, create list = create_command_list(node->tokenlist)
+ * connect next list as `pipe`
+ * if subshell, assign in subshell list, parsing later process.
+ */
+int	create_command_list(t_exec_list **exec_list_head)
+{
+	t_exec_list		*node;
+	t_command_info	*cmd_info;
+
+	if (!exec_list_head || !*exec_list_head)
+		return (FAILURE);
+	node = *exec_list_head;
+	while (node)
+	{
+		if (node->node_kind == e_node_pipeline)
+		{
+			cmd_info = create_command_info();
+			if (!cmd_info)
+				return (FAILURE);
+			if (create_cmd_info_from_pipeline(&node, cmd_info) == FAILURE)
+				return (FAILURE);
+			if (connect_cmd_info_to_execlist(\
+			&node->pipeline_commands, cmd_info) == FAILURE)
+				return (FAILURE);
+		}
+		node = node->next;
+	}
 	return (SUCCESS);
 }

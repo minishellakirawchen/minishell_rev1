@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:22 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 12:35:08 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 08:55:49 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,21 +43,29 @@ typedef enum e_node_kind		t_node_kind;
 /* ************************** */
 
 /* create_operator_list.c */
-//t_exec_list	*create_operator_list(t_list **tokenlist_head);
-//int	create_operator_list(t_info *info);
-int	create_operator_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head);
-int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head, t_info *info);
+int				create_operator_list(t_list_bdi **tokenlst_head, t_exec_list **execlst_head);
+int				parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head, t_info *info);
+t_exec_list		*create_execlist_node(t_node_kind kind, t_list_bdi *token_lst, t_exec_list **prev, t_exec_list **next);
+
+/* create_operator_list_helper.c */
+bool	is_pipeline_token(t_token_elem *token_elem, ssize_t	subshell_depth);
+void	delete_operator_token(t_list_bdi **operator_token);
+
 
 /* create_command_list.c */
-int	create_command_list(t_exec_list **exec_list_head);
+int				create_command_list(t_exec_list **exec_list_head);
 
 /* create_redirect_list.c */
 int		create_redirect_list(t_exec_list **exexlist_head, t_info *info);
-char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_from, bool *is_quoted, bool is_expand, t_info *info);
+char	*get_filename_or_heredoc_eof(t_list_bdi **token_get_frm, bool *quoted, bool is_expand, t_info *info);
 
+/* create_execlist_node.c */
+t_exec_list *create_execlist_node(t_node_kind kind, t_list_bdi *token_lst, t_exec_list **prev, t_exec_list **next);
 
-/* move_tokens_to_command_info.c */
-void	move_tokens_to_command_info(t_list_bdi **token_list, t_command_info **command_list, t_list_bdi *popped_token);
+/* move_tokens_to_cmd_info.c */
+void	move_tokens_to_cmd_info(t_list_bdi **tok_lst, t_command_info **cmd_lst, t_list_bdi *popped_tok);
+void	move_tokens_to_subshell_list(t_list_bdi **tok_lst, t_command_info **cmd_lst, t_list_bdi *popped_tok);
+void	move_tokens_to_pipeline_list(t_command_info **command_list, t_list_bdi *popped_token);
 
 void	add_top_of_tree(t_exec_list **tree, t_exec_list *add_elem);
 void	add_bottom_of_tree(t_exec_list **tree, t_exec_list *add_elem);

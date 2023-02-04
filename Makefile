@@ -26,6 +26,8 @@ SRC		= main.c \
 		  tokenizer/get_trimmed_word.c \
 		  parser/parser.c \
 		  parser/create_operator_list.c \
+		  parser/create_operator_list_helper.c \
+		  parser/create_execlist_node.c \
 		  parser/create_command_list.c \
 		  parser/create_redirect_list.c \
 		  parser/move_tokens_to_command_list.c \

@@ -32,7 +32,7 @@ int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	while (node)
 	{
 		token_elem = node->content;
-		if (is_expandable_var_in_str(token_elem->word, token_elem->quote_chr))
+		if (is_expandable_var(token_elem->word, token_elem->quote_chr))
 			if (expand_var_in_str(&token_elem->word, info) == FAILURE)
 				return (FAILURE);
 		node = node->next;

@@ -1,5 +1,6 @@
 
 
+
 # wildcard
 Use wildcards in arguments in the current working directory.
 
@@ -583,6 +584,17 @@ test append4 >> "$key  "end  >> "$key"'  $key'$key$key ;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 ### heredocのexpansion
 実行順は最優先, ;も貫通される
 expansionの変数はどこの条件が使われる？
@@ -810,7 +822,52 @@ a4=
 
 
 
+
+
 ## Parsing
+
+
+
+
+### create_command_list
+```shell
+/* create_cmd_info_from_pipeline(t_exec_list **pipeline_node) */
+/*
+// command_list->subshell_token_list : token list in subshell w/o ( and ) which same subshell_depth
+// command_list->pipeline_token_list : token list in until pipe
+
+// exec_list->token_list[i]				: cat Makefile    |  grep a       | (echo hello) > out1 | (pwd && (cd /bin && pwd) || echo hoge) >> out2 < in1
+// exec_list->token_list[i]->pipeline_commands	: command_list[0]->command_list[1]->command_list[2]    ->command_list[3]
+
+// command_list[0]->subshell_token_list	: NULL
+// command_list[0]->pipeline_token_list	: cat Makefile
+
+// command_list[1]->subshell_token_list	: NULL
+// command_list[1]->pipeline_token_list	: grep a
+
+// command_list[2]->subshell_token_list	: echo hello
+// command_list[2]->pipeline_token_list	: > out1
+
+// command_list[3]->subshell_token_list	: pwd && (cd /bin && pwd) || echo hoge
+// command_list[3]->pipeline_token_list	: >> out2 < in1
+*/
+
+// exec_pipe_node=exec_list
+// node_kind=pipeline_commands(!=operator)
+
+// operatorなら飛ばす
+// そうでなければlist=create_command_list(node->tokenlist)でpipeをnextとする線形リストを作成
+// node->command_list_head = command_list;
+// node->redirect_list_head = redirect_list;
+// echo hello > out (subshell) これは不可？
+// (subshell) > out
+// | (subshell) | これは問題なさそう
+// (hoge; huga && piyo)
+// subshellはforkするからpipeと同じ扱いとする
+
+
+```
+
 
 ### parsing token list
 ```shell
@@ -827,7 +884,28 @@ a4=
 
 
 
+### create_redirect_list.c
+```shell
 
+/*
+ pipeline_token_list		->	expand				->	split					->	char **commands
+ ------------------------------------------------------------------------------------------------------------------------
+ [echo]->[hello]->[world]															{"echo", "hello", "world", NULL}
+ [$key]					->	[echo hello world]	->	[echo]->[hello]->[world]	->	{"echo", "hello", "world", NULL}
+ ["hello"]=[world]
+
+bash-3.2$ export e1="echo hello"world'huga'
+bash-3.2$ echo $e1  # echo helloworldhuga
+;
+bash-3.2$ export e2="test   a  $e1'hogehoge'"
+bash-3.2$ echo $e2  # test a echo helloworldhuga'hogehoge'
+
+bash-3.2$ export x1=ech"o hello"
+bash-3.2$ $x1       # hello
+*/
+
+
+```
 
 
 
