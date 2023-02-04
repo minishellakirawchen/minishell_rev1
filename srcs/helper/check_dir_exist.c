@@ -6,24 +6,37 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 22:37:33 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/01 20:34:26 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/04 11:27:23 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_dir_exist(char *tdir)
+void	print_cd_error(int err_no, char *cmd)
+{
+	printf("test err_no : %d\n", err_no);
+	if (err_no == ENOENT)
+		ft_printf("minishell: cd: %s: No such file or directory\n", cmd);
+	if (err_no == ENOTDIR)
+		ft_printf("minishell: cd: %s: Not a directory\n", cmd);
+	if (err_no == ETXTBSY)
+		ft_printf("minishell: cd: %s: Text file busy\n", cmd);
+}
+
+int	check_dir_exist(char *tdir, char *cmd)
 {
 	DIR		*dir;
-	int		err_no;
 
-	err_no = SUCCESS;
+	errno = 0;
 	dir = opendir(tdir);
-	if (ENOENT == errno)
-		err_no = ENOENT;
-	if (EACCES == errno)
-		err_no = EACCES;
 	if (dir)
 		closedir(dir);
-	return (err_no);
+	if (errno == ENOENT || errno == ENOTDIR || errno == ETXTBSY)
+	{
+		print_cd_error(errno, cmd);
+		return (FAILURE);
+	}
+	if (errno == EACCES)
+		return (errno);
+	return (SUCCESS);
 }
