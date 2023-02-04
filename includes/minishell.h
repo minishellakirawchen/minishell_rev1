@@ -173,12 +173,16 @@ struct s_token_elem
 // split
 struct s_split_info
 {
+	size_t			head_idx;
+	size_t			word_len;
+
 	const char		*src;
 	const char 		*delim;
 	const char 		*setchars;
+
 	bool			is_connect_to_next_word;  // hello"world"->[hello]=["world"]
-	size_t			head_idx;
-	size_t			word_len;
+	bool			is_quoted;
+	char 			quote_chr;
 };
 
 // exec_list->pipeline_commands->content

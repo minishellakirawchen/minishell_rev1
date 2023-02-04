@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:43:43 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 17:46:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ int	parsing_token_list(t_list_bdi **tokenlist_head, t_exec_list **execlist_head,
 		return (PROCESS_ERROR);
 	if (create_redirect_list(execlist_head, info) == FAILURE)
 		return (PROCESS_ERROR);
+
+	debug_print_exec_list(*execlist_head, "parsing fin");
+
 	return (EXIT_SUCCESS);
 }
 

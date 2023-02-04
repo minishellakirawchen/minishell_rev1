@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:47:24 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 17:52:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 	int			exit_status;
 	t_exec_list	*exec_node;
 	t_exec_list	*pipeline_node;
-	bool		debug = false;
+	bool		debug = true;
 
 	if (!info || !execlist_head)
 		return (FAILURE);
@@ -51,6 +51,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 		if (debug)
 		{
 				/* vvvvv debug mode: print command_info vvvvv */
+			printf("---------- after expand, before execute ----------\n");
 			t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
 			while (pipeline_cmds_node)
 			{
@@ -61,6 +62,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 				if (pipeline_cmds_node)
 					ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
 			}
+			printf("--------------------------------------------------\n");
 			/* ^^^^^ debug mode: print command_info ^^^^^ */
 		}
 //		printf("vvvvv execute vvvvv\n");
