@@ -233,7 +233,7 @@ void	free_command_info(void *content);
 void	free_redirect_info(void *content);
 void	clear_exec_list(t_exec_list **exec_list);
 
-int		update_shlvl(char **now_shlvl_str);
+int		update_shlvl(char **current_shlvl_str);
 int		add_initial_shlvl(t_list **env_list_head);
 
 
