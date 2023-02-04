@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 18:51:56 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 22:05:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,10 @@ bool	is_child_process(pid_t pid);
 bool	is_parent_process(pid_t pid);
 
 /* pipe_helper.c */
-void	init_pipefd(int prev_pipefd[2], int now_pipefd[2]);
-void	copy_prevfd_to_newfd(int prev_pipefd[2], const int now_pipefd[2]);
-int		dup2_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
-int		close_fds(int now_fd[2], int prev_fd[2], t_list_bdi *next);
+void	init_pipefd(int prev_pipefd[2], int next_pipefd[2]);
+void	copy_prevfd_to_newfd(int prev_pipefd[2], const int next_pipefd[2]);
+int		dup2_fds(int prev_pipefd[2], int next_pipefd[2], t_list_bdi *next);
+int		close_fds(int prev_pipefd[2], int next_pipefd[2], t_list_bdi *next);
 
 /* create_envp.c */
 char	**create_minishell_envp(t_list *envlist_head);

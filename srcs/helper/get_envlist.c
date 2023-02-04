@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:13:19 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 21:46:54 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 21:59:43 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ t_list	*get_envlist(void)
 		return (NULL);
 	is_shlvl_exist = false;
 	env_list_head = NULL;
-	errno = 0;
 	while (environ[idx])
 	{
 		if (add_envelem_from_environ(environ[idx], &is_shlvl_exist, &env_list_head) == FAILURE)
@@ -47,7 +46,6 @@ t_list	*get_envlist(void)
 		ft_lstclear(&env_list_head, free_env_elem);
 		return (NULL);
 	}
-	debug_print_env(env_list_head);
 	return (env_list_head);
 }
 
@@ -76,6 +74,7 @@ t_env_elem	*create_new_envelem(char *key, char *value, int not_print)
 {
 	t_env_elem	*elem;
 
+	errno = 0;
 	elem = (t_env_elem *)malloc(sizeof(t_env_elem));
 	if (!elem)
 		return (perror_ret_nullptr("malloc"));
@@ -98,13 +97,14 @@ static int	get_key_value_from_environ(const char *environ_elem, char **key, char
 
 	if (!environ_elem || !key || !value)
 		return (FAILURE);
+	errno = 0;
 	idx = 0;
 	while (environ_elem[idx] && environ_elem[idx] != '=')
 		idx++;
 	*key = ft_substr(environ_elem, 0, idx);
 	if (!*key)
 		return (perror_and_return_int("malloc", FAILURE));
-	if (environ_elem[idx] == '\0')//key only
+	if (environ_elem[idx] == '\0')
 	{
 		*value = NULL;
 		return (SUCCESS);
@@ -143,7 +143,7 @@ static t_env_elem	*get_env_elem(const char *environ_i, bool *is_shlvl)
 	if (update_shlvl(&elem->value) == FAILURE)
 	{
 		free_env_elem(elem);
-		return (perror_ret_nullptr("malloc"));
+		return (NULL);
 	}
 	return (elem);
 }
