@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:01 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 17:39:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 19:20:46 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,17 @@ typedef enum e_token_type		t_token_type;
 /*         tokenize           */
 /* ************************** */
 
-int			tokenize_input_line(t_info *info, const char *readline_input);
+/* space_split.c */
 t_list_bdi	*get_delim_splitted_tokenlist(const char *src, const char *delim, const char *setchars);
+
+/* create_splitted_word_token.c */
+t_token_elem	*create_splitted_word_token_from_src(t_split_info *s_info);
+
+/* get_trimmed_word.c */
+char *get_trimmed_word(t_split_info *s_info);
+
+
+int			tokenize_input_line(t_info *info, const char *readline_input);
 int			split_by_operators(t_list_bdi **token_head);
 
 int			arrange_and_validate_token_list(t_list_bdi **tokenlist_head);
