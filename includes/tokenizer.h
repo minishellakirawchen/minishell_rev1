@@ -18,6 +18,7 @@
 /*          typedef           */
 typedef struct s_info			t_info;
 typedef struct s_token_elem		t_token_elem;
+typedef struct s_split_info		t_split_info;
 
 typedef enum e_token_type		t_token_type;
 
@@ -40,6 +41,9 @@ int			validate_operator_tokens(t_token_elem *now_token, t_token_elem *next_token
 
 //t_token_elem	*create_token_elem(char *word);
 t_token_elem	*create_token_elem(char *word, bool is_connected, bool is_quoted, char quote_chr);
+
+t_split_info	*create_split_info(const char *src, const char *delim, const char *set);
+
 
 int			is_tokentype_operator(t_token_type type);
 int			is_tokentype_pipeline(t_token_type type);
