@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 23:22:14 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 21:23:07 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 	int				exit_status;
 	t_command_info	*command_info;
 	char			**minishell_envp;
-	pid_t			pid;
 
 	if (!pipeline_cmds_head || !pipeline_cmds_head->content)
 		return (PROCESS_ERROR);
@@ -30,14 +29,15 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
 	minishell_envp = create_minishell_envp(info->envlist_head);
 	if (!minishell_envp)
 		return (PROCESS_ERROR);
-	pid = fork();
-	if (pid < 0)
-		return (perror_ret_int("fork", PROCESS_ERROR));
-	if (is_child_process(pid))
-		exit (execute_pipeline_iter(pipeline_cmds_head, minishell_envp, info));
-	if (waitpid(pid, &exit_status, 0) < 0)
-		return (perror_ret_int("waitpid", PROCESS_ERROR));
-	exit_status = WEXITSTATUS(exit_status);
+//	pid = fork();
+//	if (pid < 0)
+//		return (perror_ret_int("fork", PROCESS_ERROR));
+//	if (is_child_process(pid))
+//		exit (execute_pipeline_iter(pipeline_cmds_head, minishell_envp, info));
+//	if (waitpid(pid, &exit_status, 0) < 0)
+//		return (perror_ret_int("waitpid", PROCESS_ERROR));
+//	exit_status = WEXITSTATUS(exit_status);
+	exit_status = execute_pipeline_iter(pipeline_cmds_head, minishell_envp, info);
 	free_2d_alloc((void **)minishell_envp);
 	return (exit_status);
 }
@@ -92,12 +92,13 @@ static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head)
 	/* wait */
 	last_node = ft_lstlast_bdi(pipeline_cmds_head);
 	command_info = last_node->content;
-	waitpid(command_info->pid, &exit_status, 0);
+//	waitpid(command_info->pid, &exit_status, 0);
 	pipeline_cmds_node = pipeline_cmds_head;
 	while (pipeline_cmds_node)
 	{
 		command_info = pipeline_cmds_node->content;
-		waitpid(command_info->pid, NULL, 0);
+//		waitpid(command_info->pid, NULL, 0);
+		waitpid(command_info->pid, &exit_status, 0);
 		pipeline_cmds_node = pipeline_cmds_node->next;
 	}
 	return (WEXITSTATUS(exit_status));

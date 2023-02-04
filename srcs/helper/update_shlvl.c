@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 21:56:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 09:33:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 21:47:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static char	*get_new_shlvl(int current_shlvl_num, bool is_atoi_success)
 int	add_initial_shlvl(t_list **env_list_head)
 {
 	t_env_elem		*elem;
+	t_list			*new_list;
 
 	if (!env_list_head)
 		return (FAILURE);
@@ -75,8 +76,14 @@ int	add_initial_shlvl(t_list **env_list_head)
 	if (!elem->key || !elem->value)
 	{
 		free_env_elem(elem);
-		elem = NULL;
 		return (perror_ret_int("malloc", FAILURE));
 	}
+	new_list = ft_lstnew(elem);
+	if (!new_list)
+	{
+		free_env_elem(elem);
+		return (perror_ret_int("malloc", FAILURE));
+	}
+	ft_lstadd_back(env_list_head, new_list);
 	return (SUCCESS);
 }

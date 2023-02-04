@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:13:19 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 17:42:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 21:46:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,14 @@ t_list	*get_envlist(void)
 		}
 		idx++;
 	}
-	if (!is_shlvl_exist && add_initial_shlvl(&env_list_head) == FAILURE)
+	if (is_shlvl_exist)
+		return (env_list_head);
+	if (add_initial_shlvl(&env_list_head) == FAILURE)
 	{
 		ft_lstclear(&env_list_head, free_env_elem);
 		return (NULL);
 	}
+	debug_print_env(env_list_head);
 	return (env_list_head);
 }
 

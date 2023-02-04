@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 17:44:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 21:48:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int	tokenize_input_line(t_info *info, const char *readline_input)
 	if (!info->tokenlist_head)
 		return (PROCESS_ERROR);
 
-	debug_print_tokens(info->tokenlist_head, "split space");
+//	debug_print_tokens(info->tokenlist_head, "split space");
 
 	/* split by control operation and redirection */
 	/* prev->before_list->next  ->  prev->split1->split2...->next */
 	if (split_by_operators(&info->tokenlist_head) == PROCESS_ERROR)
 		return (PROCESS_ERROR);
 
-	debug_print_tokens(info->tokenlist_head, "split opes");
+//	debug_print_tokens(info->tokenlist_head, "split opes");
 	return (EXIT_SUCCESS);
 }
