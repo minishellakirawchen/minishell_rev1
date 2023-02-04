@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 13:59:13 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 09:35:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_info	*init_info(void)
 
 static void	display_ascii_art(void)
 {
+	return ;
 	ft_printf("           _       _      _          _ _ \n" \
 	" _ __ ___ (_)_ __ (_)___ | |__   ___| | |\n" \
 	"| '_ ` _ \\| | '_ \\| / __|| '_ \\ / _ \\ | |\n" \
@@ -61,6 +62,6 @@ int	main(int argc, char **argv)
 	exit_status = prompt_loop(info);
 	// free param
 	free_info(&info);
-	system("leaks -q minishell");
+//	system("leaks -q minishell");
 	return (exit_status);
 }

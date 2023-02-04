@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 21:56:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 09:22:46 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 09:33:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int update_shlvl(char **current_shlvl_str)
 	*current_shlvl_str = get_new_shlvl(current_shlvl_num, is_atoi_success);;
 	if (!*current_shlvl_str)
 		return (FAILURE);
-	ft_dprintf(STDERR_FILENO, "[#DEBUG shlvl] now:%d, newnum:%s\n", current_shlvl_num, *current_shlvl_str);
+//	ft_dprintf(STDERR_FILENO, "[#DEBUG shlvl] now:%d, newnum:%s\n", current_shlvl_num, *current_shlvl_str);
 	return (SUCCESS);
 }
 

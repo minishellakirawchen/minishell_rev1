@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:35:56 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 09:40:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,29 @@ int	prompt_loop(t_info *info)
 {
 	int		exit_status;
 	bool	is_return_input;
-	char	*prompt;
-	char	*tmp;
-	char	*exit_status_string;
+//	char	*prompt;
+//	char	*tmp;
+//	char	*exit_status_string;
 
 	if (!info)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 	while (true)
 	{
-		exit_status_string = ft_itoa(exit_status);
-		tmp = ft_strjoin("minishell ", exit_status_string);
-		prompt = ft_strjoin(tmp, " $> ");
-		free(tmp);
-		free(exit_status_string);
+//		exit_status_string = ft_itoa(exit_status);
+//		tmp = ft_strjoin("minishell ", exit_status_string);
+//		prompt = ft_strjoin(tmp, " $> ");
+//		free(tmp);
+//		free(exit_status_string);
 
 //		debug_print_env(info->envlist_head);
 
 		is_return_input = false;
 		/* input */
-		info->readline_input = readline(prompt);
-		free(prompt);
+//		info->readline_input = readline(prompt);
+//		free(prompt);
+
+		info->readline_input = readline("minishell $ ");
 //		info->readline_input = readline(PROMPT);
 		if (!info->readline_input)
 		{
