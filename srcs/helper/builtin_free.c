@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/31 23:23:06 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/03 19:39:38 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,13 @@ int	cd_error_handler(t_cd_info *cd_info, char **cmds)
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
+}
+
+void	init_key_value(t_export_info *e_info)
+{
+	if(e_info != NULL)
+	{
+		e_info->key = NULL;
+		e_info->value = NULL;
+	}
 }
