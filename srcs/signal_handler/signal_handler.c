@@ -6,25 +6,13 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:39 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 00:59:19 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 01:38:33 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void prompt_int_handler(int sig_num)
-{
-	if (sig_num == SIGINT)
-	{
-		ft_printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		// rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-static void init_sigaction(int sig_no, struct sigaction sig_act, sigfunc *sig_handler)
+ void init_sigaction(int sig_no, struct sigaction sig_act, sigfunc *sig_handler)
 {
 	errno = 0;
 
@@ -36,13 +24,25 @@ static void init_sigaction(int sig_no, struct sigaction sig_act, sigfunc *sig_ha
 
 }
 
-void	init_signal_in_prompt(void)
+int	print_signal_error(int exit_status, t_list_bdi *node, t_list_bdi *last_node)
 {
-	struct sigaction	sig_int_act;
-	struct sigaction	sig_quit_act;
-
-	ft_bzero(&sig_int_act, sizeof(sigaction));
-	init_sigaction(SIGINT, sig_int_act, prompt_int_handler);
-	ft_bzero(&sig_quit_act, sizeof(sigaction));
-	init_sigaction(SIGQUIT, sig_quit_act, SIG_IGN);
+	if (WIFEXITED(exit_status))
+		exit_status = WEXITSTATUS(exit_status);
+	else if (WIFSIGNALED(exit_status))
+	{
+		if (WTERMSIG(exit_status) == 3 && last_node == node)
+			ft_printf("SIGQUIT: %d\n", WTERMSIG(exit_status));
+		exit_status = 131;
+	}
+	else if (WIFSTOPPED(exit_status))
+	{
+		ft_printf("stopped by signal: %d\n", WSTOPSIG(exit_status));
+		exit_status = 145;
+	}
+	else if (WIFCONTINUED(exit_status))
+	{
+		ft_printf("continued\n");
+		exit_status = 0;
+	}
+	return (exit_status);
 }

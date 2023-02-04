@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 23:53:37 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 01:26:54 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	prompt_loop(t_info *info)
 	if (!info)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
-	init_signal_in_prompt();
+	init_signal_prompt();
 	while (true)
 	{
 		is_return_input = false;
@@ -83,6 +83,7 @@ int	prompt_loop(t_info *info)
 		clear_input_info(&info);
 		if (exit_status == PROCESS_ERROR)
 			break ;
+		info->exit_status = exit_status;
 	}
 	return (exit_status);
 }

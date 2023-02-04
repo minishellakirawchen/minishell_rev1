@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 19:45:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 23:53:36 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 {
 	if (!command_info || !minishell_envp || !info)
 		return (FAILURE);
-
 //	debug_print_2d_arr(command_info->commands, "<execute command>");
 
 	/* exec redirect */
