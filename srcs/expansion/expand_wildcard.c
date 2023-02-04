@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 09:45:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 23:06:03 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 10:44:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int	get_tokens_match_with_wildcard(t_list_bdi **save, const char *wildcard_str, 
 		}
 		if (is_matches_wildcard_and_target_str(wildcard_str, name, valid_list))
 		{
-			token_elem = create_token_elem(name);
+			token_elem = create_token_elem(name, false, false, '\0');
 			newlist = ft_lstnew_bdi(token_elem);
 			if (!newlist || !token_elem)
 				return (perror_ret_int("malloc", FAILURE));// TODO: free

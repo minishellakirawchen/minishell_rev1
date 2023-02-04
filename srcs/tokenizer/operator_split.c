@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 17:15:53 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 23:15:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 10:43:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* FREE OK */
@@ -73,24 +73,23 @@ t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char 
 				word_len++;
 		}
 		splittd_word = ft_substr(src, head_idx, word_len);
-		token_elem = (t_token_elem *)malloc(sizeof(t_token_elem));
-		if (!splittd_word || !token_elem)
+		if (!splittd_word)
 		{
-			splittd_word = free_1d_alloc(splittd_word);
-			free_token_elem(token_elem);
+			ft_lstclear_bdi(&splitted_list_head, free_token_elem);
 			return (perror_ret_nullptr("malloc"));
 		}
-		token_elem->word = splittd_word;
-		token_elem->type = e_init;
-		token_elem->is_connect_to_next_word = is_connect_to_next;
-		token_elem->quote_chr = quote_chr;
-		token_elem->is_quoted = is_quoted;
-		token_elem->subshell_depth = -1;
+		token_elem = create_token_elem(splittd_word, is_connect_to_next, is_quoted, quote_chr);
+		if (!token_elem)
+		{
+			free(splittd_word);
+			ft_lstclear_bdi(&splitted_list_head, free_token_elem);
+			return (perror_ret_nullptr("malloc"));
+		}
 		new_list = ft_lstnew_bdi(token_elem);
 		if (!new_list)
 		{
-			splittd_word = free_1d_alloc(splittd_word);
 			free_token_elem(token_elem);
+			ft_lstclear_bdi(&splitted_list_head, free_token_elem);
 			return (perror_ret_nullptr("malloc"));
 		}
 		ft_lstadd_back_bdi(&splitted_list_head, new_list);
