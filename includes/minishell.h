@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <stdbool.h>
+# include <errno.h>
 
 # include "./../libs/include/libft.h"
 

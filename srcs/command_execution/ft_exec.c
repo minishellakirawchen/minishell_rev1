@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 18:54:55 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 22:33:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
 
 	/* exec redirect */
 	if (execute_redirect(command_info, info) == FAILURE)
-		exit (PROCESS_ERROR);
+		exit (FILE_OPEN_ERROR);
 
 	/* is_builtin -> execute_builtin */
 	if (is_builtin(command_info->commands))
@@ -56,7 +56,6 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 	if (!commands)
 		return (PROCESS_ERROR);
 	errno = 0;
-
 	env_paths = get_env_value(PATH, envlist);
 	splitted_paths = ft_split(env_paths, CHA_PATH_DELIM);
 	if (!splitted_paths)

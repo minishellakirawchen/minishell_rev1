@@ -61,7 +61,8 @@ static int	create_heredoc_file_in_command_info(t_command_info **cmd_info, int *h
 			redirct_info->filename = get_heredoc_tmp_filename(*heredoc_cnt);
 			if (!redirct_info->filename)
 				return (FAILURE);
-			(*cmd_info)->redirect_fd[FD_HEREDOC] = get_openfile_fd(redirct_info->filename, e_io_overwrite);
+			(*cmd_info)->redirect_fd[FD_HEREDOC] = get_openfile_fd(
+					redirct_info->filename, e_io_overwrite);
 			if ((*cmd_info)->redirect_fd[FD_HEREDOC] < 0)
 				return (perror_ret_int("open", FAILURE));
 			heredoc_exit_status = do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], redirct_info);

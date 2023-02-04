@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 22:05:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/04 22:11:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ static int	execute_pipeline_iter(t_list_bdi *pipeline_cmds_head, char **envp, t_
 	exit_status = get_last_status_and_wait_children(pipeline_cmds_head);
 	return (exit_status);
 }
-
-
 
 static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head)
 {
