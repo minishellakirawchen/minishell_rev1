@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:30:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 11:20:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,4 +289,34 @@ void	debug_print_env(t_list *envlist)
 	}
 }
 
+void	print_dp_array(int **array, const char *wild, const char *target)
+{
+	size_t			row;
+	size_t			col;
+	const size_t	wild_len = ft_strlen_ns(wild);
+	const size_t	str_len = ft_strlen_ns(target);
+
+	if (!array)
+		return ;
+	row = 0;
+	while (row < wild_len + 2)
+	{
+		col = 0;
+		while (col < str_len + 2)
+		{
+			if ((row == 0 && col == 0) || (row == 1 && col == 0) || (row == 0 && col == 1))
+				ft_printf("- ");
+			else if (row == 0)
+				ft_printf("%c ", target[col - 2]);
+			else if (col == 0)
+				ft_printf("%c ", wild[row - 2]);
+			else
+				ft_printf("%d ", array[row - 1][col - 1]);
+			col++;
+		}
+		row++;
+		ft_printf("\n");
+	}
+	ft_printf("\n");
+}
 

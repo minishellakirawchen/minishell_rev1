@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 19:40:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 18:23:39 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 11:50:00 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,14 +157,18 @@ bool	is_matches_wildcard_and_str(char *wildcard_str, char *target_str)
 	//dp[i][j] : wildcardのi文字目, targetのj文字目まで見て文字列が成立すれば1, 成立しなければ0
 	dp[0][0] = 1;
 
-	i = 0;
+	i = 1;
 	while (i < len_wildcard + 1)
 	{
 		j = 0;
 		while (j < len_target + 1)
 		{
 			if (wildcard_str[i - 1] == '*')
-				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+			{
+				dp[i][j] = max(dp[i][j], dp[i - 1][j]);
+				if (j > 0)
+					dp[i][j] = max(dp[i][j], dp[i][j - 1]);
+			}
 			if ((j > 0) && (wildcard_str[i - 1] == target_str[j - 1]))
 				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
 			j++;

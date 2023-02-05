@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 19:40:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 20:25:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 11:47:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,17 +153,20 @@ static int	is_match(const char *wildcard_str, const char *target_str, int **dp, 
 		while (j < len_target + 1)
 		{
 			if (valid_table[i - 1] == 1) //wildcard
-				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
-			if ((j > 0) && wildcard_str[i - 1] == target_str[j - 1] && valid_table[i - 1] == 0)
+			{
+				dp[i][j] = max(dp[i - 1][j], dp[i][j]);
+				if (j > 0)
+					dp[i][j] = max(dp[i][j - 1], dp[i][j]);
+//				printf("i:%zu, j:%zu, j-1:%zu\n", i, j, j-1);
+			}
+			if (j > 0 && wildcard_str[i - 1] == target_str[j - 1] && valid_table[i - 1] == 0)
 				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
 			j++;
 		}
 		i++;
 	}
 	print_dp_array(dp, wildcard_str, target_str);
-	if (dp[len_wildcard][len_target] > 0)
-		return (true);
-	return (false);
+	return (dp[len_wildcard][len_target] > 0);
 }
 
 int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str, const int *valid_table)

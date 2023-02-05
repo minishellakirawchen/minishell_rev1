@@ -6,16 +6,17 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 14:33:57 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 11:15:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* FREE OK */
+
 #include "expansion.h"
 
 /* command_list->redirect_list = heredoc->io->io->heredoc->... */
 /* if type=io, expand and create filename
  * from redirect_list->content=redirect_info->token_list */
-int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline_node, t_info *info)
+int	expand_var_and_create_commands_from_tokens(\
+t_exec_list **pipeline_node, t_info *info)
 {
 	t_list_bdi		*cmd_list_node;
 	t_command_info	*cmd_info;
@@ -28,7 +29,8 @@ int	expand_var_and_create_commands_from_tokens(t_exec_list **pipeline_node, t_in
 		cmd_info = cmd_list_node->content;
 		if (cmd_info->pipeline_token_list)
 		{
-			cmd_info->commands = create_expanded_commands(&cmd_info->pipeline_token_list, info, NULL);
+			cmd_info->commands = create_expanded_commands(\
+			&cmd_info->pipeline_token_list, info, NULL);
 			if (!cmd_info->commands)
 				return (FAILURE);
 		}
