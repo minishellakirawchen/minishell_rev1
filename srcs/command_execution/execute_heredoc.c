@@ -3,37 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execute_heredoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 14:51:36 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 21:23:51 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
-
-static int	do_heredoc(int fd, t_redirect_info *redirect_info)
-{
-	char	*line;
-
-	if (fd < 0 || !redirect_info || !redirect_info->heredoc_eof)
-		return (FAILURE);
-	while (true)
-	{
-		ft_dprintf(STDERR_FILENO, "> ");
-		line = get_next_line(STDIN_FILENO, true);
-		if (is_eof(line))
-			return (SUCCESS);
-		if (is_delimiter(line, redirect_info->heredoc_eof))
-		{
-			free_1d_alloc(line);
-			break ;
-		}
-		ft_dprintf(fd, line);
-		free_1d_alloc(line);
-	}
-	return (SUCCESS);
-}
+#include "minishell.h"
 
 static int	get_filename_and_openfile(\
 t_redirect_info **redirect_info, int *cnt, t_command_info **cmd_info)

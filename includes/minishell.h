@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 17:44:17 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 21:54:52 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@
 /* struct */
 typedef struct s_info			t_info;
 typedef struct s_exec_list		t_exec_list;
+typedef struct s_gbl_var		t_gbl_var;
 
 /* lst->constent */
 typedef struct s_env_elem		t_env_elem;
@@ -141,6 +142,14 @@ struct s_exec_list
 	t_list			*envlist_head;
 	t_list			*tokenlist_head;
 };
+
+/*golbal variable for signal*/
+struct s_gbl_var
+{
+	volatile sig_atomic_t heredoc_status;
+	volatile sig_atomic_t exit_status;
+};
+
 
 /*  lst->(void *)content  */
 /* environment variable list */

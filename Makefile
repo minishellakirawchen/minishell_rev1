@@ -69,6 +69,7 @@ SRC		= main.c \
 		  command_execution/execute_builtin.c \
 		  signal_handler/signal_handler.c \
 		  signal_handler/init_signal_execute.c \
+		  signal_handler/init_signal_heredoc.c \
 		  ft_builtin/ft_echo.c \
 		  ft_builtin/ft_env.c \
 		  ft_builtin/ft_export.c \

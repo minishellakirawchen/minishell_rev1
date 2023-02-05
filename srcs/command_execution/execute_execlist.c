@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_execution.c                                :+:      :+:    :+:   */
+/*   execute_execlist.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 16:43:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 21:36:23 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 		return (PROCESS_ERROR);
 
 	debug_print_exec_list(*execlist_head, "execlist befor expand");
-
+	set_tc_attr_in_execute();
 	exec_node = *execlist_head;
 	while (exec_node)
 	{

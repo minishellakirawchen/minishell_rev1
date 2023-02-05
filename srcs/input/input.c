@@ -6,20 +6,20 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 18:39:46 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 22:01:39 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "input.h"
+#include "minishell.h"
 
-volatile sig_atomic_t exit_status = EXIT_SUCCESS;
+t_gbl_var g_var;
 
 static void prompt_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		exit_status = EXIT_FAILURE;
-		write(STDOUT_FILENO, "\n", 2);
+		g_var.exit_status = EXIT_FAILURE;
+		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
@@ -59,9 +59,9 @@ int	prompt_loop(t_info *info)
 
 	if (!info)
 		return (FAILURE);
-	init_signal_prompt();
 	while (true)
 	{
+		init_signal_prompt();
 		exit_status_string = ft_itoa(info->exit_status);
 		tmp = ft_strjoin("minishell ", exit_status_string);
 		prompt = ft_strjoin(tmp, " $> ");
@@ -73,7 +73,6 @@ int	prompt_loop(t_info *info)
 		set_tc_attr_out_execute();
 		info->readline_input = readline(prompt);
 		free (prompt);
-		set_tc_attr_in_execute();
 		if (!info->readline_input)
 		{
 			// debug
@@ -91,40 +90,40 @@ int	prompt_loop(t_info *info)
 //		ft_dprintf(STDERR_FILENO, "#%-15s:[%s]\n", "input", info->readline_input);
 
 		/* tokenize */
-		exit_status = tokenize_input_line(info, info->readline_input);
-		is_return_input |= exit_status;
-		if (exit_status != EXIT_SUCCESS)
+		g_var.exit_status = tokenize_input_line(info, info->readline_input);
+		is_return_input |= g_var.exit_status;
+		if (g_var.exit_status != EXIT_SUCCESS)
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]tokenize failure\n");
 
 		/* input validation (Mandatory/Bonus) */
-		if (exit_status == EXIT_SUCCESS)
+		if (g_var.exit_status == EXIT_SUCCESS)
 		{
-			exit_status = arrange_and_validate_token_list(&info->tokenlist_head);
-			is_return_input |= exit_status;
+			g_var.exit_status = arrange_and_validate_token_list(&info->tokenlist_head);
+			is_return_input |= g_var.exit_status;
 		}
 		// debug
 		debug_print_tokens(info->tokenlist_head, "arranged");
 
 		/* parsing (Mandatory/Bonus) */
-		if (!is_return_input && exit_status == EXIT_SUCCESS)
-			exit_status = parsing_token_list(&info->tokenlist_head, &info->execlist_head, info);
-		is_return_input |= exit_status;
-		if (exit_status != EXIT_SUCCESS)
+		if (!is_return_input && g_var.exit_status == EXIT_SUCCESS)
+			g_var.exit_status = parsing_token_list(&info->tokenlist_head, &info->execlist_head, info);
+		is_return_input |= g_var.exit_status;
+		if (g_var.exit_status != EXIT_SUCCESS)
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]parsing failure\n");
 		/* expansion & command_execution */
-		if (!is_return_input && exit_status == EXIT_SUCCESS)
-			exit_status = execute_execlist(&info->execlist_head, info);
+		if (!is_return_input && g_var.exit_status == EXIT_SUCCESS)
+			g_var.exit_status = execute_execlist(&info->execlist_head, info);
 
 		/* clear input */
 		clear_input_info(&info);
-		if (exit_status == PROCESS_ERROR)
+		if (g_var.exit_status == PROCESS_ERROR)
 			break ;
-		info->exit_status = exit_status;
+		info->exit_status = g_var.exit_status;
 		// exit_status_string = ft_itoa(exit_status);
 		// tmp = ft_strjoin("minishell ", exit_status_string);
 		// prompt = ft_strjoin(tmp, " $> ");
 		// free(tmp);
 		// free(exit_status_string);
 	}
-	return (exit_status);
+	return (g_var.exit_status);
 }

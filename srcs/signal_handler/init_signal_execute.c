@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/05 16:51:23 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 21:39:45 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	init_signal_execute(void)
 	struct sigaction	sig_int_act;
 	struct sigaction	sig_quit_act;
 
+	signal(SIGINT, SIG_IGN);
 	ft_bzero(&sig_int_act, sizeof(sigaction));
 	ft_bzero(&sig_quit_act, sizeof(sigaction));
 	init_sigaction(SIGINT, sig_int_act, execute_int_handler);
