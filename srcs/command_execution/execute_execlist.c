@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 20:44:12 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 22:03:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
 while (pipeline_cmds_node)
 {
 t_command_info *command_info = pipeline_cmds_node->content;
-// tmp print
 debug_print_command_info(command_info);
 pipeline_cmds_node = pipeline_cmds_node->next;
 if (pipeline_cmds_node)
