@@ -12,7 +12,8 @@
 
 #include "expansion.h"
 
-static int	*create_realloc_dst(t_token_elem **dst, t_token_elem *src, size_t *dst_idx)
+static int	*create_realloc_dst(\
+t_token_elem **dst, t_token_elem *src, size_t *dst_idx)
 {
 	size_t	dst_len;
 	size_t	src_len;

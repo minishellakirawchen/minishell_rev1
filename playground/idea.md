@@ -184,6 +184,49 @@ bash-3.2 0 $ echo ****a
 export b=*は展開されない
 ここの除外がむずすぎる
 
+### expand_wildcard.c
+```shell
+//bash-3.2 0 $ echo *		//in1 in2 ngfile out
+
+//bash-3.2-2 0 $ echo *i	//*i				存在しない場合はnot expand
+//bash-3.2-2 0 $ echo *i*	//in1 in2 ngfile	存在する場合は置換, is delim by token or space, spaceで良さそう？
+
+//bash-3.2-2 0 $ export a2="a  b      c"
+//bash-3.2-2 0 $ echo $a2	//a b c
+//bash-3.2-2 0 $ cat $a2
+//cat: a: No such file or directory
+//cat: b: No such file or directory
+//cat: c: No such file or directory
+
+//bash-3.2-2 0 $ export b1="*"
+//bash-3.2-2 0 $ export b2=i
+//bash-3.2-2 0 $ echo $b2$b1
+//in1 in2
+//bash-3.2-2 0 $ echo $b1$b2
+//*i
+//bash-3.2-2 0 $
+
+//expand var -> expand wild card
+//unquotedされていてもOK? ->NG, "*" 'I' is *
+
+//$b1$b2 が結合されたtokenに対して expand wildcardを展開、quotedには展開しない
+//concatはどこで実施している...?
+//get_expanded_strでconcat済みなので、expand var -> expand wildcard ->quote removalで良さそう
+
+// tokenを検索, *が展開できれば置換する
+// wildcard_str is one word
+\
+// sort as a to z
+// echo  * :隠しファイルは表示しない
+// echo .* :                する
+// echo .*.:                しない
+// -> .* or not
+// matchしたものをリストに保持してsortする
+
+
+
+
+```
 
 
 
@@ -316,7 +359,19 @@ bash: *: command not found
 // input pipeline is type=pipeline
 // type=subshell is expanded in execution->parsing process
 
+### expand in token.c
+```shell
 
+// "$hoge $huga"
+// remove "'	//"'hoge'"->'hoge'
+
+// $hoge$huga -> helloworld$huga
+// ^^^^^         ^^^^^^^^^^
+// ^idx                    ^idx
+// pop->addback newlist
+
+
+```
 
 
 

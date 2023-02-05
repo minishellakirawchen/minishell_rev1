@@ -6,28 +6,19 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:15:59 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 17:23:47 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 12:13:35 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-// "$hoge $huga"
-// remove "'	//"'hoge'"->'hoge'
-
-// $hoge$huga -> helloworld$huga
-// ^^^^^         ^^^^^^^^^^
-// ^idx                    ^idx
-// pop->addback newlist
-
-int expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
+int	expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 {
 	t_token_elem	*token_elem;
 	t_list_bdi		*node;
 
 	if (!src_tokens || !info)
 		return (FAILURE);
-
 	node = *src_tokens;
 	while (node)
 	{
@@ -60,13 +51,11 @@ char	*create_string_by_concat_tokens(t_list_bdi *list_head)
 	concat_str = (char *)ft_calloc(sizeof(char), size + 1);
 	if (!concat_str)
 		return (perror_ret_nullptr("malloc"));
-	node = list_head;
-	while (node)
+	while (list_head)
 	{
-		token_elem = node->content;
+		token_elem = list_head->content;
 		ft_strlcat(concat_str, token_elem->word, size + 1);
-		node = node->next;
+		list_head = list_head->next;
 	}
 	return (concat_str);
 }
-
