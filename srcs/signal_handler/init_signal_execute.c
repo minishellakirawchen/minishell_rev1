@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/05 01:28:15 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 16:51:23 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ void	init_signal_execute(void)
 
 	ft_bzero(&sig_int_act, sizeof(sigaction));
 	ft_bzero(&sig_quit_act, sizeof(sigaction));
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
 	init_sigaction(SIGINT, sig_int_act, execute_int_handler);
 	init_sigaction(SIGQUIT, sig_quit_act, execute_quit_handler);
 }

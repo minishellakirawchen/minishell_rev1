@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 01:39:23 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 15:15:27 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ static int	execute_pipeline_iter(t_list_bdi *pipeline_cmds_head, char **envp, t_
 	t_list_bdi		*pipeline_cmds_node;
 	int				exit_status;
 
-
 	init_pipefd(prev_pipefd, now_pipefd);
+	set_tc_attr_in_execute();
 	pipeline_cmds_node = pipeline_cmds_head;
 	while (pipeline_cmds_node)
 	{
