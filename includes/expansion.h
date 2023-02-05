@@ -99,10 +99,17 @@ int		expanded_wildcard_to_token_list(t_list_bdi **expanded_token_list);
 /* concat_wildcard_valid_list.c */
 int	concat_wildcard_valid_list(t_token_elem **dst, t_token_elem *src);
 
-
 /* is_matches_wildcard.c */
-//int		is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str);
 int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str, const int *valid_table);
+
+/* get_dir_for_wildcard.c */
+t_list_bdi	*get_read_dir_list(void);
+
+/* sort_strlist_for_wildcard.c */
+void	sort_ascending_strlist(t_list_bdi **list_head);
+
+/* get_wildcard_tokens_from_dir */
+int	get_wildcard_tokens(t_list_bdi **get_tokens_save_to, const char *wildcard_str, const int *valid_list);
 
 
 t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **tok_list);

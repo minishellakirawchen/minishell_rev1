@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 10:30:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 12:32:50 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:05:44 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int **dp, const int *valid_table)
 		{
 			if (valid_table[i - 1] == 1)
 				update_dp_table_if_wildcard(&dp, i, j);
-			if (j > 0 && valid_table[i - 1] == 0 && wildcard[i - 1] == target[j - 1])
+			if (j > 0 && valid_table[i - 1] == 0 \
+			&& wildcard[i - 1] == target[j - 1])
 				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
 			j++;
 		}

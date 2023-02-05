@@ -48,6 +48,9 @@ SRC		= main.c \
 		  expansion/concat_wildcard_valid_list.c \
 		  expansion/quote_removal_or_re_tokenize.c \
 		  expansion/get_env_value.c \
+		  expansion/get_dir_for_wildcard.c \
+		  expansion/get_wildcard_token_from_dir.c \
+		  expansion/sort_strlist_for_wildcard.c \
 		  command_execution/execute_execlist.c \
 		  command_execution/execute_pipeline.c \
 		  command_execution/execute_redirect.c \
