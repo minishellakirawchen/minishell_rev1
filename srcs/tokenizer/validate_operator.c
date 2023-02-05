@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:00 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 13:29:36 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:55:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int	validate_operator_sign(t_token_elem *now_token)
 {
-	// e_token_type idx より良い方法はないものか...
-	const char		*operators[] = {\
+	const char	*operators[] = {\
 	";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", NULL};
 	size_t		idx;
 
