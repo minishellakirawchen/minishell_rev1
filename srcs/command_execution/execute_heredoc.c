@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 21:23:51 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 00:21:08 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ static int	closefile_and_judge_status(t_command_info **cmd_info, int status)
 	return (SUCCESS);
 }
 
-static int	create_heredoc_file_in_cmd_info(t_command_info **cmd_info, int *cnt)
+static int	create_heredoc_file_in_cmd_info(t_command_info **cmd_info,
+	int *cnt, int *exit_status)
 {
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*r_info;
-	int				execute_status;
 
 	if (!cmd_info || !*cmd_info)
 		return (FAILURE);
@@ -55,9 +55,11 @@ static int	create_heredoc_file_in_cmd_info(t_command_info **cmd_info, int *cnt)
 		{
 			if (get_filename_and_openfile(&r_info, cnt, cmd_info) == FAILURE)
 				return (FAILURE);
-			execute_status = do_heredoc(\
-			(*cmd_info)->redirect_fd[FD_HEREDOC], r_info);
-			if (closefile_and_judge_status(cmd_info, execute_status) == FAILURE)
+			if (do_heredoc(\
+				(*cmd_info)->redirect_fd[FD_HEREDOC],
+					r_info, exit_status) == PROCESS_ERROR)
+				return (PROCESS_ERROR);
+			if (closefile_and_judge_status(cmd_info, *exit_status) == FAILURE)
 				return (FAILURE);
 			*cnt += 1;
 		}
@@ -66,7 +68,7 @@ static int	create_heredoc_file_in_cmd_info(t_command_info **cmd_info, int *cnt)
 	return (SUCCESS);
 }
 
-int	execute_heredoc(t_exec_list **execlist_head)
+int	execute_heredoc(t_exec_list **execlist_head, int *exit_status)
 {
 	t_exec_list		*exec_node;
 	t_list_bdi		*command_list_node;
@@ -74,7 +76,7 @@ int	execute_heredoc(t_exec_list **execlist_head)
 	int				heredoc_cnt;
 
 	if (!execlist_head || !*execlist_head)
-		return (FAILURE);
+		return (PROCESS_ERROR);
 	heredoc_cnt = 0;
 	exec_node = *execlist_head;
 	while (exec_node)
@@ -84,8 +86,8 @@ int	execute_heredoc(t_exec_list **execlist_head)
 		{
 			command_info = command_list_node->content;
 			if (create_heredoc_file_in_cmd_info(\
-			&command_info, &heredoc_cnt) == FAILURE)
-				return (FAILURE);
+			&command_info, &heredoc_cnt, exit_status) == PROCESS_ERROR)
+				return (PROCESS_ERROR);
 			command_list_node = command_list_node->next;
 		}
 		exec_node = exec_node->next;

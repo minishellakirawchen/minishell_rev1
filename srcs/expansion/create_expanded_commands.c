@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 11:09:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 20:59:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* FREE OK */
@@ -92,17 +92,6 @@ static char	**create_commands_from_token_list(t_list_bdi **token_list)
  create commands		[echo],[hello] -> {"echo", "hello", NULL}
 */
 
-/* token list is freed in function */
-/* *concat_str need free in call function even if error occurred */
-/*
-debug_print_tokens(*token_list, "1) create_expanded_commands");
-debug_print_tokens(*token_list, "2) create_expanded_commands - remove quote");
-printf("3) create_expanded_commands - concat_str:%s", concat_str ? *concat_str : NULL);
-debug_print_tokens(*token_list, "4) create_expanded_commands - expand var");
-debug_print_tokens(*token_list, "5) create_expanded_commands - re tokenize");
-debug_print_tokens(*token_list, "6) create_expanded_commands - concat");
-debug_print_tokens(*token_list, "7) create_expanded_commands - expand wildcard");
-*/
 char	**create_expanded_commands(\
 t_list_bdi **token_list, t_info *info, char **concat_str)
 {

@@ -1734,7 +1734,7 @@ int execute_operator_list(t_exec_list *exec_list_head)
     t_exec_list *exec_node;
     t_pipe_line *pipe_node;
     t_node_kind operator_type;
-    int         exit_status;
+    int         g_signal_status;
     
 	if (!exec_list_head || !*exec_list_head)
 		return (FAILURE);
@@ -1751,17 +1751,17 @@ int execute_operator_list(t_exec_list *exec_list_head)
         }
         if (operator_type == ';' && !exec_node)
             break ;
-        exit_status = exec_pipeline(exec_node); pipeline_commands->operator->pipeline_commands->operator,...
+        g_signal_status = exec_pipeline(exec_node); pipeline_commands->operator->pipeline_commands->operator,...
         
-        if (operator_type == '&&' && exit_status == 0)
+        if (operator_type == '&&' && g_signal_status == 0)
             break ;
-        if (operator_type == '||' && exit_status != 0)
+        if (operator_type == '||' && g_signal_status != 0)
             break ;
         if (operator_type == ';')
-            exit_status = 0; // TODO: check
+            g_signal_status = 0; // TODO: check
         exec_node = exec_node->next;
     }
-    return (exit_status);	
+    return (g_signal_status);	
 };
 
 
@@ -1781,7 +1781,7 @@ int execute_pipeline(t_list *command_list_head)
 		
 		node = node->next;
 	}
-	return (exit_status;)
+	return (g_signal_status;)
 }
 
 ```

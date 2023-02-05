@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:28 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 13:16:40 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 20:05:38 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ int	tokenize_input_line(t_info *info, const char *readline_input)
 	space_trimmed_input = ft_strtrim(readline_input, STR_SPACE);
 	if (!space_trimmed_input)
 		return (perror_ret_int("malloc", PROCESS_ERROR));
+	if (ft_strlen_ns(space_trimmed_input) == 0)
+	{
+		free_1d_alloc(space_trimmed_input);
+		return (CONTINUE);
+	}
 	info->tokenlist_head = get_delim_splitted_tokenlist(\
 	space_trimmed_input, STR_SPACE, STR_QUOTE);
 	free_1d_alloc(space_trimmed_input);

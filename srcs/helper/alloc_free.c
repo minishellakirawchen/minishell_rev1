@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 15:11:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 00:19:58 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,13 @@ void	*free_info(t_info **info)
 	free(*info);
 	*info = NULL;
 	return (NULL);
+}
+
+void	clear_input_info(t_info **info)
+{
+	if (!info || !*info)
+		return ;
+	ft_lstclear_bdi(&(*info)->tokenlist_head, free_token_elem);
+	clear_exec_list(&(*info)->execlist_head);
+	(*info)->readline_input = free_1d_alloc((*info)->readline_input);
 }

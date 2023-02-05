@@ -6,25 +6,25 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/05 21:39:45 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 00:19:14 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void execute_int_handler(int sig_num)
+static void	execute_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
 		kill(0, SIGKILL);
-		exit (130);
+		exit(130);
 	}
 }
 
-static void execute_quit_handler(int sig_num)
+static void	execute_quit_handler(int sig_num)
 {
 	if (sig_num == SIGQUIT)
-		exit (131);
+		exit(131);
 }
 
 void	init_signal_execute(void)
