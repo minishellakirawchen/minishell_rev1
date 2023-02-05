@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 14:32:42 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:34:00 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 # define STR_SUBSHELL	"()"
 
 # define STR_EXPAND_EXIT_STATUS	"$?"
-# define STR_EXPANSION_DELIM	" !#$%&*+=./:=j?@[]{}^~'`\\\"" //ispunct include "_"
+# define STR_EXPANSION_DELIM	" !#$%&*+=./:=j?@[]{}^~'`\\\""
 
 # define CHR_DOLLAR			'$'
 # define CHR_QUESTION		'?'
@@ -80,30 +80,30 @@ typedef enum e_tokenlist_kind	t_list_kind;
 
 enum e_token_type
 {
-	e_semicolon = 0,		// ;
-	e_ope_pipe = 1,			// |
-	e_ope_or = 2,			// ||
-	e_ope_and = 3,			// &&
-	e_subshell_start = 4,	// (
-	e_subshell_end = 5,		// )
-	e_redirect_in = 6,		// <
-	e_redirect_out = 7,		// >
-	e_redirect_append = 8,	// >>
-	e_heredoc = 9,			// <<
-	e_file = 10,			//
-	e_heredoc_eof = 11,		//
-	e_word = 12,			//
-	e_init = 13,			// init=word
+	e_semicolon = 0,
+	e_ope_pipe = 1,
+	e_ope_or = 2,
+	e_ope_and = 3,
+	e_subshell_start = 4,
+	e_subshell_end = 5,
+	e_redirect_in = 6,
+	e_redirect_out = 7,
+	e_redirect_append = 8,
+	e_heredoc = 9,
+	e_file = 10,
+	e_heredoc_eof = 11,
+	e_word = 12,
+	e_init = 13,
 	e_null
 };
 
 enum e_node_kind
 {
-	e_node_head,		// unused
+	e_node_head,
 	e_node_semicolon,
 	e_node_and,
 	e_node_or,
-	e_node_operator,	// unused
+	e_node_operator,
 	e_node_subshell,
 	e_node_pipeline,
 	e_node_commands,
@@ -116,41 +116,34 @@ enum e_list_kind
 	e_redirect_list,
 };
 
-
 /* ************************** */
 /*          struct            */
 /* ************************** */
-// minishell parameter
+/* minishell parameter */
 struct s_info
 {
 	t_list		*envlist_head;
 	t_list_bdi	*tokenlist_head;
 	t_exec_list	*execlist_head;
-	char 		*readline_input;
+	char		*readline_input;
 	int			exit_status;
 };
 
-// commands list for execute
+/* commands list for execute */
 struct s_exec_list
 {
-	// create_operator_list
 	t_node_kind		node_kind;
-	t_token_type	token_type; // tmp for print debug
+	t_token_type	token_type;
 	t_exec_list		*prev;
 	t_exec_list		*next;
-
-	// use it execute_pipeline
-	t_list_bdi		*pipeline_commands;	//content=command_list
-
-	// create_command_list
-	t_list_bdi		*token_list_head;	// content=command_list, tmp_save
+	t_list_bdi		*pipeline_commands;
+	t_list_bdi		*token_list_head;
 	t_list			*envlist_head;
 	t_list			*tokenlist_head;
 };
 
-
 /*  lst->(void *)content  */
-// environment variable list
+/* environment variable list */
 struct s_env_elem
 {
 	char	*key;
@@ -158,7 +151,7 @@ struct s_env_elem
 	int		not_print;
 };
 
-// token elem
+/* token elem */
 struct s_token_elem
 {
 	char			*word;
@@ -167,57 +160,57 @@ struct s_token_elem
 	char			quote_chr;
 	bool			is_quoted;
 	int				subshell_depth;
-
-	int 			*wildcard_valid_flag;
+	int				*wildcard_valid_flag;
 };
 
-// split
+/* split parameter */
 struct s_split_info
 {
 	size_t			head_idx;
 	size_t			word_len;
-
 	const char		*src;
-	const char 		*delim;
-	const char 		*setchars;
-
-	bool			is_connect_to_next_word;  // hello"world"->[hello]=["world"]
+	const char		*delim;
+	const char		*setchars;
+	bool			is_connect_to_next_word;
 	bool			is_quoted;
-	char 			quote_chr;
+	char			quote_chr;
 };
 
-// exec_list->pipeline_commands->content
-struct s_command_info
-{
-	t_node_kind		type;			// command or subshell
+/* exec_list->pipeline_commands->content */
+/*
+ * 	t_node_kind		type;			// command or subshell
 	char 			**commands;		// argument of execve()
 	t_list_bdi		*redirect_list;	// set fd before execute commands
-
-	int				redirect_fd[3];	// in, out, here_doc; //TODO:init
+	int				redirect_fd[3];	// in, out, here_doc;
 	pid_t			pid;
-
-	t_list_bdi		*pipeline_token_list; //tmp_save, expansio後にchar **commandsへ整形する
-	t_list_bdi		*subshell_token_list; //parsing create_operator_listから実行できる
+	t_list_bdi		*pipeline_token_list; //tmp_save
+	t_list_bdi		*subshell_token_list; //execute -> parsing
+ */
+struct s_command_info
+{
+	t_node_kind		type;
+	char			**commands;
+	t_list_bdi		*redirect_list;
+	int				redirect_fd[3];
+	pid_t			pid;
+	t_list_bdi		*pipeline_token_list;
+	t_list_bdi		*subshell_token_list;
 };
 
-// redirect_list->content
+/* redirect_list->content */
 struct s_redirect_info
 {
 	t_token_type	io_type;
-	char			*filename;		// malloc, in/out/heredoc
-	char			*heredoc_eof;	// malloc
-	bool			is_expansion;	// "eof"->not expand
-
+	char			*filename;
+	char			*heredoc_eof;
 	t_list_bdi		*token_list;
-	bool			is_ambiguous;	// if is_ambiguous, filename is error
+	bool			is_expansion;
+	bool			is_ambiguous;
 };
-
 
 /* ************************** */
 /*            main            */
 /* ************************** */
-
-
 
 /* ************************** */
 /*           helper           */
@@ -228,41 +221,36 @@ t_list		*get_envlist(void);
 t_env_elem	*create_new_envelem(char *key, char *value, int not_print);
 void		print_key_value(void *content);
 
+void		*free_1d_alloc(void *alloc);
+void		**free_2d_alloc(void **alloc);
+void		*free_info(t_info **info);
+void		*free_allocs_ret_nullptr(void *alloc1, void *alloc2);
 
-void	*free_1d_alloc(void *alloc);
-void	**free_2d_alloc(void **alloc);
-void	*free_info(t_info **info);
-void	free_env_elem(void *content);
-void	free_token_elem(void *content);
-void	free_command_info(void *content);
-void	free_redirect_info(void *content);
-void	clear_exec_list(t_exec_list **exec_list);
+/* free_alloc_struct.c */
+void		free_env_elem(void *content);
+void		free_token_elem(void *content);
+void		free_command_info(void *content);
+void		free_redirect_info(void *content);
+void		clear_exec_list(t_exec_list **exec_list);
 
-int		update_shlvl(char **current_shlvl_str);
-int		add_initial_shlvl(t_list **env_list_head);
-
+int			update_shlvl(char **current_shlvl_str);
+int			add_initial_shlvl(t_list **env_list_head);
 
 /*         error_return.c           */
-void	*perror_ret_nullptr(char *err);
-int		perror_ret_int(char *err, int retno);
-int		ambiguous_error(char *filename);
-int		openfile_error(char *filename, char *strerror);
-
+void		*perror_ret_nullptr(char *err);
+int			perror_ret_int(char *err, int retno);
+int			ambiguous_error(char *filename);
+int			openfile_error(char *filename, char *strerror);
 
 /* ************************** */
 /*         debug print        */
 /* ************************** */
-void	debug_print_2d_arr(char **arr, char *str);
-void	debug_print(const char *fmt,...);
-void	debug_print_tokens(t_list_bdi *head, char *str);
-void	debug_print_tree(t_exec_list *root, char *str);
-void	debug_print_exec_list(t_exec_list *head, char *str);
-void	debug_print_exec_nodetype(t_exec_list *node);
-void	debug_print_redirect_info(t_list_bdi *head, char *str);
-void	debug_print_command_info(t_command_info *command_info);
-//void	debug_print_command_info(t_command_info *command_info, bool subshell, bool token_cmds, bool cmds, bool redirect)
-void	debug_print_wildcard_valid_list(int *list, size_t len);
-void	debug_print_env(t_list *envlist);
-
+void		debug_print_2d_arr(char **arr, char *str);
+void		debug_print_tokens(t_list_bdi *head, char *str);
+void		debug_print_exec_list(t_exec_list *head, char *str);
+void		debug_print_redirect_info(t_list_bdi *head, char *str);
+void		debug_print_command_info(t_command_info *command_info);
+void		debug_print_wildcard_valid_list(int *list, size_t len);
+void		debug_print_env(t_list *envlist);
 
 #endif //MINISHELL_H

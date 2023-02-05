@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/04 22:43:04 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:16:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	cd_error_handler(t_cd_info *cd_info, char **cmds)
 {
 	if (cd_info->cd_type == e_opt_error)
 	{
-		ft_printf("minishell: cd: %c%c: invalid option\n", (*cmds)[0],
-			(*cmds)[1]);
+		ft_printf("minishell: cd: %c%c: invalid option\n", (*cmds)[0], \
+		(*cmds)[1]);
 		return (EXIT_FAILURE);
 	}
-	else if (cd_info->cd_type == e_oldpwd &&
-			(cd_info->oldpwd == NULL || *(cd_info->oldpwd) == NULL))
+	else if (cd_info->cd_type == e_oldpwd && \
+	(cd_info->oldpwd == NULL || *(cd_info->oldpwd) == NULL))
 	{
 		ft_printf("minishell: cd: OLDPWD not set\n");
 		return (EXIT_FAILURE);
@@ -52,7 +52,7 @@ int	cd_error_handler(t_cd_info *cd_info, char **cmds)
 
 void	init_key_value(t_export_info *e_info)
 {
-	if(e_info != NULL)
+	if (e_info != NULL)
 	{
 		e_info->key = NULL;
 		e_info->value = NULL;

@@ -29,7 +29,6 @@ SRC		= main.c \
 		  tokenizer/get_split_before_after_opes.c \
 		  parser/parser.c \
 		  parser/create_operator_list.c \
-
 		  parser/create_operator_list_helper.c \
 		  parser/create_execlist_node.c \
 		  parser/create_command_list.c \
@@ -76,6 +75,7 @@ SRC		= main.c \
 		  ft_builtin/ft_cd.c \
 		  ft_builtin/ft_exit.c \
 		  helper/alloc_free.c \
+		  helper/free_alloc_struct.c \
 		  helper/get_envlist.c \
 		  helper/error_return.c \
 		  helper/print_key_value.c \

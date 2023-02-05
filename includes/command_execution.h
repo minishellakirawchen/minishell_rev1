@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 22:05:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:19:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@
 # define PATH	"PATH"
 # define HEREDOC_TMP_FILE	".heredoc_tmp"
 
-
-
 /* ************************** */
 /*          typedef           */
 /* ************************** */
@@ -54,7 +52,6 @@ typedef enum e_node_kind		t_node_kind;
 
 typedef enum e_fopen_type		t_fopen;
 
-
 /* ************************** */
 /*           enum             */
 /* ************************** */
@@ -65,7 +62,6 @@ enum e_fopen_type
 	e_io_overwrite,
 	e_io_append,
 };
-
 
 /* ************************** */
 /*          struct            */
@@ -85,7 +81,8 @@ int		execute_subshell(t_list_bdi **token_list, t_info *info);
 int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info);
 
 /* ft_exec.c */
-int		ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info);
+int		ft_execve(\
+t_command_info *command_info, char **minishell_envp, t_info *info);
 
 /* judge_fork_process */
 bool	is_child_process(pid_t pid);

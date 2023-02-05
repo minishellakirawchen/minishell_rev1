@@ -6,35 +6,15 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 21:56:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 21:53:08 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:15:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_new_shlvl(int current_shlvl_num, bool is_atoi_success);
-
-/* return value		: SUCCESS or FAILURE of the process. */
-/* new SHLVL string	: update *now_shlvl_str passed in the argument **now_shlvl_str. */
-int update_shlvl(char **current_shlvl_str)
-{
-	int		current_shlvl_num;
-	bool	is_atoi_success;
-
-	if (!current_shlvl_str)
-		return (FAILURE);
-	current_shlvl_num = ft_atoi(*current_shlvl_str, &is_atoi_success);
-	free_1d_alloc(*current_shlvl_str);
-	*current_shlvl_str = get_new_shlvl(current_shlvl_num, is_atoi_success);;
-	if (!*current_shlvl_str)
-		return (FAILURE);
-//	ft_dprintf(STDERR_FILENO, "[#DEBUG shlvl] now:%d, newnum:%s\n", current_shlvl_num, *current_shlvl_str);
-	return (SUCCESS);
-}
-
 static char	*get_new_shlvl(int current_shlvl_num, bool is_atoi_success)
 {
-	int 	new_shlvl_num;
+	int		new_shlvl_num;
 	char	*new_shlvl_str;
 
 	if (is_atoi_success && current_shlvl_num == 999)
@@ -47,7 +27,9 @@ static char	*get_new_shlvl(int current_shlvl_num, bool is_atoi_success)
 			new_shlvl_num = 0;
 		else if (1000 < current_shlvl_num + 1)
 		{
-			ft_dprintf(STDERR_FILENO, "minishell: warning: shell level (%d) too high, resetting to 1\n", current_shlvl_num + 1);
+			ft_dprintf(STDERR_FILENO, \
+			"minishell: warning: shell level (%d) too high, resetting to 1\n", \
+			current_shlvl_num + 1);
 			new_shlvl_num = 1;
 		}
 		else
@@ -85,5 +67,22 @@ int	add_initial_shlvl(t_list **env_list_head)
 		return (perror_ret_int("malloc", FAILURE));
 	}
 	ft_lstadd_back(env_list_head, new_list);
+	return (SUCCESS);
+}
+
+/* return SUCCESS or FAILURE of the process and */
+/* update *now_shlvl_str passed in the argument **now_shlvl_str. */
+int	update_shlvl(char **current_shlvl_str)
+{
+	int		current_shlvl_num;
+	bool	is_atoi_success;
+
+	if (!current_shlvl_str)
+		return (FAILURE);
+	current_shlvl_num = ft_atoi(*current_shlvl_str, &is_atoi_success);
+	free_1d_alloc(*current_shlvl_str);
+	*current_shlvl_str = get_new_shlvl(current_shlvl_num, is_atoi_success);
+	if (!*current_shlvl_str)
+		return (FAILURE);
 	return (SUCCESS);
 }
