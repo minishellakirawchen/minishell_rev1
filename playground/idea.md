@@ -346,7 +346,7 @@ bash: *: command not found
 * */
   /* call this function in execution part before command_execute */
 
-// input for expand_var_and_create_commands_from_tokens is "pipeline"
+// input for expand_var_and_create_cmds_from_tokens is "pipeline"
 //  t_exec_list pipeline, node_lind=pipeline
 //    pipeline1->pipeline2->pipeline3->... ($> pipeline1 &&/||/; pipeline2 &&/||/; pipeline3 ..)
 //  t_list pipeline_commands = command_list1->command_list2->.. (command_list1 | command_list2 | ....)

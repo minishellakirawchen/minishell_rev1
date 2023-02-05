@@ -6,76 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 22:33:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:13:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
-
-static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist);
-static bool	is_path(const char *commands_head);
-static char	*get_execute_path(char *path, char *file);
-
-int	ft_execve(t_command_info *command_info, char **minishell_envp, t_info *info)
-{
-	if (!command_info || !minishell_envp || !info)
-		exit (PROCESS_ERROR);
-
-//	debug_print_2d_arr(command_info->commands, "<DEBUG>execute command");
-
-	/* exec redirect */
-	if (execute_redirect(command_info, info) == FAILURE)
-		exit (FILE_OPEN_ERROR);
-
-	/* is_builtin -> execute_builtin */
-	if (is_builtin(command_info->commands))
-		exit (execute_builtin(info, command_info->commands));
-
-	/* is_subshell */
-	if (command_info->subshell_token_list)
-		exit (execute_subshell(&command_info->subshell_token_list, info));
-	/* execute commands (other than builtin) */
-	if (is_path(command_info->commands[0]))
-		execve(command_info->commands[0], command_info->commands, minishell_envp);
-	else
-		if (ft_execvp(command_info->commands, minishell_envp, info->envlist_head) == PROCESS_ERROR)
-			exit (PROCESS_ERROR);
-
-	/* if command not fount */
-	ft_dprintf(STDERR_FILENO, "command not found: %s\n", command_info->commands[0]);
-	exit (CMD_NOT_FOUND);
-}
-
-static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
-{
-	char		**splitted_paths;
-	char		*env_paths;
-	size_t		idx;
-	char 		*path;
-
-	if (!commands)
-		return (PROCESS_ERROR);
-	errno = 0;
-	env_paths = get_env_value(PATH, envlist);
-	splitted_paths = ft_split(env_paths, CHA_PATH_DELIM);
-	if (!splitted_paths)
-		return (perror_ret_int("malloc", PROCESS_ERROR));
-	idx = 0;
-	while (splitted_paths[idx])
-	{
-		path = get_execute_path(splitted_paths[idx], commands[0]);
-		if (!path)
-		{
-			free_2d_alloc((void **)splitted_paths);
-			return (perror_ret_int("malloc", PROCESS_ERROR));
-		}
-		execve(path, commands, minishell_envp);
-		free_1d_alloc(path);
-		idx++;
-	}
-	free_2d_alloc((void **)splitted_paths);
-	return (CMD_NOT_FOUND);//意味ない
-}
 
 static char	*get_execute_path(char *path, char *file)
 {
@@ -98,9 +33,67 @@ static char	*get_execute_path(char *path, char *file)
 	return (execute_path);
 }
 
+static int	do_execve(char **splitted_paths, char **envp, char **commands)
+{
+	size_t		idx;
+	char		*path;
+
+	if (!splitted_paths || !commands)
+		return (PROCESS_ERROR);
+	idx = 0;
+	while (splitted_paths[idx])
+	{
+		path = get_execute_path(splitted_paths[idx], commands[0]);
+		if (!path)
+			return (PROCESS_ERROR);
+		execve(path, commands, envp);
+		free_1d_alloc(path);
+		idx++;
+	}
+	return (CMD_NOT_FOUND);
+}
+
+static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
+{
+	char	**splitted_paths;
+	char	*env_paths;
+	int		exit_val;
+
+	if (!commands)
+		return (PROCESS_ERROR);
+	errno = 0;
+	env_paths = get_env_value(PATH, envlist);
+	splitted_paths = ft_split(env_paths, CHA_PATH_DELIM);
+	if (!splitted_paths)
+		return (perror_ret_int("malloc", PROCESS_ERROR));
+	exit_val = do_execve(splitted_paths, minishell_envp, commands);
+	free_2d_alloc((void **)splitted_paths);
+	return (exit_val);
+}
+
 static bool	is_path(const char *commands_head)
 {
 	if (commands_head && (commands_head[0] == '/' || commands_head[0] == '.'))
 		return (true);
 	return (false);
+}
+
+int	ft_execve(t_command_info *cmd_info, char **minishell_envp, t_info *info)
+{
+	if (!cmd_info || !minishell_envp || !info)
+		exit (PROCESS_ERROR);
+	if (execute_redirect(cmd_info, info) == FAILURE)
+		exit (FILE_OPEN_ERROR);
+	if (is_builtin(cmd_info->commands))
+		exit (execute_builtin(info, cmd_info->commands));
+	if (cmd_info->subshell_token_list)
+		exit (execute_subshell(&cmd_info->subshell_token_list, info));
+	if (is_path(cmd_info->commands[0]))
+		execve(cmd_info->commands[0], cmd_info->commands, minishell_envp);
+	else
+		if (ft_execvp(cmd_info->commands, minishell_envp, \
+		info->envlist_head) == PROCESS_ERROR)
+			exit (PROCESS_ERROR);
+	ft_dprintf(STDERR_FILENO, "command not found: %s\n", cmd_info->commands[0]);
+	exit (CMD_NOT_FOUND);
 }

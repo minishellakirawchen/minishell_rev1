@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 10:02:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:32:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,8 @@ int		add_initial_shlvl(t_list **env_list_head);
 /*         error_return.c           */
 void	*perror_ret_nullptr(char *err);
 int		perror_ret_int(char *err, int retno);
+int		ambiguous_error(char *filename);
+int		openfile_error(char *filename, char *strerror);
 
 
 /* ************************** */

@@ -6,13 +6,34 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 17:52:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:16:39 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
 
-static void	move_to_next_exec_node(t_exec_list **exec_list_start_with_operator, int exit_status);
+// operator -> pipeline -> operator -> ..
+static void	move_to_next_exec_node(\
+t_exec_list **exec_lst_start_with_ope, int exit_status)
+{
+	t_exec_list	*next_operator_node;
+
+	if (!exec_lst_start_with_ope || !*exec_lst_start_with_ope)
+		return ;
+	next_operator_node = *exec_lst_start_with_ope;
+	if ((next_operator_node->node_kind == e_node_semicolon)
+		|| (next_operator_node->node_kind == e_node_and && exit_status == 0)
+		|| (next_operator_node->node_kind == e_node_or && exit_status != 0))
+	{
+		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
+		return ;
+	}
+	while (*exec_lst_start_with_ope \
+	&& (*exec_lst_start_with_ope)->node_kind != e_node_semicolon)
+		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
+	if (*exec_lst_start_with_ope)
+		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
+}
 
 /*
  * pipelie1 || pipeline2 || .. || pipeline_n; pipeline_n+1 &&
@@ -22,96 +43,48 @@ static void	move_to_next_exec_node(t_exec_list **exec_list_start_with_operator, 
  * pipeline_i = cmd_i1 | cmd_i2 | cmd_i3 .. cmd_in
  * 		pipeline_i : t_list_bdi
  * 		cmd_ij : t_command_info
- * */
-
+ */
 int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 {
 	int			exit_status;
 	t_exec_list	*exec_node;
 	t_exec_list	*pipeline_node;
-	bool		debug = true;
 
 	if (!info || !execlist_head)
 		return (FAILURE);
 	exit_status = EXIT_SUCCESS;
 	exec_node = *execlist_head;
-
-	/* exec heredoc */
 	if (execute_heredoc(execlist_head) == FAILURE)
 		return (PROCESS_ERROR);
-
-	/* expand_var and execute_commands in pipeline_node unit */
 	exec_node = *execlist_head;
 	while (exec_node)
 	{
 		pipeline_node = exec_node;
-		/* expansion */
-		if (expand_var_and_create_commands_from_tokens(&pipeline_node, info) == FAILURE)
+		if (expand_var_and_create_cmds_from_tokens(\
+		&pipeline_node, info) == FAILURE)
 			return (PROCESS_ERROR);
-		if (debug)
-		{
-				/* vvvvv debug mode: print command_info vvvvv */
-			printf("---------- after expand, before execute ----------\n");
-			t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
-			while (pipeline_cmds_node)
-			{
-				t_command_info *command_info = pipeline_cmds_node->content;
-				// tmp print
-				debug_print_command_info(command_info);
-				pipeline_cmds_node = pipeline_cmds_node->next;
-				if (pipeline_cmds_node)
-					ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
-			}
-			printf("--------------------------------------------------\n");
-			/* ^^^^^ debug mode: print command_info ^^^^^ */
-		}
-//		printf("vvvvv execute vvvvv\n");
-
-		/* execution */
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
-//		printf("^^^^^^^^^^^^^^^^^^^  ");
 		if (exit_status == PROCESS_ERROR)
 			return (PROCESS_ERROR);
-		/* get next pipeline node */
 		exec_node = exec_node->next;
 		move_to_next_exec_node(&exec_node, exit_status);
 	}
-//	debug_print_exec_list(info->execlist_head, "expansion");
 	return (exit_status);
 }
 
-// operator -> pipeline -> operator -> ..
-static void	move_to_next_exec_node(t_exec_list **exec_list_start_with_operator, int exit_status)
+/*
+
+printf("---------- after expand, before execute ----------\n");
+t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
+while (pipeline_cmds_node)
 {
-	t_exec_list	*next_operator_node;
-	bool		debug = false;
-
-//	printf("exit_status:%d\n", exit_status);
-
-	if (!exec_list_start_with_operator || !*exec_list_start_with_operator)
-		return ;
-
-	next_operator_node = *exec_list_start_with_operator;
-	/* vvvvv debug mode: execute all node vvvvv */
-	if (debug)
-	{
-		debug_print_exec_nodetype(next_operator_node);
-		(*exec_list_start_with_operator) = (*exec_list_start_with_operator)->next;
-		return ;
-	}
-	/* ^^^^^ debug mode: execute all node ^^^^^ */
-
-	if ((next_operator_node->node_kind == e_node_semicolon)
-	|| (next_operator_node->node_kind == e_node_and && exit_status == 0)
-	|| (next_operator_node->node_kind == e_node_or && exit_status != 0))
-	{
-		(*exec_list_start_with_operator) = (*exec_list_start_with_operator)->next;
-		return ;
-	}
-	//goto next semicolon->next
-	while (*exec_list_start_with_operator && (*exec_list_start_with_operator)->node_kind != e_node_semicolon)
-		(*exec_list_start_with_operator) = (*exec_list_start_with_operator)->next;
-	if (*exec_list_start_with_operator)
-		(*exec_list_start_with_operator) = (*exec_list_start_with_operator)->next;
+t_command_info *command_info = pipeline_cmds_node->content;
+// tmp print
+debug_print_command_info(command_info);
+pipeline_cmds_node = pipeline_cmds_node->next;
+if (pipeline_cmds_node)
+ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
 }
+printf("--------------------------------------------------\n");
 
+ */

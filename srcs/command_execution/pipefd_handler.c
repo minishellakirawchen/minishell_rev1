@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:16:04 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 22:05:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:40:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,3 @@ int	close_fds(int prev_pipefd[2], int next_pipefd[2], t_list_bdi *next)
 			return (perror_ret_int("close", PROCESS_ERROR));
 	return (SUCCESS);
 }
-

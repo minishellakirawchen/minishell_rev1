@@ -24,3 +24,16 @@ void	*perror_ret_nullptr(char *err)
 	return (NULL);
 }
 
+int	ambiguous_error(char *filename)
+{
+	ft_dprintf(STDERR_FILENO, \
+			"minishell: %s: ambiguous redirect\n", filename);
+	return (FAILURE);
+}
+
+int	openfile_error(char *filename, char *strerror)
+{
+	ft_dprintf(STDERR_FILENO, \
+			"minishell: %s: %s\n", filename, strerror);
+	return (FAILURE);
+}

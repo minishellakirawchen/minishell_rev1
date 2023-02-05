@@ -15,7 +15,7 @@
 /* command_list->redirect_list = heredoc->io->io->heredoc->... */
 /* if type=io, expand and create filename
  * from redirect_list->content=redirect_info->token_list */
-int	expand_var_and_create_commands_from_tokens(\
+int	expand_var_and_create_cmds_from_tokens(\
 t_exec_list **pipeline_node, t_info *info)
 {
 	t_list_bdi		*cmd_list_node;

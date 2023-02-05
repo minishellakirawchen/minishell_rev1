@@ -6,14 +6,12 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 11:11:55 by takira            #+#    #+#             */
-/*   Updated: 2023/01/30 11:12:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:35:33 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
 
-// input: hogehoge\n
-// delim: hogehoge
 bool	is_delimiter(const char *input_line, const char *delimiter)
 {
 	size_t	input_len;
@@ -34,11 +32,11 @@ bool	is_eof(char *line)
 	return (!line);
 }
 
-// tmpfile: here_doc_<cnt>.tmp
+/* tmpfile name is "here_doc_<cnt>.tmp" */
 char	*get_heredoc_tmp_filename(int cnt)
 {
 	char	*cnt_string;
-	char 	*filename;
+	char	*filename;
 	size_t	tmp_len;
 	size_t	strcnt_len;
 
@@ -48,7 +46,7 @@ char	*get_heredoc_tmp_filename(int cnt)
 		return (perror_ret_nullptr("malloc"));
 	tmp_len = ft_strlen_ns(HEREDOC_TMP_FILE);
 	strcnt_len = ft_strlen_ns(cnt_string);
-	filename = (char *)ft_calloc(sizeof(char) ,(tmp_len + strcnt_len + 1));
+	filename = (char *)ft_calloc(sizeof(char), (tmp_len + strcnt_len + 1));
 	if (!filename)
 		return (perror_ret_nullptr("malloc"));
 	ft_strlcat(filename, HEREDOC_TMP_FILE, tmp_len + strcnt_len + 1);

@@ -29,6 +29,7 @@ SRC		= main.c \
 		  tokenizer/get_split_before_after_opes.c \
 		  parser/parser.c \
 		  parser/create_operator_list.c \
+
 		  parser/create_operator_list_helper.c \
 		  parser/create_execlist_node.c \
 		  parser/create_command_list.c \

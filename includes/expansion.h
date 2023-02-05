@@ -45,7 +45,7 @@ typedef enum e_tokenlist_kind	t_list_kind;
 /* ************************** */
 
 /* expansion.c */
-int		expand_var_and_create_commands_from_tokens(t_exec_list **pipeline_node, t_info *info);
+int		expand_var_and_create_cmds_from_tokens(t_exec_list **pipeline_node, t_info *info);
 
 
 /* expand_in_tokens.c */
