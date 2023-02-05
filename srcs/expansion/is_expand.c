@@ -6,19 +6,20 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:20:25 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 16:29:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 12:08:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-// name=value
-// name=[_a-zA-z][_a-zA-Z0-9]
-// str=$hoo$var$hoge
-//      ^^^ ここまでを判定して return (true);
+/*
+ judge $key in string
+  str=$hoo$var$hoge
+       ^^^ return true
+*/
 bool	is_name(const char *str)
 {
-	size_t idx;
+	size_t	idx;
 
 	if (!str || !str[0])
 		return (false);
@@ -35,7 +36,7 @@ bool	is_name(const char *str)
 }
 
 // return true if $? or $name in str, do not depend on validate $name
-bool is_expandable_var(const char *str, char quote_chr)
+bool	is_expandable_var(const char *str, char quote_chr)
 {
 	size_t	idx;
 
@@ -74,7 +75,6 @@ bool	is_expandable_exit_status(const char *str)
 	return (false);
 }
 
-// $?
 bool	is_expandable_str_with_dollar(const char *str)
 {
 	if (!str || str[0] != CHR_DOLLAR)
@@ -85,8 +85,3 @@ bool	is_expandable_str_with_dollar(const char *str)
 		return (true);
 	return (false);
 }
-
-
-
-
-
