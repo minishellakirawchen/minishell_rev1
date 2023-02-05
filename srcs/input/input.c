@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 21:10:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 21:25:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	init_signal_prompt(void)
 	init_sigaction(SIGQUIT, sig_quit_act, SIG_IGN);
 }
 
-int	preprocess_for_execute(t_info *info)
+static int	preprocess_for_execute(t_info *info)
 {
 	int	process_exit_val;
 
@@ -65,7 +65,7 @@ int	preprocess_for_execute(t_info *info)
 	return (process_exit_val);
 }
 
-void	prompt_init(int *process_exit_value, t_info *info)
+static void	prompt_init(int *process_exit_value, t_info *info)
 {
 	*process_exit_value = EXIT_SUCCESS;
 	set_tc_attr_out_execute();
@@ -84,8 +84,6 @@ int	prompt_loop(t_info *info)
 	{
 		prompt_init(&process_exit_value, info);
 		process_exit_value = preprocess_for_execute(info);
-		if (process_exit_value == CONTINUE)
-			continue ;
 		if (process_exit_value == BREAK)
 			break ;
 		if (g_signal_status == EXIT_FAILURE)
