@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 17:44:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 18:27:31 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,6 @@ int	main(int argc, char **argv)
 	exit_status = prompt_loop(info);
 	// free param
 	free_info(&info);
-//	system("leaks -q minishell");
+	system("leaks -q minishell");
 	return (exit_status);
 }

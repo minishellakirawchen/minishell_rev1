@@ -83,7 +83,8 @@ SRC		= main.c \
 		  helper/print_key_value.c \
 		  helper/builtin_judge.c \
 		  helper/builtin_free.c \
-		  helper/get_set_elem.c \
+		  helper/set_elem.c \
+		  helper/get_elem.c \
 		  helper/check_dir_exist.c \
 		  helper/ft_lst_ascsort.c \
 		  helper/chdir_setpath.c \
