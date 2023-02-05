@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 13:25:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 10:39:31 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,17 @@ char	**create_expanded_commands(t_list_bdi **token_list, t_info *info, char **co
 //char	**create_commands_from_token_list(t_list_bdi **token_list);
 
 
-/* concat_connected_tokens_and_create_wildcard_valid_list.c */
-int		concat_connected_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list);
+/* concat_tokens_and_create_wildcard_valid_list.c */
+int		concat_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list);
 bool	check_valid_wildcard_in_word(t_token_elem *token);
 
 
 /* get_expanded_str.c */
 int		expand_var_in_str(char **src, t_info *info);
 char	*concat_dst_to_src(char **dst, char *src);
+/* get_env_value.c */
 char	*get_name_str(const char *str_start_with_dollar);
 char	*get_env_value(const char *search_key, t_list *env_list_head);
-int		expand_exit_status(char **expanded_str, int exit_status);
 
 
 /* quote_removal_or_re_tokenize.c */
@@ -94,15 +94,15 @@ bool	is_expandable_exit_status(const char *str);
 bool	is_expandable_str_with_dollar(const char *str);
 
 /* expand_wildcard.c */
-bool	is_expandable_wildcard_in_str(const char *word, bool is_quoted);
-char	*get_expand_wildcard(char *wildcard_str, int *valid_list);
-
 int		expanded_wildcard_to_token_list(t_list_bdi **expanded_token_list);
+
+/* concat_wildcard_valid_list.c */
+int	concat_wildcard_valid_list(t_token_elem **dst, t_token_elem *src);
+
 
 /* is_matches_wildcard.c */
 //int		is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str);
 int	is_matches_wildcard_and_target_str(const char *wildcard_str, const char *target_str, const int *valid_table);
-
 
 
 t_redirect_info	*create_redirect_info(t_token_type io_type, t_list_bdi **tok_list);
