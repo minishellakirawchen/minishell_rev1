@@ -6,15 +6,15 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 21:03:43 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 21:10:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
 
-volatile sig_atomic_t g_signal_status = EXIT_SUCCESS;
+volatile sig_atomic_t	g_signal_status = EXIT_SUCCESS;
 
-static void prompt_int_handler(int sig_num)
+static void	prompt_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
@@ -40,10 +40,8 @@ static void	init_signal_prompt(void)
 
 int	preprocess_for_execute(t_info *info)
 {
-	int		process_exit_value;
+	int	process_exit_val;
 
-	if (!info)
-		return (PROCESS_ERROR);
 	if (!info->readline_input)
 	{
 		ft_dprintf(STDERR_FILENO, "exit");
@@ -51,61 +49,49 @@ int	preprocess_for_execute(t_info *info)
 	}
 	if (is_same_str(info->readline_input, ""))
 	{
-		info->readline_input = free_1d_alloc(info->readline_input); // Not update g_signal_status
+		info->readline_input = free_1d_alloc(info->readline_input);
 		return (CONTINUE);
 	}
 	add_history(info->readline_input);
-	process_exit_value = tokenize_input_line(info, info->readline_input);
-	if (process_exit_value == CONTINUE)
+	process_exit_val = tokenize_input_line(info, info->readline_input);
+	if (process_exit_val == CONTINUE)
 		return (CONTINUE);
-	if (process_exit_value == EXIT_SUCCESS)
-		process_exit_value = arrange_and_validate_token_list(&info->tokenlist_head);
-	if (process_exit_value == EXIT_SUCCESS)
-		process_exit_value = parsing_token_list(&info->tokenlist_head, &info->execlist_head, info);
-	return (process_exit_value);
+	if (process_exit_val == EXIT_SUCCESS)
+		process_exit_val = arrange_and_validate_token_list(\
+		&info->tokenlist_head);
+	if (process_exit_val == EXIT_SUCCESS)
+		process_exit_val = parsing_token_list(\
+				&info->tokenlist_head, &info->execlist_head, info);
+	return (process_exit_val);
+}
+
+void	prompt_init(int *process_exit_value, t_info *info)
+{
+	*process_exit_value = EXIT_SUCCESS;
+	set_tc_attr_out_execute();
+	info->readline_input = readline(PROMPT);
+	set_tc_attr_in_execute();
 }
 
 int	prompt_loop(t_info *info)
 {
-	int		process_exit_value;
-	char	*prompt;
-	char	*tmp;
-	char	*exit_status_string;
+	int	process_exit_value;
+
 	if (!info)
 		return (FAILURE);
 	init_signal_prompt();
 	while (true)
 	{
-		process_exit_value = EXIT_SUCCESS;
-		/* vvvvvvvvvvvvvvvvvvvvvvv */
-		exit_status_string = ft_itoa(info->exit_status);
-		tmp = ft_strjoin("minishell ", exit_status_string);
-		prompt = ft_strjoin(tmp, " $> ");
-		free(tmp);
-		free(exit_status_string);
-		/* ^^^^^^^^^^^^^^^^^^^^^^^ */
-
-		/* input */
-		set_tc_attr_out_execute();
-		info->readline_input = readline(prompt);
-		free (prompt);
-		set_tc_attr_in_execute();
-
+		prompt_init(&process_exit_value, info);
 		process_exit_value = preprocess_for_execute(info);
 		if (process_exit_value == CONTINUE)
 			continue ;
 		if (process_exit_value == BREAK)
 			break ;
-
 		if (g_signal_status == EXIT_FAILURE)
 			info->exit_status = g_signal_status;
-
-		/* expansion & command_execution */
 		if (process_exit_value == EXIT_SUCCESS)
 			process_exit_value = execute_execlist(&info->execlist_head, info);
-
-		printf("[#DEBUG]process_exit_value:%d, signal:%d\n", process_exit_value, g_signal_status);
-		/* clear input */
 		clear_input_info(&info);
 		if (process_exit_value == PROCESS_ERROR)
 			break ;
