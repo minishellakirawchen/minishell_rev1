@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/01 02:10:40 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/04 11:22:29 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static char	*define_new_path(t_cd_info *cd_info, char *cmd)
 		while (*cdpaths != NULL)
 		{
 			tdir = init_tdir(*cdpaths, cmd);
-			if (check_dir_exist(tdir) == SUCCESS)
+			if (check_dir_exist(tdir, cmd) == SUCCESS)
 				return (tdir);
 			cdpaths++;
 		}
@@ -70,7 +70,7 @@ static void	print_err_message(void)
 	ft_dprintf(STDERR_FILENO, "directories: No such file or directory \n");
 }
 
-static t_cd_info	*init_cd_info(t_info *info)
+static t_cd_info	*init_cd_info(t_info *info, char *cmd)
 {
 	t_cd_info	*cd_info;
 
@@ -84,7 +84,7 @@ static t_cd_info	*init_cd_info(t_info *info)
 	cd_info->pwd = getcwd(NULL, 0);
 	if (cd_info->pwd == NULL)
 	{
-		if (check_dir_exist("./") == EACCES)
+		if (check_dir_exist("./", cmd) == EACCES)
 			cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
 		else
 			print_err_message();
@@ -102,7 +102,7 @@ int	ft_cd(t_info *info, char **cmds)
 	exit_status = EXIT_SUCCESS;
 	if (!info || !cmds)
 		return (EXIT_FAILURE);
-	cd_info = init_cd_info(info);
+	cd_info = init_cd_info(info, *cmds);
 	if (!cd_info)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	cd_info->cd_type = judge_cmd(*(++cmds));

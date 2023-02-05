@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:07 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/05 15:16:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 17:19:09 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,6 @@ void	init_key_value(t_export_info *e_info)
 	{
 		e_info->key = NULL;
 		e_info->value = NULL;
+		e_info->key_type = e_typeinit;
 	}
 }

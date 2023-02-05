@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/01 02:19:56 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/04 11:20:28 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,17 +109,12 @@ int	chdir_setpath(t_info *info, t_cd_info *cd_info, char **cmds)
 {
 	int	exit_dir;
 
-	exit_dir = check_dir_exist(cd_info->newpwd);
+	exit_dir = check_dir_exist(cd_info->newpwd, *cmds);
 	if (exit_dir == SUCCESS)
 	{
 		chdir(cd_info->newpwd);
 		set_path(info, cd_info);
 		return (EXIT_SUCCESS);
-	}
-	if (exit_dir == ENOENT)
-	{
-		ft_printf("minishell: cd: %s: No such file or directory\n", *cmds);
-		return (EXIT_FAILURE);
 	}
 	if (exit_dir == EACCES)
 	{
