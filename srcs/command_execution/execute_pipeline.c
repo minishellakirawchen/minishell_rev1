@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 16:38:57 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 17:44:19 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,24 @@
 
 static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head)
 {
-//	t_list_bdi		*last_node;
+	t_list_bdi		*last_node;
 	t_list_bdi		*pipeline_cmds_node;
 	t_command_info	*command_info;
 	int				exit_status;
 
-//	last_node = ft_lstlast_bdi(pipeline_cmds_head);
-//	command_info = last_node->content;
+	last_node = ft_lstlast_bdi(pipeline_cmds_head);
 	pipeline_cmds_node = pipeline_cmds_head;
 
 	while (pipeline_cmds_node)
 	{
 		command_info = pipeline_cmds_node->content;
-		waitpid(command_info->pid, &exit_status, 0);
+		signal(SIGCHLD, SIG_DFL);
+		if (waitpid(command_info->pid, &exit_status, 0) < 0)
+		{
+			signal(SIGCHLD, SIG_IGN);
+			return (130);
+		}
+		exit_status = print_signal_error(exit_status, pipeline_cmds_node, last_node);
 		pipeline_cmds_node = pipeline_cmds_node->next;
 	}
 	return (WEXITSTATUS(exit_status));
@@ -41,6 +46,7 @@ static int	execute_pipeline_iter(t_list_bdi *pipeline_cmds_head, char **envp, t_
 	int				exit_status;
 
 	init_pipefd(prev_pipefd, next_pipefd);
+	set_tc_attr_in_execute();
 	pipeline_cmds_node = pipeline_cmds_head;
 	while (pipeline_cmds_node)
 	{
@@ -52,9 +58,10 @@ static int	execute_pipeline_iter(t_list_bdi *pipeline_cmds_head, char **envp, t_
 			return (perror_ret_int("fork", PROCESS_ERROR));
 		if (is_child_process(command_info->pid))
 		{
+			init_signal_execute();
 			if (dup2_fds( prev_pipefd, next_pipefd,pipeline_cmds_node->next) == PROCESS_ERROR)
 				return (PROCESS_ERROR);
-			if (close_fds( prev_pipefd,next_pipefd, pipeline_cmds_node->next) == PROCESS_ERROR)
+			if (close_fds( prev_pipefd, next_pipefd, pipeline_cmds_node->next) == PROCESS_ERROR)
 				return (PROCESS_ERROR);
 			exit (ft_execve(command_info, envp, info));
 		}

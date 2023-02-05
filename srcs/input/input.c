@@ -6,11 +6,37 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 16:41:59 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 18:01:45 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
+
+volatile sig_atomic_t exit_status = EXIT_SUCCESS;
+
+static void prompt_int_handler(int sig_num)
+{
+	if (sig_num == SIGINT)
+	{
+		exit_status = EXIT_FAILURE;
+		write(STDOUT_FILENO, "\n", 2);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
+
+void	init_signal_prompt(void)
+{
+	struct sigaction	sig_int_act;
+	struct sigaction	sig_quit_act;
+
+	signal(SIGINT, SIG_IGN);
+	ft_bzero(&sig_int_act, sizeof(sigaction));
+	init_sigaction(SIGINT, sig_int_act, prompt_int_handler);
+	ft_bzero(&sig_quit_act, sizeof(sigaction));
+	init_sigaction(SIGQUIT, sig_quit_act, SIG_IGN);
+}
 
 void	clear_input_info(t_info **info)
 {
@@ -25,7 +51,7 @@ void	clear_input_info(t_info **info)
 // is_continue=false: syntax error等, minishellはexitせず継続
 int	prompt_loop(t_info *info)
 {
-	int		exit_status;
+	//int		exit_status;
 	bool	is_return_input;
 	char	*prompt;
 	char	*tmp;
@@ -33,10 +59,10 @@ int	prompt_loop(t_info *info)
 
 	if (!info)
 		return (FAILURE);
-	exit_status = EXIT_SUCCESS;
+	init_signal_prompt();
 	while (true)
 	{
-		exit_status_string = ft_itoa(exit_status);
+		exit_status_string = ft_itoa(info->exit_status);
 		tmp = ft_strjoin("minishell ", exit_status_string);
 		prompt = ft_strjoin(tmp, " $> ");
 		free(tmp);
@@ -44,15 +70,14 @@ int	prompt_loop(t_info *info)
 
 		is_return_input = false;
 		/* input */
+		set_tc_attr_out_execute();
 		info->readline_input = readline(prompt);
-		free(prompt);
-
-//		info->readline_input = readline("minishell $ ");
-//		info->readline_input = readline(PROMPT);
+		free (prompt);
+		set_tc_attr_in_execute();
 		if (!info->readline_input)
 		{
 			// debug
-			ft_dprintf(STDERR_FILENO, "[#DEBUG]^D Pressed. Exit minishell\n");  // check exit_status using ^D
+			ft_dprintf(STDERR_FILENO, "exit");
 			break ;
 		}
 		if (is_same_str(info->readline_input, ""))
@@ -72,21 +97,22 @@ int	prompt_loop(t_info *info)
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]tokenize failure\n");
 
 		/* input validation (Mandatory/Bonus) */
-		exit_status = arrange_and_validate_token_list(&info->tokenlist_head);
-		is_return_input |= exit_status;
-
+		if (exit_status == EXIT_SUCCESS)
+		{
+			exit_status = arrange_and_validate_token_list(&info->tokenlist_head);
+			is_return_input |= exit_status;
+		}
 		// debug
 		debug_print_tokens(info->tokenlist_head, "arranged");
 
 		/* parsing (Mandatory/Bonus) */
-		if (!is_return_input)
+		if (!is_return_input && exit_status == EXIT_SUCCESS)
 			exit_status = parsing_token_list(&info->tokenlist_head, &info->execlist_head, info);
 		is_return_input |= exit_status;
 		if (exit_status != EXIT_SUCCESS)
 			ft_dprintf(STDERR_FILENO, "[#DEBUG]parsing failure\n");
-
 		/* expansion & command_execution */
-		if (!is_return_input)
+		if (!is_return_input && exit_status == EXIT_SUCCESS)
 			exit_status = execute_execlist(&info->execlist_head, info);
 
 		/* clear input */
@@ -94,6 +120,11 @@ int	prompt_loop(t_info *info)
 		if (exit_status == PROCESS_ERROR)
 			break ;
 		info->exit_status = exit_status;
+		// exit_status_string = ft_itoa(exit_status);
+		// tmp = ft_strjoin("minishell ", exit_status_string);
+		// prompt = ft_strjoin(tmp, " $> ");
+		// free(tmp);
+		// free(exit_status_string);
 	}
 	return (exit_status);
 }
