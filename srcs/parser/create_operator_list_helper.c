@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 08:43:07 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 08:43:19 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 08:59:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,3 @@ void	delete_operator_token(t_list_bdi **operator_token)
 	ft_lstdelone_bdi(operator_token, free_token_elem);
 	*operator_token = NULL;
 }
-

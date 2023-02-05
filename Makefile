@@ -30,6 +30,8 @@ SRC		= main.c \
 		  parser/create_execlist_node.c \
 		  parser/create_command_list.c \
 		  parser/create_redirect_list.c \
+		  parser/create_redirect_list_helper.c \
+		  parser/get_filename_or_heredoc_eof.c \
 		  parser/move_tokens_to_command_list.c \
 		  parser/tree_operation.c \
 		  parser/tree_helper.c \
