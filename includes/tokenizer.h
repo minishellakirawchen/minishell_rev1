@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:01 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 19:20:46 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:50:14 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int			split_by_operators(t_list_bdi **token_head);
 
 int			arrange_and_validate_token_list(t_list_bdi **tokenlist_head);
 int			validate_quote(t_list_bdi *tokenlist_head);
-int			validate_operator_sign(t_token_elem *now_token);
 int			validate_syntax_operators(t_list_bdi *tokenlist_head);;
 int			validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head);
 
@@ -52,6 +51,17 @@ int			validate_operator_tokens(t_token_elem *now_token, t_token_elem *next_token
 t_token_elem	*create_token_elem(char *word, bool is_connected, bool is_quoted, char quote_chr);
 
 t_split_info	*create_split_info(const char *src, const char *delim, const char *set);
+
+/* validate_operator.c */
+int		valid_control_operator(t_list_bdi **tokenlist_head);
+int		validate_operator_sign(t_token_elem *now_token);
+
+/* create_split_info.c */
+t_split_info	*create_split_info(const char *src, const char *delim, const char *set);
+void			init_split_info(t_split_info *s_info);
+
+/* get_split_before_after_opes.c */
+t_list_bdi	*get_split_before_after_opes(const char *src, const char *opes, char *quote);
 
 
 int			is_tokentype_operator(t_token_type type);

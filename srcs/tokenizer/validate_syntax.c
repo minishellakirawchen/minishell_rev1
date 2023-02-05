@@ -6,13 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:20:42 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 15:12:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:33:05 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
 
-int validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
+int	validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
 {
 	t_list_bdi		*node;
 	t_token_elem	*token;
@@ -45,7 +45,7 @@ int validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
  OK echo hello; < infile
  OK echo hello; > outfile
 */
-int validate_syntax_operators(t_list_bdi *tokenlist_head)
+int	validate_syntax_operators(t_list_bdi *tokenlist_head)
 {
 	t_list_bdi		*node;
 	t_token_elem	*token;
@@ -70,4 +70,3 @@ int validate_syntax_operators(t_list_bdi *tokenlist_head)
 	}
 	return (SUCCESS);
 }
-

@@ -23,7 +23,9 @@ SRC		= main.c \
 		  tokenizer/arrange_and_validate_token.c \
 		  tokenizer/create_token_elem.c \
 		  tokenizer/create_splitted_word_token.c \
+		  tokenizer/create_split_info.c \
 		  tokenizer/get_trimmed_word.c \
+		  tokenizer/get_split_before_after_opes.c \
 		  parser/parser.c \
 		  parser/create_operator_list.c \
 		  parser/create_operator_list_helper.c \

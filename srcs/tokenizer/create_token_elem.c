@@ -6,13 +6,14 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 22:58:23 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 22:58:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:28:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
 
-t_token_elem	*create_token_elem(char *word, bool is_connected, bool is_quoted, char quote_chr)
+t_token_elem	*create_token_elem(\
+char *word, bool is_connected, bool is_quoted, char quote_chr)
 {
 	t_token_elem	*new_token;
 
