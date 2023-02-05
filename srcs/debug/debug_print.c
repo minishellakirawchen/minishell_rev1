@@ -197,9 +197,9 @@ void	debug_print_tokens(t_list_bdi *head, char *str)
 //			ft_dprintf(STDERR_FILENO, "*"); //expand wildcard
 		print_wildcard_valid_list(token);
 		ft_dprintf(STDERR_FILENO, "%d", token->subshell_depth);
-		if (token->is_connect_to_next_word && node->next)
+		if (token->is_connect_to_next && node->next)
 			ft_dprintf(STDERR_FILENO, "=");
-		if (!token->is_connect_to_next_word && node->next)
+		if (!token->is_connect_to_next && node->next)
 			ft_dprintf(STDERR_FILENO, ",");
 		node= node->next;
 	}

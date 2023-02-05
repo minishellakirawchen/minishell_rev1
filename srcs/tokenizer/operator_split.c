@@ -198,7 +198,7 @@ void	handle_tokens(t_token_elem **last_token, t_list_bdi **last_node, t_list_bdi
 	if (!last_token || !last_node || !now_node || !token_elem)
 		return ;
 	*last_token = (*last_node)->content;
-	(*last_token)->is_connect_to_next_word = token_elem->is_connect_to_next_word;
+	(*last_token)->is_connect_to_next = token_elem->is_connect_to_next;
 	(*last_node)->next = (*now_node)->next;
 	ft_lstdelone_bdi(now_node, free_token_elem);
 	*now_node = *last_node;

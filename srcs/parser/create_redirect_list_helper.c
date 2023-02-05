@@ -27,7 +27,7 @@ static t_list_bdi	*get_filename_or_eof_tokenlist(t_list_bdi **token_get_from)
 		popped_token_node = ft_lstpop_bdi(token_get_from);
 		token_elem = popped_token_node->content;
 		ft_lstadd_back_bdi(&token_list, popped_token_node);
-		if (!token_elem->is_connect_to_next_word)
+		if (!token_elem->is_connect_to_next)
 			break ;
 	}
 	return (token_list);

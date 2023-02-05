@@ -24,7 +24,7 @@ t_token_elem	*create_token_elem(char *word, bool is_connected, bool is_quoted, c
 	}
 	new_token->word = word;
 	new_token->type = e_init;
-	new_token->is_connect_to_next_word = is_connected;
+	new_token->is_connect_to_next = is_connected;
 	new_token->is_quoted = is_quoted;
 	new_token->quote_chr = quote_chr;
 	new_token->subshell_depth = -1;

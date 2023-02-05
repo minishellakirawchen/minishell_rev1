@@ -23,7 +23,7 @@ static size_t	get_connected_token_size(t_list_bdi *list)
 	while (list)
 	{
 		token_elem = list->content;
-		while (list && token_elem->is_connect_to_next_word)
+		while (list && token_elem->is_connect_to_next)
 		{
 			list = list->next;
 			if (list)

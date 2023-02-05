@@ -163,7 +163,7 @@ struct s_token_elem
 {
 	char			*word;
 	t_token_type	type;
-	bool			is_connect_to_next_word;
+	bool			is_connect_to_next;
 	char			quote_chr;
 	bool			is_quoted;
 	int				subshell_depth;

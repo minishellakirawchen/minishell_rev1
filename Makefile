@@ -3,7 +3,7 @@ NAME	= minishell
 
 # COMPILE FLAGS
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -MMD -MP
+CFLAGS	= -Wall -Wextra -Werror -MMD -MP -g -fsanitize=address
 
 VPATH = $(SRC_DIR)
 

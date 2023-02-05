@@ -136,8 +136,8 @@ static int	set_elem_type_if_word(t_list_bdi **tokenlist_head)
 			next_token = node->next->content;
 
 		// disconnect to control operator
-		if (token->is_connect_to_next_word && next_token && next_token->type != e_init)
-			token->is_connect_to_next_word = false;
+		if (token->is_connect_to_next && next_token && next_token->type != e_init)
+			token->is_connect_to_next = false;
 		if (next_token && is_tokentype_redirection(token->type))
 		{
 			if (next_token->type != e_init)

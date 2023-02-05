@@ -71,7 +71,7 @@ static int	concat_connected_words(t_list_bdi **node, t_token_elem **token)
 			ft_lstclear_bdi(&popped_node, free_token_elem);
 			return (FAILURE);
 		}
-		if (!append->is_connect_to_next_word)
+		if (!append->is_connect_to_next)
 			break ;
 		ft_lstclear_bdi(&popped_node, free_token_elem);
 	}
@@ -79,7 +79,7 @@ static int	concat_connected_words(t_list_bdi **node, t_token_elem **token)
 	return (SUCCESS);
 }
 
-/* connect (*token_list)->content if "is_connect_to_next_word" */
+/* connect (*token_list)->content if "is_connect_to_next" */
 int	concat_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list)
 {
 	t_list_bdi		*node;
@@ -94,10 +94,10 @@ int	concat_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list)
 		if (get_wildcard_valid_lsit(&token) == FAILURE)
 			return (FAILURE);
 		node = node->next;
-		if (!token->is_connect_to_next_word)
+		if (!token->is_connect_to_next)
 			continue ;
 		concat_connected_words(&node, &token);
-		token->is_connect_to_next_word = false;
+		token->is_connect_to_next = false;
 	}
 	return (SUCCESS);
 }

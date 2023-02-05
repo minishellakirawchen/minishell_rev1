@@ -37,7 +37,7 @@ static t_list_bdi	*get_expanded_tokenlist(
 		}
 		ft_lstadd_back_bdi(&token_list, popped_token_node);
 		*quoted |= tok_elem->is_quoted;
-		if (!tok_elem->is_connect_to_next_word)
+		if (!tok_elem->is_connect_to_next)
 			break ;
 	}
 	return (token_list);
