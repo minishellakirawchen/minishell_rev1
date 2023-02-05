@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 16:43:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 20:44:12 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,25 @@ t_exec_list **exec_lst_start_with_ope, int exit_status)
 		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
 }
 
+int	execute_pipeline(t_list_bdi *pipeline_cmds, t_info *info)
+{
+	int				exit_status;
+	t_command_info	*command_info;
+	char			**minishell_envp;
+
+	if (!pipeline_cmds || !pipeline_cmds->content)
+		return (PROCESS_ERROR);
+	command_info = pipeline_cmds->content;
+	if (is_single_builtin(pipeline_cmds))
+		return (execute_builtin(info, command_info->commands));
+	minishell_envp = create_minishell_envp(info->envlist_head);
+	if (!minishell_envp)
+		return (PROCESS_ERROR);
+	exit_status = execute_pipe_iter(pipeline_cmds, minishell_envp, info);
+	free_2d_alloc((void **)minishell_envp);
+	return (exit_status);
+}
+
 /*
  * pipelie1 || pipeline2 || .. || pipeline_n; pipeline_n+1 &&
  *  ^ EXEC      ^ not exec         ^not exec    ^ nextEXEC
@@ -55,9 +74,6 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 	exit_status = EXIT_SUCCESS;
 	if (execute_heredoc(execlist_head) == FAILURE)
 		return (PROCESS_ERROR);
-
-	debug_print_exec_list(*execlist_head, "execlist befor expand");
-
 	exec_node = *execlist_head;
 	while (exec_node)
 	{
@@ -65,18 +81,6 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 		if (expand_var_and_create_cmds_from_tokens(\
 		&pipeline_node, info) == FAILURE)
 			return (PROCESS_ERROR);
-		printf("---------- after expand, before execute ----------\n");
-		t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
-		while (pipeline_cmds_node)
-		{
-			t_command_info *command_info = pipeline_cmds_node->content;
-			debug_print_command_info(command_info);
-			pipeline_cmds_node = pipeline_cmds_node->next;
-			if (pipeline_cmds_node)
-				ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
-		}
-		printf("--------------------------------------------------\n");
-
 		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
 		if (exit_status == PROCESS_ERROR)
 			return (PROCESS_ERROR);

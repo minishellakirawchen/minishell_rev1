@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 15:52:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 17:22:08 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define FD_OUTFILE		1
 # define FD_HEREDOC		2
 
-/* exit_status */
+/* g_signal_status */
 # define CHDIR_FAILURE				1
 # define EXIT_TOO_MANY_ARGS			1
 # define FILE_OPEN_ERROR			1
@@ -69,12 +69,13 @@ enum e_fopen_type
 
 /* execute_execlist.c */
 int		execute_execlist(t_exec_list **execlist_head, t_info *info);
+int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info);
+
+/* execute_pipeline.c */
+int		execute_pipe_iter(t_list_bdi *pipeline, char **envp, t_info *info);
 
 /* execute_subshell */
 int		execute_subshell(t_list_bdi **token_list, t_info *info);
-
-/* execute_pipeline.c */
-int		execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info);
 
 /* ft_exec.c */
 int		ft_execve(\

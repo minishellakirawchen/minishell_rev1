@@ -56,7 +56,7 @@ SRC		= main.c \
 		  expansion/get_wildcard_token_from_dir.c \
 		  expansion/sort_strlist_for_wildcard.c \
 		  command_execution/execute_execlist.c \
-		  command_execution/execute_pipeline.c \
+		  command_execution/execute_pipeline_iter.c \
 		  command_execution/execute_redirect.c \
 		  command_execution/execute_heredoc.c \
 		  command_execution/execute_heredoc_helper.c \
