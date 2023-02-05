@@ -6,45 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 09:09:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/03 23:09:58 by takira           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   concat_connected_tokens_and_create_wildcard_valid_list.c                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/02 10:36:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/02 22:28:20 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 09:52:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-
-/*
-bool	check_valid_wildcard_in_word(t_list_bdi *token_node)
-{
-	size_t	idx;
-
-	t_token_elem	*token_elem;
-	if (!token_node)
-		return (false);
-	token_elem = token_node->content;
-	if (!token_elem->wildcard_valid_flag)
-			return (is_expandable_wildcard_in_str(token_elem->word, token_elem->is_quoted));
-	idx = 0;
-	while (token_elem->word[idx])
-	{
-		if (token_elem->wildcard_valid_flag[idx] == 1)
-			return (false);
-		idx++;
-	}
-	return (true);
-}
-*/
 
 bool	check_valid_wildcard_in_word(t_token_elem *token)
 {
@@ -52,8 +18,6 @@ bool	check_valid_wildcard_in_word(t_token_elem *token)
 
 	if (!token)
 		return (false);
-//	if (!token->wildcard_valid_flag)
-//		return (is_expandable_wildcard_in_str(token->word, token->is_quoted));
 	idx = 0;
 	while (token->word[idx])
 	{
@@ -64,70 +28,62 @@ bool	check_valid_wildcard_in_word(t_token_elem *token)
 	return (false);
 }
 
-int get_wildcard_valid_lsit(t_token_elem **token_elem)
+static int	get_wildcard_valid_lsit(t_token_elem **token)
 {
-	size_t	word_len ;
+	size_t	len;
 	size_t	idx;
 
-	if (!token_elem || !*token_elem ||  !(*token_elem)->word)
+	if (!token || !*token || !(*token)->word)
 		return (FAILURE);
-	word_len = ft_strlen_ns((*token_elem)->word);
-	(*token_elem)->wildcard_valid_flag = (int *)ft_calloc(sizeof(int), word_len + 1);
-	if (!(*token_elem)->wildcard_valid_flag)
+	len = ft_strlen_ns((*token)->word);
+	(*token)->wildcard_valid_flag = (int *)ft_calloc(sizeof(int), len + 1);
+	if (!(*token)->wildcard_valid_flag)
 		return (perror_ret_int("malloc", FAILURE));
-	if ((*token_elem)->is_quoted)
+	if ((*token)->is_quoted)
 		return (SUCCESS);
 	idx = 0;
-	while ((*token_elem)->word[idx])
+	while ((*token)->word[idx])
 	{
-		if ((*token_elem)->word[idx] == '*')
-			(*token_elem)->wildcard_valid_flag[idx] = 1;
+		if ((*token)->word[idx] == '*')
+			(*token)->wildcard_valid_flag[idx] = 1;
 		idx++;
 	}
 	return (SUCCESS);
 }
 
-int	concat_wildcard_valid_list(t_token_elem **dst, t_token_elem *src)
+static int	concat_connected_words(t_list_bdi **node, t_token_elem **token)
 {
-	size_t	dst_len;
-	size_t	src_len;
-	size_t	dst_idx;
-	size_t	src_idx;
-	int		*flag;
+	t_list_bdi		*popped_node;
+	t_token_elem	*append;
 
-	if (!dst || !*dst || !src)
-		return (FAILURE);
-	dst_len = ft_strlen_ns((*dst)->word);
-	src_len = ft_strlen_ns(src->word);
-//	printf("dst:%s, src:%s\n", (*dst)->word, src->word);
-	flag = (int *)ft_calloc(sizeof(int), dst_len + src_len + 1);
-	dst_idx = 0;
-	while (dst_idx < dst_len)
+	while (*node)
 	{
-		flag[dst_idx] = (*dst)->wildcard_valid_flag[dst_idx];
-		dst_idx++;
+		popped_node = ft_lstpop_bdi(node);
+		append = popped_node->content;
+		if (concat_wildcard_valid_list(token, append) == FAILURE)
+		{
+			ft_lstclear_bdi(&popped_node, free_token_elem);
+			return (FAILURE);
+		}
+		(*token)->word = concat_dst_to_src(&(*token)->word, append->word);
+		if (!(*token)->word)
+		{
+			ft_lstclear_bdi(&popped_node, free_token_elem);
+			return (FAILURE);
+		}
+		if (!append->is_connect_to_next_word)
+			break ;
+		ft_lstclear_bdi(&popped_node, free_token_elem);
 	}
-	free((*dst)->wildcard_valid_flag);
-	(*dst)->wildcard_valid_flag = flag;
-	if (src->is_quoted)
-		return (SUCCESS);
-	src_idx = 0;
-	while (src->word[src_idx])
-	{
-		if (src->word[src_idx] == '*')
-			flag[dst_idx + src_idx] = 1;
-		src_idx++;
-	}
+	ft_lstclear_bdi(&popped_node, free_token_elem);
 	return (SUCCESS);
 }
 
 /* connect (*token_list)->content if "is_connect_to_next_word" */
-int	concat_connected_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list)
+int	concat_tokens_and_create_wildcard_valid_list(t_list_bdi **token_list)
 {
 	t_list_bdi		*node;
-	t_list_bdi		*popped_node;
 	t_token_elem	*token;
-	t_token_elem 	*append;
 
 	if (!token_list)
 		return (FAILURE);
@@ -136,42 +92,12 @@ int	concat_connected_tokens_and_create_wildcard_valid_list(t_list_bdi **token_li
 	{
 		token = node->content;
 		if (get_wildcard_valid_lsit(&token) == FAILURE)
-			return (FAILURE);//TODO:free
-//		token->is_wildcard_expandable = check_valid_wildcard_in_word(token);
+			return (FAILURE);
 		node = node->next;
 		if (!token->is_connect_to_next_word)
 			continue ;
-		while (node)
-		{
-			popped_node = ft_lstpop_bdi(&node);
-			append = popped_node->content;
-			if (concat_wildcard_valid_list(&token, append) == FAILURE)
-				return (FAILURE);//TODO:free
-			token->word = concat_dst_to_src(&token->word, append->word);
-			if (!token->word)
-				return (perror_ret_int("malloc", FAILURE)); //TODO:free
-			if (!append->is_connect_to_next_word)
-				break ;
-			ft_lstclear_bdi(&popped_node, free_token_elem);
-		}
-		ft_lstclear_bdi(&popped_node, free_token_elem);
+		concat_connected_words(&node, &token);
 		token->is_connect_to_next_word = false;
 	}
 	return (SUCCESS);
 }
-
-/*
-void	get_connected_tokens(t_list_bdi **list_connected_from, t_list_bdi **list)
-{
-	t_list_bdi		*popped_node;
-	t_token_elem	*token_elem;
-
-	if (!list_connected_from)
-		return ;
-	popped_node = ft_lstpop_bdi(list_connected_from);
-	ft_lstadd_back_bdi(list, popped_node);
-	token_elem = popped_node->content;
-	if (token_elem->is_connect_to_next_word)
-		get_connected_tokens(list_connected_from, list);
-}
-*/
