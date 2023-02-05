@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:14:46 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 15:41:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 22:59:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ bool			is_expandable_str_with_dollar(const char *str);
 /* expand_wildcard.c */
 int				expanded_wildcard_to_token_list(\
 t_list_bdi **expanded_token_list);
+bool			is_not_expandable_command(t_list_bdi *first_token);
 
 /* concat_wildcard_valid_list.c */
 int				concat_wildcard_valid_list(\

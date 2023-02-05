@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 20:59:11 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 23:00:50 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* FREE OK */
@@ -101,6 +101,7 @@ t_list_bdi **token_list, t_info *info, char **concat_str)
 		return (NULL);
 	if (remove_quote_in_tokens(&*token_list) == FAILURE)
 		return (NULL);
+//	debug_print_tokens(*token_list, "remove quote");
 	if (concat_str)
 	{
 		*concat_str = create_string_by_concat_tokens(*token_list);
@@ -109,12 +110,20 @@ t_list_bdi **token_list, t_info *info, char **concat_str)
 	}
 	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
 		return (NULL);
+	debug_print_tokens(*token_list, "expand var");
+
 	if (re_tokenize_tokens(&*token_list) == FAILURE)
 		return (NULL);
+	debug_print_tokens(*token_list, "re tokenize");
+
 	if (concat_tokens_and_create_wildcard_valid_list(&*token_list) == FAILURE)
 		return (NULL);
+//	debug_print_tokens(*token_list, "concat");
+
 	if (expanded_wildcard_to_token_list(&*token_list) == FAILURE)
 		return (NULL);
+//	debug_print_tokens(*token_list, "expand wildcard");
+
 	commands = create_commands_from_token_list(&*token_list);
 	if (!commands)
 		return (NULL);

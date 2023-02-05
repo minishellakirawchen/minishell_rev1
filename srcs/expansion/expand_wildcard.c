@@ -34,7 +34,7 @@ t_list_bdi **wildcard_save_list, t_list_bdi **expanded_tokens)
 	return (SUCCESS);
 }
 
-static bool	is_not_expandable_command(t_list_bdi *first_token)
+bool	is_not_expandable_command(t_list_bdi *first_token)
 {
 	t_token_elem	*token_elem;
 

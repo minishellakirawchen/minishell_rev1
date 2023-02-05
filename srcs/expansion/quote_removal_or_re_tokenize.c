@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:00:58 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 12:05:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 22:59:59 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ int	re_tokenize_tokens(t_list_bdi **src_tokens)
 
 	if (!src_tokens)
 		return (FAILURE);
+	if (is_not_expandable_command(*src_tokens))
+		return (SUCCESS);
 	expanded_token_list = NULL;
 	while (*src_tokens)
 	{
