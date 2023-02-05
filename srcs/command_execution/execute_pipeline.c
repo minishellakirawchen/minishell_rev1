@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 14:19:08 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 16:38:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 
 static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head)
 {
-	t_list_bdi		*last_node;
+//	t_list_bdi		*last_node;
 	t_list_bdi		*pipeline_cmds_node;
 	t_command_info	*command_info;
 	int				exit_status;
 
-	last_node = ft_lstlast_bdi(pipeline_cmds_head);
-	command_info = last_node->content;
+//	last_node = ft_lstlast_bdi(pipeline_cmds_head);
+//	command_info = last_node->content;
 	pipeline_cmds_node = pipeline_cmds_head;
+
 	while (pipeline_cmds_node)
 	{
 		command_info = pipeline_cmds_node->content;
@@ -51,9 +52,9 @@ static int	execute_pipeline_iter(t_list_bdi *pipeline_cmds_head, char **envp, t_
 			return (perror_ret_int("fork", PROCESS_ERROR));
 		if (is_child_process(command_info->pid))
 		{
-			if (dup2_fds( prev_pipefd, next_pipefd, pipeline_cmds_node->next) == PROCESS_ERROR)
+			if (dup2_fds( prev_pipefd, next_pipefd,pipeline_cmds_node->next) == PROCESS_ERROR)
 				return (PROCESS_ERROR);
-			if (close_fds( prev_pipefd, next_pipefd, pipeline_cmds_node->next) == PROCESS_ERROR)
+			if (close_fds( prev_pipefd,next_pipefd, pipeline_cmds_node->next) == PROCESS_ERROR)
 				return (PROCESS_ERROR);
 			exit (ft_execve(command_info, envp, info));
 		}
@@ -71,22 +72,21 @@ static int	execute_pipeline_iter(t_list_bdi *pipeline_cmds_head, char **envp, t_
 	return (exit_status);
 }
 
-int	execute_pipeline(t_list_bdi *pipeline_cmds_head, t_info *info)
+int	execute_pipeline(t_list_bdi *pipeline_cmds, t_info *info)
 {
 	int				exit_status;
 	t_command_info	*command_info;
 	char			**minishell_envp;
 
-	if (!pipeline_cmds_head || !pipeline_cmds_head->content)
+	if (!pipeline_cmds|| !pipeline_cmds->content)
 		return (PROCESS_ERROR);
-	command_info = pipeline_cmds_head->content;
-	if (is_single_builtin(pipeline_cmds_head))
+	command_info = pipeline_cmds->content;
+	if (is_single_builtin(pipeline_cmds))
 		return (execute_builtin(info, command_info->commands));
 	minishell_envp = create_minishell_envp(info->envlist_head);
 	if (!minishell_envp)
 		return (PROCESS_ERROR);
-	exit_status = execute_pipeline_iter(\
-	pipeline_cmds_head, minishell_envp, info);
+	exit_status = execute_pipeline_iter(pipeline_cmds, minishell_envp, info);
 	free_2d_alloc((void **)minishell_envp);
 	return (exit_status);
 }

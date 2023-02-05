@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 22:59:29 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 16:46:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,17 @@ int	parsing_token_list(
 {
 	if (!tokenlist_head || !execlist_head || !info)
 		return (PROCESS_ERROR);
+	debug_print_tokens(*tokenlist_head, "init");
+
+
 	if (create_operator_list(tokenlist_head, execlist_head) == FAILURE)
 		return (PROCESS_ERROR);
+	debug_print_exec_list(*execlist_head, "create operator list");
+
 	if (create_command_list(execlist_head) == FAILURE)
 		return (PROCESS_ERROR);
+	debug_print_exec_list(*execlist_head, "create command list");
+
 	if (create_redirect_list(execlist_head, info) == FAILURE)
 		return (PROCESS_ERROR);
 	debug_print_exec_list(*execlist_head, "parsing fin");

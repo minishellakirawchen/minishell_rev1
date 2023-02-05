@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 17:02:36 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 08:56:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 16:50:47 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "parser.h"
@@ -44,7 +44,7 @@ static t_command_info	*create_command_info(void)
 }
 
 static int	create_cmd_info_from_pipeline(\
-t_exec_list **pipe_node, t_command_info *cmd_info)
+t_exec_list **pipe_node, t_command_info **cmd_info)
 {
 	t_token_elem	*token_elem;
 	t_list_bdi		*popped_token;
@@ -58,15 +58,15 @@ t_exec_list **pipe_node, t_command_info *cmd_info)
 		if (token_elem->type != e_ope_pipe)
 		{
 			move_tokens_to_cmd_info(\
-			&(*pipe_node)->token_list_head, &cmd_info, popped_token);
+			&(*pipe_node)->token_list_head, &*cmd_info, popped_token);
 			continue ;
 		}
 		if (connect_cmd_info_to_execlist(\
-		&(*pipe_node)->pipeline_commands, cmd_info) == FAILURE)
+		&(*pipe_node)->pipeline_commands, *cmd_info) == FAILURE)
 			return (FAILURE);
 		ft_lstdelone_bdi(&popped_token, free_token_elem);
-		cmd_info = create_command_info();
-		if (!cmd_info)
+		*cmd_info = create_command_info();
+		if (!*cmd_info)
 			return (FAILURE);
 	}
 	return (SUCCESS);
@@ -93,7 +93,7 @@ int	create_command_list(t_exec_list **exec_list_head)
 			cmd_info = create_command_info();
 			if (!cmd_info)
 				return (FAILURE);
-			if (create_cmd_info_from_pipeline(&node, cmd_info) == FAILURE)
+			if (create_cmd_info_from_pipeline(&node, &cmd_info) == FAILURE)
 				return (FAILURE);
 			if (connect_cmd_info_to_execlist(\
 			&node->pipeline_commands, cmd_info) == FAILURE)
