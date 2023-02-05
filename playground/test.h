@@ -35,7 +35,7 @@
 # define FAIL	0
 # define PASS	1
 
-# define max(a, b)	(a >= b ? a : b)
+# define MAX_SIZE(a, b)	(a >= b ? a : b)
 
 # define BUFFER	256
 

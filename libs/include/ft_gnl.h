@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:20:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:49:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,4 @@ size_t		ft_strlen_gnl(const char *str);
 size_t		cnt_chr_in_str(const char c, const char *str);
 size_t		ft_strlcpy_gnl(char *dst, const char *src, size_t dstsize);
 
-
 #endif //FT_GNL_H
-

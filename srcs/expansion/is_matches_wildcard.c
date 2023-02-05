@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 10:30:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 13:05:44 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:48:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static void	update_dp_table_if_wildcard(int ***dp, size_t i, size_t j)
 {
 	if (!dp || !*dp)
 		return ;
-	(*dp)[i][j] = max((*dp)[i][j], (*dp)[i - 1][j]);
+	(*dp)[i][j] = max_int((*dp)[i][j], (*dp)[i - 1][j]);
 	if (j > 0)
-		(*dp)[i][j] = max((*dp)[i][j], (*dp)[i][j - 1]);
+		(*dp)[i][j] = max_int((*dp)[i][j], (*dp)[i][j - 1]);
 }
 
 static int	is_match(const char *wildcard, const char *target, \
@@ -42,7 +42,7 @@ int **dp, const int *valid_table)
 				update_dp_table_if_wildcard(&dp, i, j);
 			if (j > 0 && valid_table[i - 1] == 0 \
 			&& wildcard[i - 1] == target[j - 1])
-				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
+				dp[i][j] = max_int(dp[i][j], dp[i - 1][j - 1]);
 			j++;
 		}
 		i++;

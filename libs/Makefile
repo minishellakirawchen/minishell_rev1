@@ -46,7 +46,6 @@ LIBFT_SRC	= string/str/ft_strlen.c \
 			  string/str/ft_strjoin.c \
 			  string/str/ft_strtrim.c \
 			  string/str/ft_split.c \
-			  string/str/ft_split_set.c \
 			  string/str/ft_strmapi.c \
 			  string/str/ft_striteri.c\
 			  string/str/ft_ispunct.c \

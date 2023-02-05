@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:57:14 by takira            #+#    #+#             */
-/*   Updated: 2023/02/01 15:47:01 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:45:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ char		*ft_strdup_ns(const char *s1);
 char		*ft_strtrim(char const *s1, char const *set);
 
 char		**ft_split(char const *s, char c);
-char		**ft_split_set(char const *s, char delim, char set);
 
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));

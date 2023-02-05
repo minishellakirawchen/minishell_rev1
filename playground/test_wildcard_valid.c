@@ -154,13 +154,13 @@ static int	is_match(const char *wildcard_str, const char *target_str, int **dp, 
 		{
 			if (valid_table[i - 1] == 1) //wildcard
 			{
-				dp[i][j] = max(dp[i - 1][j], dp[i][j]);
+				dp[i][j] = MAX_SIZE(dp[i - 1][j], dp[i][j]);
 				if (j > 0)
-					dp[i][j] = max(dp[i][j - 1], dp[i][j]);
+					dp[i][j] = MAX_SIZE(dp[i][j - 1], dp[i][j]);
 //				printf("i:%zu, j:%zu, j-1:%zu\n", i, j, j-1);
 			}
 			if (j > 0 && wildcard_str[i - 1] == target_str[j - 1] && valid_table[i - 1] == 0)
-				dp[i][j] = max(dp[i][j], dp[i - 1][j - 1]);
+				dp[i][j] = MAX_SIZE(dp[i][j], dp[i - 1][j - 1]);
 			j++;
 		}
 		i++;
