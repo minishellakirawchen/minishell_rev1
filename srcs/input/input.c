@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 10:35:09 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:47:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ static int	preprocess_for_execute(t_info *info)
 
 static void	prompt_init(int *process_exit_value, t_info *info)
 {
-	if (*process_exit_value != CONTINUE)
+	if (*process_exit_value == EXIT_BY_SIG) //-4->1
+		info->exit_status = EXIT_FAILURE;
+	else if (*process_exit_value != CONTINUE)
 		info->exit_status = *process_exit_value;
 	*process_exit_value = EXIT_SUCCESS;
 	g_status.exit_status = EXIT_SUCCESS;

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/06 13:43:32 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 17:17:26 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	heredoc_int_handler(int sig_num)
 	if (sig_num == SIGINT)
 	{
 		g_status.heredoc_status = EXIT_BY_SIG;
-		write(STDOUT_FILENO, "\n", 1);
+		ft_dprintf(STDIN_FILENO, "\n");
 	}
 }
 
@@ -35,21 +35,21 @@ void	init_signal_heredoc(void)
 	init_sigaction(SIGQUIT, sig_quit_act, SIG_IGN);
 }
 
-int	do_heredoc(int fd, t_redirect_info *redirect_info)
+int	do_heredoc(int fd, t_redirect_info *r_info)
 {
 	char	*line;
 
 	g_status.heredoc_status = SUCCESS;
-	line = NULL;
-	if (fd < 0 || !redirect_info || !redirect_info->heredoc_eof)
+	if (fd < 0 || !r_info || !r_info->heredoc_eof)
 		return (PROCESS_ERROR);
 	init_signal_heredoc();
 	set_tc_attr_out_execute();
-	while (g_status.heredoc_status == SUCCESS)
+	line = NULL;
+	while (true)
 	{
 		ft_dprintf(STDERR_FILENO, "> ");
 		line = get_next_line(STDIN_FILENO, true);
-		if (is_eof(line) || is_delimiter(line, redirect_info->heredoc_eof))
+		if (is_eof(line) || is_delimiter(line, r_info->heredoc_eof))
 		{
 			line = free_1d_alloc(line);
 			break ;
@@ -57,5 +57,7 @@ int	do_heredoc(int fd, t_redirect_info *redirect_info)
 		ft_dprintf(fd, line);
 		line = free_1d_alloc(line);
 	}
+	if (g_status.heredoc_status == EXIT_BY_SIG)
+		free_1d_alloc(line);
 	return (g_status.heredoc_status);
 }
