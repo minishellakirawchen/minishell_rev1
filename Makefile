@@ -147,7 +147,7 @@ fclean	: clean
 
 re		: fclean all
 
-bonus	:
+bonus	: all
 
 norm	:
 	norminette -v
