@@ -62,7 +62,7 @@ int **get_dp_table(size_t row, size_t col)
 	int		**dp;
 	size_t	idx;
 
-	dp = (int **)calloc(sizeof(int *), row + 1);
+	dp = (int **)ft_calloc(sizeof(int *), row + 1);
 	if (!dp)
 	{
 		perror("malloc");
@@ -72,7 +72,7 @@ int **get_dp_table(size_t row, size_t col)
 	idx = 0;
 	while (idx < row)
 	{
-		dp[idx] = (int *)calloc(sizeof(int), col + 1);
+		dp[idx] = (int *)ft_calloc(sizeof(int), col + 1);
 		if (!dp[idx])
 		{
 			perror("malloc");

@@ -62,7 +62,7 @@ int **get_dp_table(size_t row, size_t col)
 	int		**dp;
 	size_t	idx;
 
-	dp = (int **)calloc(sizeof(int *), row + 1);
+	dp = (int **)ft_calloc(sizeof(int *), row + 1);
 	if (!dp)
 	{
 		perror("malloc");
@@ -72,7 +72,7 @@ int **get_dp_table(size_t row, size_t col)
 	idx = 0;
 	while (idx < row)
 	{
-		dp[idx] = (int *)calloc(sizeof(int), col + 1);
+		dp[idx] = (int *)ft_calloc(sizeof(int), col + 1);
 		if (!dp[idx])
 		{
 			perror("malloc");
@@ -218,7 +218,7 @@ int main(void)
 
 	int	no = 1;
 	int ng = 0;
-	int *valid_list = (int *)calloc(sizeof(int), 10);
+	int *valid_list = (int *)ft_calloc(sizeof(int), 10);
 
 	valid_list[0] = 0;
 	ng += test_wildcart(no++, "*", "a", false, valid_list);

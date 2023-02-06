@@ -103,7 +103,7 @@ OBJ		= $(SRC:%.c=%.o)
 OBJS	= $(addprefix $(OBJ_DIR)/, $(OBJ))
 
 
-# DEPSj
+# DEPS
 DEPS	= $(OBJS:%.o=%.d)
 
 

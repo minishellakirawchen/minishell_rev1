@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 00:21:08 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 12:53:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ static int	closefile_and_judge_status(t_command_info **cmd_info, int status)
 	return (SUCCESS);
 }
 
-static int	create_heredoc_file_in_cmd_info(t_command_info **cmd_info,
-	int *cnt, int *exit_status)
+static int	create_tmp_file_and_do_heredoc(\
+t_command_info **cmd_info, int *cnt, int *exit_status)
 {
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*r_info;
@@ -85,7 +85,7 @@ int	execute_heredoc(t_exec_list **execlist_head, int *exit_status)
 		while (command_list_node)
 		{
 			command_info = command_list_node->content;
-			if (create_heredoc_file_in_cmd_info(\
+			if (create_tmp_file_and_do_heredoc(\
 			&command_info, &heredoc_cnt, exit_status) == PROCESS_ERROR)
 				return (PROCESS_ERROR);
 			command_list_node = command_list_node->next;

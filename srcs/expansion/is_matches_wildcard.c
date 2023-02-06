@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 10:30:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 15:48:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 12:24:54 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ static int	**get_dp_table(size_t row, size_t col)
 	int		**dp;
 	size_t	idx;
 
-	dp = (int **)calloc(sizeof(int *), row + 1);
+	dp = (int **)ft_calloc(sizeof(int *), row + 1);
 	if (!dp)
 		return (perror_ret_nullptr("malloc"));
 	idx = 0;
 	while (idx < row)
 	{
-		dp[idx] = (int *)calloc(sizeof(int), col + 1);
+		dp[idx] = (int *)ft_calloc(sizeof(int), col + 1);
 		if (!dp[idx])
 			return (perror_ret_nullptr("malloc"));
 		idx++;
