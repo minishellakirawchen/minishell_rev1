@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_return.c                                     :+:      :+:    :+:   */
+/*   get_elem.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/22 20:15:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 18:21:21 by takira           ###   ########.fr       */
+/*   Created: 2023/02/05 18:30:54 by wchen             #+#    #+#             */
+/*   Updated: 2023/02/05 18:31:19 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	perror_ret_int(char *err, int retno)
+char	**get_value_from_key(t_env_elem *elem, char *key)
 {
-	perror(err);
-	return (retno);
-}
-
-void	*perror_ret_nullptr(char *err)
-{
-	perror(err);
+	if (is_same_str(elem->key, key))
+		return (&elem->value);
 	return (NULL);
 }
 
-int	ambiguous_error(char *filename)
+char	**get_elem(t_info *info, char *key)
 {
-	ft_dprintf(STDERR_FILENO, ERRMSG_AMBIGUOUS, filename);
-	return (FAILURE);
-}
+	t_list	*env_node;
+	char	**value;
 
-int	openfile_error(char *filename, char *strerror)
-{
-	ft_dprintf(STDERR_FILENO, ERRMSG_FILEOPEN, filename, strerror);
-	return (FAILURE);
+	env_node = info->envlist_head;
+	value = NULL;
+	while (env_node != NULL)
+	{
+		value = get_value_from_key(env_node->content, key);
+		if (value != NULL)
+			return (value);
+		env_node = env_node->next;
+	}
+	return (value);
 }

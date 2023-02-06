@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 19:09:17 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:17:02 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:01:40 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static char	*delete_newline_in_save(char *save)
 		new_save[j++] = save[i++];
 	new_save[j] = '\0';
 	ft_free_gnl(&save, NULL);
+	if (j == 0)
+		ft_free_gnl(&new_save, NULL);
 	return (new_save);
 }
 

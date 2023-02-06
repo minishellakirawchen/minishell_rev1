@@ -6,11 +6,21 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:20:42 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 13:33:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:46:11 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
+
+static void	print_parenthesis_error(int cnt)
+{
+	if (cnt > 0)
+		ft_dprintf(STDERR_FILENO, \
+		"minishell: syntax error unclosed parenthesis `('\n");
+	else
+		ft_dprintf(STDERR_FILENO, \
+		"minishell: syntax error unclosed parenthesis `)'\n");
+}
 
 int	validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
 {
@@ -33,10 +43,7 @@ int	validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
 	}
 	if (cnt == 0)
 		return (SUCCESS);
-	if (cnt > 0)
-		ft_dprintf(STDERR_FILENO, "minishell: unclosed parenthesis `('\n");
-	else
-		ft_dprintf(STDERR_FILENO, "minishell: unclosed parenthesis `)'\n");
+	print_parenthesis_error(cnt);
 	return (FAILURE);
 }
 

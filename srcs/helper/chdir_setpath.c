@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/04 11:20:28 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/05 18:58:23 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,5 @@ int	chdir_setpath(t_info *info, t_cd_info *cd_info, char **cmds)
 			return (EXIT_FAILURE);
 		}
 	}
-	return (EXIT_SUCCESS);
+	return (exit_dir);
 }

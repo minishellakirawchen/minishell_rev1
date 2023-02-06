@@ -13,6 +13,7 @@ VPATH = $(SRC_DIR)
 SRC_DIR	= ./srcs
 SRC		= main.c \
 		  input/input.c \
+		  input/judge_continue_loop.c \
 		  input/set_tc_attr.c \
 		  tokenizer/tokenizer.c \
 		  tokenizer/space_split.c \
@@ -69,6 +70,8 @@ SRC		= main.c \
 		  command_execution/execute_builtin.c \
 		  signal_handler/signal_handler.c \
 		  signal_handler/init_signal_execute.c \
+		  signal_handler/init_signal_heredoc.c \
+		  signal_handler/init_signal_prompt.c \
 		  ft_builtin/ft_echo.c \
 		  ft_builtin/ft_env.c \
 		  ft_builtin/ft_export.c \
@@ -83,7 +86,8 @@ SRC		= main.c \
 		  helper/print_key_value.c \
 		  helper/builtin_judge.c \
 		  helper/builtin_free.c \
-		  helper/get_set_elem.c \
+		  helper/set_elem.c \
+		  helper/get_elem.c \
 		  helper/check_dir_exist.c \
 		  helper/ft_lst_ascsort.c \
 		  helper/chdir_setpath.c \
@@ -99,7 +103,7 @@ OBJ		= $(SRC:%.c=%.o)
 OBJS	= $(addprefix $(OBJ_DIR)/, $(OBJ))
 
 
-# DEPSj
+# DEPS
 DEPS	= $(OBJS:%.o=%.d)
 
 

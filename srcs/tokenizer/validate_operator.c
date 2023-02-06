@@ -6,13 +6,13 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:00 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 13:55:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:41:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
 
-int	validate_operator_sign(t_token_elem *now_token)
+static int	validate_operator_sign(t_token_elem *now_token)
 {
 	const char	*operators[] = {\
 	";", "|", "||", "&&", "(", ")", "<", ">", ">>", "<<", NULL};

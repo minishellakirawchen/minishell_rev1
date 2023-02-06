@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_execution.c                                :+:      :+:    :+:   */
+/*   execute_execlist.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 22:49:41 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 19:03:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,15 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds, t_info *info)
  */
 int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 {
-	int			exit_status;
+	int			exit_value;
 	t_exec_list	*exec_node;
 	t_exec_list	*pipeline_node;
 
 	if (!info || !execlist_head)
 		return (FAILURE);
-	exit_status = EXIT_SUCCESS;
-	if (execute_heredoc(execlist_head) == FAILURE)
-		return (PROCESS_ERROR);
+	exit_value = execute_heredoc(execlist_head);
+	if (exit_value != SUCCESS) // SUCCESS, EXIT_BY_SIG, PROCESS_ERROR
+		return (exit_value);
 	exec_node = *execlist_head;
 	while (exec_node)
 	{
@@ -81,7 +81,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 		if (expand_var_and_create_cmds_from_tokens(\
 		&pipeline_node, info) == FAILURE)
 			return (PROCESS_ERROR);
-
+			/*
 		printf("---------- after expand, before execute ----------\n");
 		t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
 		while (pipeline_cmds_node)
@@ -93,14 +93,14 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 				ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
 		}
 		printf("--------------------------------------------------\n");
-
-		exit_status = execute_pipeline(pipeline_node->pipeline_commands, info);
-		if (exit_status == PROCESS_ERROR)
+			 */
+		exit_value = execute_pipeline(pipeline_node->pipeline_commands, info);
+		if (exit_value == PROCESS_ERROR)
 			return (PROCESS_ERROR);
 		exec_node = exec_node->next;
-		move_to_next_exec_node(&exec_node, exit_status);
+		move_to_next_exec_node(&exec_node, exit_value);
 	}
-	return (exit_status);
+	return (exit_value);
 }
 
 /*

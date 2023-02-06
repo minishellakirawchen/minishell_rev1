@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 17:44:20 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 17:21:56 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,6 @@ int	ft_execve(t_command_info *cmd_info, char **minishell_envp, t_info *info)
 		if (ft_execvp(cmd_info->commands, minishell_envp, \
 		info->envlist_head) == PROCESS_ERROR)
 			exit (PROCESS_ERROR);
-	ft_dprintf(STDERR_FILENO, "command not found: %s\n", cmd_info->commands[0]);
+	ft_dprintf(STDERR_FILENO, ERRMSG_CMD_NOT_FOUND, cmd_info->commands[0]);
 	exit (CMD_NOT_FOUND);
 }

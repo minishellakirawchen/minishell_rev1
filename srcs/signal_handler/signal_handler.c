@@ -6,19 +6,20 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:39 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 20:13:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 00:19:28 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void init_sigaction(int sig_no, struct sigaction sig_act, sigfunc *sig_handler)
+void	init_sigaction(int sig_no, struct sigaction sig_act,
+		t_sigfunc *sig_handler)
 {
 	errno = 0;
 	sigemptyset(&sig_act.sa_mask);
 	sig_act.sa_flags = 0;
 	sig_act.sa_handler = sig_handler;
-	if(sigaction(sig_no, &sig_act, NULL) < 0)
+	if (sigaction(sig_no, &sig_act, NULL) < 0)
 		perror("sigaction");
 }
 

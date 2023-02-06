@@ -6,36 +6,24 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 21:25:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 17:42:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "input.h"
+#include "minishell.h"
 
-volatile sig_atomic_t	g_signal_status = EXIT_SUCCESS;
+t_gbl_var	g_status;
 
-static void	prompt_int_handler(int sig_num)
+void	prompt_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		g_signal_status = EXIT_FAILURE;
-		write(STDOUT_FILENO, "\n", 2);
+		g_status.exit_status = EXIT_FAILURE;
+		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-}
-
-static void	init_signal_prompt(void)
-{
-	struct sigaction	sig_int_act;
-	struct sigaction	sig_quit_act;
-
-	signal(SIGINT, SIG_IGN);
-	ft_bzero(&sig_int_act, sizeof(sigaction));
-	init_sigaction(SIGINT, sig_int_act, prompt_int_handler);
-	ft_bzero(&sig_quit_act, sizeof(sigaction));
-	init_sigaction(SIGQUIT, sig_quit_act, SIG_IGN);
 }
 
 static int	preprocess_for_execute(t_info *info)
@@ -43,10 +31,7 @@ static int	preprocess_for_execute(t_info *info)
 	int	process_exit_val;
 
 	if (!info->readline_input)
-	{
-		ft_dprintf(STDERR_FILENO, "exit");
 		return (BREAK);
-	}
 	if (is_same_str(info->readline_input, ""))
 	{
 		info->readline_input = free_1d_alloc(info->readline_input);
@@ -67,10 +52,37 @@ static int	preprocess_for_execute(t_info *info)
 
 static void	prompt_init(int *process_exit_value, t_info *info)
 {
+	if (*process_exit_value == EXIT_BY_SIG) //-4->1
+		info->exit_status = EXIT_FAILURE;
+	else if (*process_exit_value != CONTINUE)
+		info->exit_status = *process_exit_value;
 	*process_exit_value = EXIT_SUCCESS;
+	g_status.exit_status = EXIT_SUCCESS;
 	set_tc_attr_out_execute();
-	info->readline_input = readline(PROMPT);
-	set_tc_attr_in_execute();
+	init_signal_prompt();
+//	set_tc_attr_in_execute();
+//	info->readline_input = readline(PROMPT);
+
+////////////////////////////////////////////////////////////////////
+	char	*prompt;
+	char	*tmp;
+	char	*exit_status_string;
+	exit_status_string = ft_itoa(info->exit_status);
+	tmp = ft_strjoin("minishell ", exit_status_string);
+	prompt = ft_strjoin(tmp, " $> ");
+	free(tmp);
+	free(exit_status_string);
+
+	info->readline_input = readline(prompt);
+	free(prompt);
+////////////////////////////////////////////////////////////////////
+
+}
+
+static void	update_exit_status(t_info *info)
+{
+	if (g_status.exit_status == EXIT_FAILURE)
+		info->exit_status = g_status.exit_status;
 }
 
 int	prompt_loop(t_info *info)
@@ -79,22 +91,20 @@ int	prompt_loop(t_info *info)
 
 	if (!info)
 		return (FAILURE);
-	init_signal_prompt();
+//	init_signal_prompt();
+	process_exit_value = EXIT_SUCCESS;
 	while (true)
 	{
 		prompt_init(&process_exit_value, info);
 		process_exit_value = preprocess_for_execute(info);
-		if (process_exit_value == BREAK)
+		if (is_eof_exit(process_exit_value))
 			break ;
-		if (g_signal_status == EXIT_FAILURE)
-			info->exit_status = g_signal_status;
+		update_exit_status(info);
 		if (process_exit_value == EXIT_SUCCESS)
 			process_exit_value = execute_execlist(&info->execlist_head, info);
 		clear_input_info(&info);
-		if (process_exit_value == PROCESS_ERROR)
+		if (is_minishell_abort(process_exit_value))
 			break ;
-		info->exit_status = process_exit_value;
-		g_signal_status = EXIT_SUCCESS;
 	}
-	return (g_signal_status);
+	return (info->exit_status);
 }

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 17:00:09 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 19:59:41 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 00:19:58 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,3 @@ void	clear_input_info(t_info **info)
 	clear_exec_list(&(*info)->execlist_head);
 	(*info)->readline_input = free_1d_alloc((*info)->readline_input);
 }
-

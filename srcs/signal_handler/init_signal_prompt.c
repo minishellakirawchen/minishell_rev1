@@ -1,40 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_signal_execute.c                              :+:      :+:    :+:   */
+/*   init_signal_prompt.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/06 00:19:14 by wchen            ###   ########.fr       */
+/*   Created: 2023/02/06 09:49:54 by takira            #+#    #+#             */
+/*   Updated: 2023/02/06 09:51:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	execute_int_handler(int sig_num)
-{
-	if (sig_num == SIGINT)
-	{
-		kill(0, SIGKILL);
-		exit(130);
-	}
-}
-
-static void	execute_quit_handler(int sig_num)
-{
-	if (sig_num == SIGQUIT)
-		exit(131);
-}
-
-void	init_signal_execute(void)
+void	init_signal_prompt(void)
 {
 	struct sigaction	sig_int_act;
 	struct sigaction	sig_quit_act;
 
 	signal(SIGINT, SIG_IGN);
 	ft_bzero(&sig_int_act, sizeof(sigaction));
+	init_sigaction(SIGINT, sig_int_act, prompt_int_handler);
 	ft_bzero(&sig_quit_act, sizeof(sigaction));
-	init_sigaction(SIGINT, sig_int_act, execute_int_handler);
-	init_sigaction(SIGQUIT, sig_quit_act, execute_quit_handler);
+	init_sigaction(SIGQUIT, sig_quit_act, SIG_IGN);
 }
