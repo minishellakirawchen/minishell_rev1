@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 00:24:04 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 09:51:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,12 +217,13 @@ struct							s_redirect_info
 /* ************************** */
 /*            main            */
 /* ************************** */
+void							prompt_int_handler(int sig_num);
 
 /* ************************** */
 /*           helper           */
 /* ************************** */
 
-/*         helper.c           */
+/* helper.c */
 t_list							*get_envlist(void);
 t_env_elem						*create_new_envelem(char *key, char *value,
 									int not_print);
@@ -244,7 +245,7 @@ void							clear_exec_list(t_exec_list **exec_list);
 int								update_shlvl(char **current_shlvl_str);
 int								add_initial_shlvl(t_list **env_list_head);
 
-/*         error_return.c           */
+/* error_return.c */
 void							*perror_ret_nullptr(char *err);
 int								perror_ret_int(char *err, int retno);
 int								ambiguous_error(char *filename);
