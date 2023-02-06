@@ -13,6 +13,7 @@ VPATH = $(SRC_DIR)
 SRC_DIR	= ./srcs
 SRC		= main.c \
 		  input/input.c \
+		  input/judge_continue_loop.c \
 		  input/set_tc_attr.c \
 		  tokenizer/tokenizer.c \
 		  tokenizer/space_split.c \
@@ -70,6 +71,7 @@ SRC		= main.c \
 		  signal_handler/signal_handler.c \
 		  signal_handler/init_signal_execute.c \
 		  signal_handler/init_signal_heredoc.c \
+		  signal_handler/init_signal_prompt.c \
 		  ft_builtin/ft_echo.c \
 		  ft_builtin/ft_env.c \
 		  ft_builtin/ft_export.c \
