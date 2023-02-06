@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 17:42:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 21:04:57 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,6 @@ int	prompt_loop(t_info *info)
 		if (is_minishell_abort(process_exit_value))
 			break ;
 	}
+	set_tc_attr_in_execute();
 	return (info->exit_status);
 }

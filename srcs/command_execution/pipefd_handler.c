@@ -6,14 +6,15 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:16:04 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 22:22:17 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 22:06:05 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command_execution.h"
 
-void	init_pipefd(int prev_pipefd[2], int next_pipefd[2])
+void	init_pipefd_term(int prev_pipefd[2], int next_pipefd[2])
 {
+	set_tc_attr_in_execute();
 	if (!prev_pipefd || !next_pipefd)
 		return ;
 	prev_pipefd[READ] = STDIN_FILENO;

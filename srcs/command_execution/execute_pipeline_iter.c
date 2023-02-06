@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 00:02:36 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 22:06:15 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	get_last_status_and_wait_children(t_list_bdi *pipeline_cmds_head)
 		if (waitpid(command_info->pid, &exit_status, 0) < 0)
 		{
 			signal(SIGCHLD, SIG_IGN);
+			write(STDERR_FILENO, "\n", 1);
 			return (130);
 		}
 		exit_status = print_signal_error(exit_status, cmds_node, last_node);
@@ -78,8 +79,7 @@ int	execute_pipe_iter(t_list_bdi *pipeline, char **envp, t_info *info)
 	t_list_bdi		*cmd_node;
 	t_command_info	*cmd_info;
 
-	init_pipefd(prev_pipefd, next_pipefd);
-	set_tc_attr_in_execute();
+	init_pipefd_term(prev_pipefd, next_pipefd);
 	cmd_node = pipeline;
 	while (cmd_node)
 	{
@@ -91,6 +91,7 @@ int	execute_pipe_iter(t_list_bdi *pipeline, char **envp, t_info *info)
 				exit (PROCESS_ERROR);
 			exit (ft_execve(cmd_info, envp, info));
 		}
+		signal(SIGINT, SIG_IGN);
 		if (handle_fd_for_parent(prev_pipefd, next_pipefd) == PROCESS_ERROR)
 			return (PROCESS_ERROR);
 		cmd_node = cmd_node->next;

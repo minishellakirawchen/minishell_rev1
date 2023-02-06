@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/06 00:19:14 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 22:02:49 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	execute_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		kill(0, SIGKILL);
+		write (STDERR_FILENO, "sig_handler", 1);
 		exit(130);
 	}
 }
@@ -32,7 +32,6 @@ void	init_signal_execute(void)
 	struct sigaction	sig_int_act;
 	struct sigaction	sig_quit_act;
 
-	signal(SIGINT, SIG_IGN);
 	ft_bzero(&sig_int_act, sizeof(sigaction));
 	ft_bzero(&sig_quit_act, sizeof(sigaction));
 	init_sigaction(SIGINT, sig_int_act, execute_int_handler);

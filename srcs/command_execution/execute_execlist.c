@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 19:03:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 22:04:47 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 	if (!info || !execlist_head)
 		return (FAILURE);
 	exit_value = execute_heredoc(execlist_head);
-	if (exit_value != SUCCESS) // SUCCESS, EXIT_BY_SIG, PROCESS_ERROR
+	if (exit_value != SUCCESS)
 		return (exit_value);
 	exec_node = *execlist_head;
 	while (exec_node)

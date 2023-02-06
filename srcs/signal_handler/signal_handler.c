@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:39 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 00:19:28 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 22:02:25 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,31 @@ void	init_sigaction(int sig_no, struct sigaction sig_act,
 		perror("sigaction");
 }
 
+static int	print_int_error(int exit_status, t_list_bdi *node,
+		t_list_bdi *last_node)
+{
+	if (WTERMSIG(exit_status) == SIGQUIT && last_node == node)
+	{
+		ft_dprintf(STDERR_FILENO, "Quit: %d\n", WTERMSIG(exit_status));
+		return (131);
+	}
+	if (WTERMSIG(exit_status) == SIGINT && last_node == node)
+	{
+		ft_dprintf(STDERR_FILENO, "\n");
+		return (130);
+	}
+	if (last_node == node)
+		ft_dprintf(STDERR_FILENO, "Interrupt by signal : %d\n",
+			WTERMSIG(exit_status));
+	return (WEXITSTATUS(exit_status));
+}
+
 int	print_signal_error(int exit_status, t_list_bdi *node, t_list_bdi *last_node)
 {
 	if (WIFEXITED(exit_status))
 		exit_status = WEXITSTATUS(exit_status);
 	else if (WIFSIGNALED(exit_status))
-	{
-		if (WTERMSIG(exit_status) == SIGQUIT && last_node == node)
-			ft_printf("Quit: %d\n", WTERMSIG(exit_status));
-		exit_status = 131;
-	}
+		return (print_int_error(exit_status, node, last_node));
 	else if (WIFSTOPPED(exit_status))
 	{
 		ft_printf("stopped by signal: %d\n", WSTOPSIG(exit_status));
