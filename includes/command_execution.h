@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 22:52:28 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 13:28:55 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	**create_minishell_envp(t_list *envlist_head);
 int		execute_redirect(t_command_info *command_info, t_info *info);
 
 /* execute_heredoc.c */
-int		execute_heredoc(t_exec_list **execlist_head, int *exit_status);
+int		execute_heredoc(t_exec_list **execlist_head);
 bool	is_delimiter(const char *input_line, const char *delimiter);
 bool	is_eof(char *line);
 char	*get_heredoc_tmp_filename(int cnt);

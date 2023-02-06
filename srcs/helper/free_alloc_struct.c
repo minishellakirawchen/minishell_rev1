@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 15:10:50 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 15:15:55 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:39:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,10 @@ void	free_redirect_info(void *content)
 	if (!content)
 		return ;
 	redirect_info = content;
+	errno = 0;
 	if (redirect_info->io_type == e_heredoc)
-		if (unlink(redirect_info->filename) < 0)
-			perror_and_return_int("unlink", FAILURE);
+		if (redirect_info->filename && unlink(redirect_info->filename) < 0)
+			perror("unlink");
 	free_1d_alloc(redirect_info->filename);
 	free_1d_alloc(redirect_info->heredoc_eof);
 	ft_lstclear_bdi(&redirect_info->token_list, free_token_elem);

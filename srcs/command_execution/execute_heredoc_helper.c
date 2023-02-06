@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 11:11:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 14:35:33 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:41:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	is_eof(char *line)
 	return (!line);
 }
 
-/* tmpfile name is "here_doc_<cnt>.tmp" */
+/* tmp file name is "heredoc_<cnt>.tmp" */
 char	*get_heredoc_tmp_filename(int cnt)
 {
 	char	*cnt_string;
