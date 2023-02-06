@@ -6,23 +6,25 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 17:31:23 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:27:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdbool.h>
+# include <stdio.h>
+
 # include "./../libs/include/libft.h"
 # include "command_execution.h"
 # include "expansion.h"
+# include "error_msg.h"
 # include "ft_builtin.h"
 # include "input.h"
 # include "parser.h"
 # include "signal_handler.h"
 # include "tokenizer.h"
-# include <stdbool.h>
-# include <stdio.h>
 
 /* ************************** */
 /*           macro            */
@@ -54,10 +56,6 @@
 # define EXIT_TOO_MANY_ARGS 1
 # define EXIT_NUMERIC_ARGS_REQUIRED 255
 # define SYNTAX_ERROR	258
-
-/* message */
-# define ERRMSG_AMBIGUOUS	"minishell: %s: ambiguous redirect\n"
-# define ERRMSG_FILEOPEN	"minishell: %s: %s\n"
 
 /* ************************** */
 /*          typedef           */

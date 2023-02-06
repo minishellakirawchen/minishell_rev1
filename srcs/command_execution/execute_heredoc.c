@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 21:49:34 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 17:00:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:29:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,20 @@ t_redirect_info **redirect_info, int *cnt, t_command_info **cmd_info)
 	return (SUCCESS);
 }
 
-static int	closefile_and_judge_status(t_command_info **cmd_info, int exit_value)
+static int	closefile_and_judge_status(t_command_info **cmd_info, int exit_val)
 {
 	if (!cmd_info || !*cmd_info)
 		return (PROCESS_ERROR);
 	if (close((*cmd_info)->redirect_fd[FD_HEREDOC]) < 0)
 		return (perror_ret_int("close", PROCESS_ERROR));
-	return (exit_value);
+	return (exit_val);
 }
 
 static int	do_heredoc_to_tmpfile(t_command_info **cmd_info, int *cnt)
 {
 	t_list_bdi		*redirect_list;
 	t_redirect_info	*r_info;
-	int 			exit_value;
+	int				exit_val;
 
 	if (!cmd_info || !*cmd_info)
 		return (FAILURE);
@@ -51,11 +51,12 @@ static int	do_heredoc_to_tmpfile(t_command_info **cmd_info, int *cnt)
 		r_info = redirect_list->content;
 		if (r_info->io_type == e_heredoc)
 		{
-			if (get_filename_and_openfile(&r_info, cnt, cmd_info) == PROCESS_ERROR)
+			if (get_filename_and_openfile(\
+			&r_info, cnt, cmd_info) == PROCESS_ERROR)
 				return (PROCESS_ERROR);
-			exit_value = do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], r_info);
-			if (closefile_and_judge_status(cmd_info, exit_value) != SUCCESS)
-				return (exit_value);
+			exit_val = do_heredoc((*cmd_info)->redirect_fd[FD_HEREDOC], r_info);
+			if (closefile_and_judge_status(cmd_info, exit_val) != SUCCESS)
+				return (exit_val);
 			*cnt += 1;
 		}
 		redirect_list = redirect_list->next;

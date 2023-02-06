@@ -63,7 +63,6 @@ int				validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head);
 
 /* validate_operator.c */
 int				valid_control_operator(t_list_bdi **tokenlist_head);
-int				validate_operator_sign(t_token_elem *now_token);
 
 /* check_operator_syntax.c */
 int				validate_operator_tokens(\
