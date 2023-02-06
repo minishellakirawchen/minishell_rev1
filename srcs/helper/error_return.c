@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 20:15:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 11:27:32 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 17:31:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,12 @@ void	*perror_ret_nullptr(char *err)
 
 int	ambiguous_error(char *filename)
 {
-	ft_dprintf(STDERR_FILENO, \
-			"minishell: %s: ambiguous redirect\n", filename);
+	ft_dprintf(STDERR_FILENO, ERRMSG_AMBIGUOUS, filename);
 	return (FAILURE);
 }
 
 int	openfile_error(char *filename, char *strerror)
 {
-	ft_dprintf(STDERR_FILENO, \
-			"minishell: %s: %s\n", filename, strerror);
+	ft_dprintf(STDERR_FILENO, ERRMSG_FILEOPEN, filename, strerror);
 	return (FAILURE);
 }

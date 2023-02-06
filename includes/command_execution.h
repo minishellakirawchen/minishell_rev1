@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 13:28:55 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 17:33:16 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,11 @@
 # define SYNTAX_ERROR				258
 
 /* string */
-# define PATH	"PATH"
+# define PATH				"PATH"
 # define HEREDOC_TMP_FILE	".heredoc_tmp"
+
+/* message */
+# define ERRMSG_CMD_NOT_FOUND	"minishell: %s: command not found\n"
 
 /* ************************** */
 /*          typedef           */
@@ -47,7 +50,6 @@ typedef struct s_command_info	t_command_info;
 typedef struct s_redirect_info	t_redirect_info;
 
 typedef enum e_token_type		t_token_type;
-typedef enum e_syntax_err		t_syntax_err;
 typedef enum e_node_kind		t_node_kind;
 
 typedef enum e_fopen_type		t_fopen;

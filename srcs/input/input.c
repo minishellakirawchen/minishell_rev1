@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 13:47:56 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 17:42:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,22 @@ static void	prompt_init(int *process_exit_value, t_info *info)
 	set_tc_attr_out_execute();
 	init_signal_prompt();
 //	set_tc_attr_in_execute();
-	info->readline_input = readline(PROMPT);
+//	info->readline_input = readline(PROMPT);
+
+////////////////////////////////////////////////////////////////////
+	char	*prompt;
+	char	*tmp;
+	char	*exit_status_string;
+	exit_status_string = ft_itoa(info->exit_status);
+	tmp = ft_strjoin("minishell ", exit_status_string);
+	prompt = ft_strjoin(tmp, " $> ");
+	free(tmp);
+	free(exit_status_string);
+
+	info->readline_input = readline(prompt);
+	free(prompt);
+////////////////////////////////////////////////////////////////////
+
 }
 
 static void	update_exit_status(t_info *info)

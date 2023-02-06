@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 12:44:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 17:41:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static t_info	*init_info(void)
 	}
 	info->tokenlist_head = NULL;
 	info->execlist_head = NULL;
+	info->exit_status = EXIT_SUCCESS;
 	return (info);
 }
 

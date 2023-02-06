@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 13:23:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 17:31:23 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,36 +27,37 @@
 /* ************************** */
 /*           macro            */
 /* ************************** */
-# define PROMPT "minishell $> "
-# define NL "\n"
-
+# define PROMPT			"minishell $> "
 # define IFS "\t\n\v\f\r "
-# define STR_SPACE "\t\n\v\f\r "
-# define STR_QUOTE "'\""
-# define STR_OPERATOR ";&|<>()"
-# define STR_SUBSHELL "()"
+# define STR_SPACE		"\t\n\v\f\r "
+# define STR_QUOTE		"'\""
+# define STR_OPERATOR	";&|<>()"
+# define STR_SUBSHELL	"()"
 
-# define STR_EXPAND_EXIT_STATUS "$?"
+# define STR_EXPAND_EXIT_STATUS	"$?"
 # define STR_EXPANSION_DELIM " !#$%&*+=./:=j?@[]{}^~'`\\\""
 
-# define CHR_DOLLAR '$'
-# define CHR_QUESTION '?'
-# define CHR_SINGLE_QUOTE '\''
-# define CHR_DOUBLE_QUOTE '\"'
-# define CHA_PATH_DELIM ':'
+# define CHR_DOLLAR 		'$'
+# define CHR_QUESTION		'?'
+# define CHR_SINGLE_QUOTE	'\''
+# define CHR_DOUBLE_QUOTE	'\"'
+# define CHA_PATH_DELIM		':'
 
 /* loop */
-# define FAILURE	0
-# define SUCCESS	1
-# define CONTINUE	-2
-# define BREAK		-3
+# define FAILURE		0
+# define SUCCESS		1
+# define CONTINUE		-2
+# define BREAK			-3
 # define EXIT_BY_SIG	-4
-
-# define PROCESS_ERROR -1
+# define PROCESS_ERROR	-1
 
 # define EXIT_TOO_MANY_ARGS 1
 # define EXIT_NUMERIC_ARGS_REQUIRED 255
-# define SYNTAX_ERROR 258
+# define SYNTAX_ERROR	258
+
+/* message */
+# define ERRMSG_AMBIGUOUS	"minishell: %s: ambiguous redirect\n"
+# define ERRMSG_FILEOPEN	"minishell: %s: %s\n"
 
 /* ************************** */
 /*          typedef           */
