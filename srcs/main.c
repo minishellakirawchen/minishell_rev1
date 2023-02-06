@@ -6,13 +6,13 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 18:27:31 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/06 11:52:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_info	*init_info(void)
+static t_info	*init_info(void)
 {
 	t_info	*info;
 
@@ -47,19 +47,16 @@ int	main(int argc, char **argv)
 
 	if (argc != 1 || !argv)
 	{
-		ft_dprintf(STDERR_FILENO,
-				   "[Error]Too many argument."
-				       "       Input following:$> ./minishell");
+		ft_dprintf(STDERR_FILENO, \
+		"[Error]Too many argument." \
+		"       Input following:$> ./minishell");
 		return (EXIT_FAILURE);
 	}
-	// init info
 	info = init_info();
 	if (!info)
 		return (FAILURE);
 	display_ascii_art();
-	// prompt loop
 	exit_status = prompt_loop(info);
-	// free param
 	free_info(&info);
 	system("leaks -q minishell");
 	return (exit_status);
