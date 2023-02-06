@@ -6,19 +6,19 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 10:13:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:35:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_gbl_var	g_var;
+t_gbl_var	g_status;
 
 void	prompt_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		g_var.exit_status = EXIT_FAILURE;
+		g_status.exit_status = EXIT_FAILURE;
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -52,8 +52,10 @@ static int	preprocess_for_execute(t_info *info)
 
 static void	prompt_init(int *process_exit_value, t_info *info)
 {
+	if (*process_exit_value != CONTINUE)
+		info->exit_status = *process_exit_value;
 	*process_exit_value = EXIT_SUCCESS;
-	g_var.exit_status = EXIT_SUCCESS;
+	g_status.exit_status = EXIT_SUCCESS;
 	set_tc_attr_out_execute();
 	init_signal_prompt();
 //	set_tc_attr_in_execute();
@@ -62,8 +64,8 @@ static void	prompt_init(int *process_exit_value, t_info *info)
 
 static void	update_exit_status(t_info *info)
 {
-	if (g_var.exit_status == EXIT_FAILURE)
-		info->exit_status = g_var.exit_status;
+	if (g_status.exit_status == EXIT_FAILURE)
+		info->exit_status = g_status.exit_status;
 }
 
 int	prompt_loop(t_info *info)
@@ -73,6 +75,7 @@ int	prompt_loop(t_info *info)
 	if (!info)
 		return (FAILURE);
 //	init_signal_prompt();
+	process_exit_value = EXIT_SUCCESS;
 	while (true)
 	{
 		prompt_init(&process_exit_value, info);
@@ -85,7 +88,6 @@ int	prompt_loop(t_info *info)
 		clear_input_info(&info);
 		if (is_minishell_abort(process_exit_value))
 			break ;
-		info->exit_status = process_exit_value;
 	}
 	return (info->exit_status);
 }

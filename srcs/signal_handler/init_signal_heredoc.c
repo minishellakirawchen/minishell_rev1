@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-t_gbl_var	g_var;
+t_gbl_var	g_status;
 
 static void	heredoc_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		g_var.heredoc_status = EXIT_FAILURE;
+		g_status.heredoc_status = EXIT_FAILURE;
 		write(STDOUT_FILENO, "\n", 1);
 	}
 }
@@ -39,17 +39,17 @@ int	do_heredoc(int fd, t_redirect_info *redirect_info, int *exit_status)
 {
 	char	*line;
 
-	g_var.heredoc_status = 0;
+	g_status.heredoc_status = 0;
 	line = NULL;
 	if (fd < 0 || !redirect_info || !redirect_info->heredoc_eof)
 		return (PROCESS_ERROR);
 	init_signal_heredoc();
 	set_tc_attr_out_execute();
-	while (g_var.heredoc_status == 0)
+	while (g_status.heredoc_status == 0)
 	{
 		ft_dprintf(STDERR_FILENO, "> ");
 		line = get_next_line(STDIN_FILENO, true);
-		if (is_eof(line) && g_var.heredoc_status == 0)
+		if (is_eof(line) && g_status.heredoc_status == 0)
 			return (SUCCESS);
 		if (is_delimiter(line, redirect_info->heredoc_eof))
 		{
@@ -59,6 +59,6 @@ int	do_heredoc(int fd, t_redirect_info *redirect_info, int *exit_status)
 		ft_dprintf(fd, line);
 		line = free_1d_alloc(line);
 	}
-	*exit_status = g_var.heredoc_status;
+	*exit_status = g_status.heredoc_status;
 	return (FAILURE);
 }

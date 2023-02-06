@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/16 10:46:22 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 15:48:22 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:32:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 # define FAILURE	0
 # define SUCCESS	1
-# define CONTINUE	2
-# define BREAK		3
+# define CONTINUE	-2
+# define BREAK		-3
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 09:51:30 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:31:27 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@
 # define CHA_PATH_DELIM ':'
 
 /* loop */
-# define FAILURE 0
-# define SUCCESS 1
-# define CONTINUE 2
-# define BREAK 3
+# define FAILURE	0
+# define SUCCESS	1
+# define CONTINUE	-2
+# define BREAK		-3
 
 # define PROCESS_ERROR -1
 
