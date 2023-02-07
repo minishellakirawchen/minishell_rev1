@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/06 23:12:27 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 12:43:07 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	do_heredoc(int fd, t_redirect_info *r_info)
 		line = free_1d_alloc(line);
 	}
 	free_1d_alloc(line);
-	if (g_status.heredoc_status)
+	if (g_status.heredoc_status == EXIT_BY_SIG)
 		ft_dprintf(STDERR_FILENO, "\n");
 	return (g_status.heredoc_status);
 }

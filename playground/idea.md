@@ -30,13 +30,13 @@ bash3.2_2[0] $ echo "$a1"           //hello   world
 
 bash3.2_2[0] $ export a2="'hello    world'"
 bash3.2_2[0] $ export | grep a2     //declare -x a2="'hello    world'"
-bash3.2_2[127] $ $a2                //bash: 'hello: command not found
+bash3.2_2[0] $ $a2                //bash: 'hello: command not found
 bash3.2_2[0] $ echo $a2             //'hello world'
 bash3.2_2[0] $ echo "$a2"           //'hello    world'
 
 bash3.2_2[0] $ export a3='"hello   good bye"'
 bash3.2_2[0] $ export | grep a3     //declare -x a3="\"hello   good bye\""
-bash3.2_2[127] $ $a3                //bash: "hello: command not found
+bash3.2_2[0] $ $a3                //bash: "hello: command not found
 bash3.2_2[0] $ echo $a3             //"hello good bye"
 bash3.2_2[0] $ echo "$a3"           //"hello   good bye"
 
@@ -70,10 +70,6 @@ bash3.2_2[0] $ export c1=hello"world"
 bash3.2_2[0] $ export | grep c1     //declare -x c1="helloworld"
 
 ```
-
-
-
-
 
 
 
