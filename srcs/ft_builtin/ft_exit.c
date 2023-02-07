@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:31:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 22:59:24 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 21:24:43 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_exit(t_info *info, char **cmds)
 		return (EXIT_FAILURE);
 	}
 	if (cmds_count == 0)
-		exit_status = EXIT_SUCCESS;
+		exit_status = info->exit_status;
 	exit_status %= 256;
 	exit(exit_status);
 }

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 22:37:33 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 19:26:47 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 19:51:30 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ int	check_dir_exist(char *tdir, char *cmd, int print_flag)
 	{
 		if (print_flag == 1)
 			print_cd_error(errno, cmd);
-		return (FAILURE);
+		return (EXIT_FAILURE);
 	}
 	if (errno == EACCES)
 		return (errno);
-	return (SUCCESS);
+	return (EXIT_SUCCESS);
 }
