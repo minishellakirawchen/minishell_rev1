@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 18:22:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 23:49:32 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/08 00:15:21 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,10 @@ char	*define_new_path(t_cd_info *cd_info, char *cmd)
 	{
 		tdir = judge_cdpath(cd_info, cmd);
 		if (tdir != NULL)
+		{
+			cd_info->cd_type = e_cdpath;
 			return (tdir);
+		}
 	}
 	return (init_tdir(cd_info->pwd, cmd));
 }

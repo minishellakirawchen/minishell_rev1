@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/02/07 23:19:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 00:19:10 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ enum							e_cd_cmd_type
 	e_oldpwd,
 	e_cdpath,
 	e_opt_error,
+	e_nomal,
 	e_cd_init,
 };
 
@@ -70,6 +71,7 @@ struct							s_cd_info
 	char						*pwd;
 	char						**oldpwd;
 	char						*newpwd;
+	char						*cur_pwd;
 };
 /* ************************** */
 /*         ft_builtin         */

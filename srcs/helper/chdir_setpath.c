@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 21:18:05 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/08 00:28:06 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,28 @@ static int	set_path(t_info *info, t_cd_info *cd_info)
 {
 	int		exit_status;
 	char	*env_pwd;
-	char	*cur_pwd;
 
-	cur_pwd = getcwd(NULL, 0);
-	if (cur_pwd == NULL)
+	env_pwd = NULL;
+	cd_info->cur_pwd = getcwd(NULL, 0);
+	if (cd_info->cur_pwd == NULL)
 		return (perror_and_return_int("getcwd", EXIT_FAILURE));
-	if (!cd_info->env_pwd)
-		env_pwd = NULL;
-	else
+	if (cd_info->env_pwd != NULL)
 		env_pwd = ft_strdup_ns(*cd_info->env_pwd);
 	exit_status = 0;
 	if (*cd_info->newpwd == '.')
 		set_append_path(info, cd_info, env_pwd);
 	else
 	{
-		exit_status += add_env(info, ft_strdup("PWD"), ft_strdup(cur_pwd));
+		exit_status += add_env(info, ft_strdup("PWD"),
+				ft_strdup(cd_info->cur_pwd));
 		exit_status += add_env(info, ft_strdup("OLDPWD"), env_pwd);
 	}
 	if (exit_status > 0)
 		return (EXIT_FAILURE);
-	if (cd_info->cd_type == e_home || cd_info->cd_type == e_oldpwd)
-		ft_printf("%s\n", cur_pwd);
-	cur_pwd = free_1d_alloc(cur_pwd);
+	if (cd_info->cd_type == e_home || cd_info->cd_type == e_oldpwd
+		|| cd_info->cd_type == e_cdpath)
+		ft_printf("%s\n", cd_info->cur_pwd);
+	cd_info->cur_pwd = free_1d_alloc(cd_info->cur_pwd);
 	return (EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 22:26:30 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 00:31:57 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/08 00:13:50 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,5 @@ int	judge_cmd(char *cmd)
 		return (e_absolute);
 	else if (cmd[0] == '.')
 		return (e_relative);
-	return (e_cdpath);
+	return (e_nomal);
 }

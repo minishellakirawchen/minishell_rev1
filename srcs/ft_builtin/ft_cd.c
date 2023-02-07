@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 19:31:23 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/08 00:20:55 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static t_cd_info	*init_cd_info(t_info *info, char *cmd)
 	}
 	cd_info->oldpwd = get_elem(info, "OLDPWD");
 	cd_info->newpwd = NULL;
+	cd_info->cur_pwd = NULL;
 	return (cd_info);
 }
 
