@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 22:07:05 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 12:54:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int		get_io_fd(t_token_type io_type);
 t_fopen	get_fopen_type(t_token_type io_type);
 
 /* execute_builtin.c */
-int		execute_builtin(t_info *info, char **cmds);
+int		execute_builtin(t_info *info, char **cmds, bool in_pipe);
 bool	is_builtin(char **cmds);
 bool	is_single_builtin(t_list_bdi *pipeline_cmds_head);
 

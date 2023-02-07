@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 11:27:41 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 12:55:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int								ft_unset(t_info *info, char **cmds);
 int								ft_echo(char **cmds);
 int								ft_pwd(t_info *info);
 int								ft_cd(t_info *info, char **cmds);
-int								ft_exit(t_info *info, char **cmds);
+int								ft_exit(t_info *info, char **cmds, bool in_pipe);
 /* ************************** */
 /*           helper           */
 /* ************************** */

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 22:04:47 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 12:57:10 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds, t_info *info)
 		return (PROCESS_ERROR);
 	command_info = pipeline_cmds->content;
 	if (is_single_builtin(pipeline_cmds))
-		return (execute_builtin(info, command_info->commands));
+		return (execute_builtin(info, command_info->commands, false));
 	minishell_envp = create_minishell_envp(info->envlist_head);
 	if (!minishell_envp)
 		return (PROCESS_ERROR);

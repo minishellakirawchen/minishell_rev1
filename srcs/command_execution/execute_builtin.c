@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 15:35:04 by wchen             #+#    #+#             */
-/*   Updated: 2023/01/30 20:32:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/07 12:56:01 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ bool	is_builtin(char **cmds)
 	return (false);
 }
 
-int	execute_builtin(t_info *info, char **cmds)
+int	execute_builtin(t_info *info, char **cmds, bool in_pipe)
 {
 	if (!cmds || !*cmds)
 		return (EXIT_FAILURE);
@@ -66,6 +66,6 @@ int	execute_builtin(t_info *info, char **cmds)
 	if (is_same_str("cd", cmds[0]))
 		return (ft_cd(info, cmds));
 	if (is_same_str("exit", cmds[0]))
-		return (ft_exit(info, cmds));
+		return (ft_exit(info, cmds, in_pipe));
 	return (EXIT_FAILURE);
 }

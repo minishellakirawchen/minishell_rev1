@@ -6,13 +6,13 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:31:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 22:59:24 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 12:56:13 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_cmds(char **cmds)
+static int	count_cmds(char **cmds)
 {
 	int	count;
 
@@ -25,7 +25,7 @@ int	count_cmds(char **cmds)
 	return (count);
 }
 
-int	cmd_to_ll(char **cmds)
+static int	cmd_to_ll(char **cmds)
 {
 	bool	is_strtoll_success;
 	int		exit_status;
@@ -47,14 +47,15 @@ int	cmd_to_ll(char **cmds)
 	return (exit_status);
 }
 
-int	ft_exit(t_info *info, char **cmds)
+int	ft_exit(t_info *info, char **cmds, bool in_pipe)
 {
 	int	exit_status;
 	int	cmds_count;
 
 	if (!info || !cmds)
 		return (EXIT_FAILURE);
-	ft_dprintf(STDERR_FILENO, "exit\n");
+	if (!in_pipe)
+		ft_dprintf(STDERR_FILENO, "exit\n");
 	cmds_count = count_cmds(&cmds[1]);
 	exit_status = cmd_to_ll(cmds);
 	if (cmds_count > 1 && exit_status != 255)
