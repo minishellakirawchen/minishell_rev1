@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:15:59 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 12:13:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/07 12:21:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ int	expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	{
 		token_elem = node->content;
 		if (is_expandable_var(token_elem->word, token_elem->quote_chr))
+		{
 			if (expand_var_in_str(&token_elem->word, info) == FAILURE)
 				return (FAILURE);
+		}
 		node = node->next;
 	}
 	return (SUCCESS);

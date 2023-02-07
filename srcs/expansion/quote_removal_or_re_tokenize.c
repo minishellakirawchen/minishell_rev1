@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:00:58 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 22:59:59 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/07 12:17:55 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	re_tokenize(t_list_bdi **expanded_tok_lst, t_list_bdi *popped_node)
 	else
 	{
 		space_split_lst = get_delim_splitted_tokenlist(\
-		token_elem->word, STR_SPACE, STR_QUOTE);
+		token_elem->word, STR_SPACE, "");
 		if (!space_split_lst)
 		{
 			ft_lstdelone_bdi(&popped_node, free_token_elem);

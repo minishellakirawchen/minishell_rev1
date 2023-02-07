@@ -1,4 +1,83 @@
 
+# expansion quoted
+
+
+`export key=value`, `value`は`"'`で `word list`を渡せる
+quoted flagは外す
+
+value登録の際にはunquoted
+
+key="hoge   hoge"   -> key=[hoge   hoge]
+prompt : $key -> [hoge   hoge] -> [hoge], [hoge]
+
+key="'hoge   hoge'" -> 'hoge   hoge' -> ['hoge],[  ],[hoge']
+key='"hoge   hoge"' ->
+
+
+re tokenizeを通るものはtoken or expanded var
+tokenはspace splittedされているはず、space保持しているのはquotedされている
+expanded varはquotedが付与しない
+set char=""でretokenizeすれば良い
+
+
+```c
+
+bash3.2_2[0] $ export a1="hello   world"
+bash3.2_2[0] $ export | grep a1     //declare -x a1="hello   world"
+bash3.2_2[0] $ $a1                  //bash: hello: command not found
+bash3.2_2[0] $ echo $a1             //hello world
+bash3.2_2[0] $ echo "$a1"           //hello   world
+
+bash3.2_2[0] $ export a2="'hello    world'"
+bash3.2_2[0] $ export | grep a2     //declare -x a2="'hello    world'"
+bash3.2_2[127] $ $a2                //bash: 'hello: command not found
+bash3.2_2[0] $ echo $a2             //'hello world'
+bash3.2_2[0] $ echo "$a2"           //'hello    world'
+
+bash3.2_2[0] $ export a3='"hello   good bye"'
+bash3.2_2[0] $ export | grep a3     //declare -x a3="\"hello   good bye\""
+bash3.2_2[127] $ $a3                //bash: "hello: command not found
+bash3.2_2[0] $ echo $a3             //"hello good bye"
+bash3.2_2[0] $ echo "$a3"           //"hello   good bye"
+
+
+bash3.2_2[0] $ export b1=hello
+bash3.2_2[0] $ export | grep b1     //declare -x b1="hello"
+bash3.2_2[0] $ $b1                  //bash: hello: command not found
+bash3.2_2[0] $ echo $b1             //hello
+
+bash3.2_2[0] $ export b2="hello"
+bash3.2_2[0] $ export | grep b2     //declare -x b2="hello"
+bash3.2_2[0] $ $b2                  //bash: hello: command not found
+bash3.2_2[0] $ echo $b2             //hello
+
+bash3.2_2[0] $ export b3='hello'
+bash3.2_2[0] $ export | grep b3     //declare -x b3="hello"
+bash3.2_2[0] $ $b3                  //bash: hello: command not found
+bash3.2_2[0] $ echo $b3             //hello
+
+bash3.2_2[0] $ export b4="'hello'"
+bash3.2_2[0] $ export | grep b4     //declare -x b4="'hello'"
+bash3.2_2[0] $ $b4                  //bash: 'hello': command not found
+bash3.2_2[0] $ echo $b4             //'hello'
+
+bash3.2_2[0] $ export b5='"hello"'
+bash3.2_2[0] $ export | grep b5     //declare -x b5="\"hello\""
+bash3.2_2[0] $ $b5                  //bash: "hello": command not found
+bash3.2_2[0] $ echo $b5             //"hello"
+
+bash3.2_2[0] $ export c1=hello"world"
+bash3.2_2[0] $ export | grep c1     //declare -x c1="helloworld"
+
+```
+
+
+
+
+
+
+
+
 
 
 # wildcard

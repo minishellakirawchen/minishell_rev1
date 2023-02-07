@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 23:07:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/07 12:28:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* FREE OK */
@@ -79,7 +79,7 @@ static char	**create_commands_from_token_list(t_list_bdi **token_list)
 }
 
 /*
- quote removal("')		["hello"] -> [hello]
+ quote removal("')		["hello"]q -> [hello]q
   v
  expand var(except')	[$key] -> [var1  var2]
   v
