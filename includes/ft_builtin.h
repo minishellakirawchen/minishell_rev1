@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 00:19:10 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/08 00:37:18 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ int								ft_unset(t_info *info, char **cmds);
 int								ft_echo(char **cmds);
 int								ft_pwd(t_info *info);
 int								ft_cd(t_info *info, char **cmds);
-int								ft_exit(t_info *info, char **cmds, bool in_pipe);
+int								ft_exit(t_info *info, char **cmds,
+									bool in_pipe);
 /* ************************** */
 /*           helper           */
 /* ************************** */
@@ -107,7 +108,8 @@ t_key_type						judge_info_key(t_export_info *e_info);
 t_key_type						judge_value(t_export_info *e_info);
 int								judge_opt(char *cmd);
 int								judge_cmd(char *cmd);
-int								check_dir_exist(char *tdir, char *cmd, int print_flag);
+int								check_dir_exist(char *tdir, char *cmd,
+									int print_flag);
 void							ft_lst_ascsort(t_list **headRef);
 int								chdir_setpath(t_info *info, t_cd_info *cd_info,
 									char **cmds);
