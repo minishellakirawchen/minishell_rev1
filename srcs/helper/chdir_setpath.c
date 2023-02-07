@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/05 18:58:23 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 18:14:36 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	set_path(t_info *info, t_cd_info *cd_info)
 	if (!cd_info->env_pwd)
 		env_pwd = NULL;
 	else
-		env_pwd = *cd_info->env_pwd;
+		env_pwd = ft_strdup_ns(*cd_info->env_pwd);
 	exit_status = 0;
 	if (*cd_info->newpwd == '.')
 		set_append_path(info, cd_info, env_pwd);
@@ -39,14 +39,14 @@ static int	set_path(t_info *info, t_cd_info *cd_info)
 	{
 		exit_status += add_env(info, ft_strdup("PWD"), getcwd(NULL, 0));
 		exit_status += add_env(info, ft_strdup("OLDPWD"),
-				ft_strdup_ns(env_pwd));
+				env_pwd);
 	}
 	if (exit_status > 0)
 		return (EXIT_FAILURE);
 	if (cd_info->cd_type == e_home)
-		printf("%s\n", *cd_info->home);
+		ft_printf("%s\n", *cd_info->home);
 	if (cd_info->cd_type == e_oldpwd)
-		printf("%s\n", *cd_info->oldpwd);
+		ft_printf("%s\n", *cd_info->oldpwd);
 	return (EXIT_SUCCESS);
 }
 
