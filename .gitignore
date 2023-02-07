@@ -6,17 +6,17 @@
 
 !srcs
 !includes
-#!playground
+!playground
 !libs
 !*.c
 !*.h
 !srcs/parser/*.bnf
-#!playground/*.md
+!playground/*.md
 
 /objs/
 /libs/objs/
 /testdir/
-/playground/
+#/playground/
 /.idea/
 #cmake-build-*
 #cmake-build-debug/*

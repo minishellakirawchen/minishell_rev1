@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/07 12:56:35 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/07 22:59:51 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,13 @@ static int	do_execve(char **splitted_paths, char **envp, char **commands)
 	idx = 0;
 	while (splitted_paths[idx])
 	{
+		if (ft_strlen_ns(splitted_paths[idx]) == 0)
+		{
+			splitted_paths[idx] = free_1d_alloc(splitted_paths[idx]);
+			splitted_paths[idx] = ft_strdup(PATH_CURRENT);
+			if (!splitted_paths[idx])
+				return (PROCESS_ERROR);
+		}
 		path = get_execute_path(splitted_paths[idx], commands[0]);
 		if (!path)
 			return (PROCESS_ERROR);
@@ -63,7 +70,7 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 		return (PROCESS_ERROR);
 	errno = 0;
 	env_paths = get_env_value(PATH, envlist);
-	splitted_paths = ft_split(env_paths, CHA_PATH_DELIM);
+	splitted_paths = ft_split_empty(env_paths, CHA_PATH_DELIM);
 	if (!splitted_paths)
 		return (perror_ret_int("malloc", PROCESS_ERROR));
 	exit_val = do_execve(splitted_paths, minishell_envp, commands);

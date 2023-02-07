@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/07 12:54:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/07 15:21:58 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 
 /* string */
 # define PATH				"PATH"
+# define PATH_CURRENT		"./"
 # define HEREDOC_TMP_FILE	".heredoc_tmp"
 
 /* message */
