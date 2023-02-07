@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/02/04 11:27:41 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 18:36:44 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,5 +109,6 @@ int								check_dir_exist(char *tdir, char *cmd);
 void							ft_lst_ascsort(t_list **headRef);
 int								chdir_setpath(t_info *info, t_cd_info *cd_info,
 									char **cmds);
+char							*define_new_path(t_cd_info *cd_info, char *cmd);
 
 #endif //FT_BUILTIN_H
