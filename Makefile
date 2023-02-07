@@ -92,6 +92,7 @@ SRC		= main.c \
 		  helper/ft_lst_ascsort.c \
 		  helper/chdir_setpath.c \
 		  helper/update_shlvl.c \
+		  helper/define_new_path.c \
 		  debug/debug_print.c \
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:07:02 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/03 19:42:56 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 00:33:31 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 	e_info->key_type = judge_info_key(e_info);
 	if (e_info->key_type == e_append || e_info->key_type == e_add)
 		e_info->key_type = judge_value(e_info);
-	if (e_info->key_type == e_error)
+	if (e_info->key_type == e_error || e_info->key_type == e_nokey)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: export: `%s': not a valid identifier\n", *cmds);

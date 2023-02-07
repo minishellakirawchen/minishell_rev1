@@ -6,62 +6,11 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/04 11:22:29 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 19:31:23 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*init_tdir(char *ref, char *cmd)
-{
-	ssize_t	ref_len;
-	ssize_t	cmd_len;
-	char	*trimed_cmd;
-	char	*tdir;
-
-	if (ref == NULL)
-		return (ft_strdup_ns(cmd));
-	ref_len = ft_strlen(ref);
-	trimed_cmd = ft_strtrim(cmd, "/");
-	if (!trimed_cmd)
-		return (NULL);
-	cmd_len = ft_strlen(trimed_cmd);
-	tdir = ft_calloc(sizeof(char), ref_len + cmd_len + 2);
-	if (!tdir)
-		return (NULL);
-	ft_strlcat(tdir, ref, ref_len + 1);
-	ft_strlcat(tdir, "/", ref_len + 2);
-	ft_strlcat(tdir, trimed_cmd, ref_len + cmd_len + 2);
-	free_1d_alloc(trimed_cmd);
-	return (tdir);
-}
-
-static char	*define_new_path(t_cd_info *cd_info, char *cmd)
-{
-	char	*tdir;
-	char	**cdpaths;
-
-	if (cd_info->cd_type == e_home)
-		return (ft_strdup_ns(*(cd_info->home)));
-	else if (cd_info->cd_type == e_absolute)
-		return (ft_strdup_ns(cmd));
-	else if (cd_info->cd_type == e_oldpwd)
-		return (ft_strdup_ns(*(cd_info->oldpwd)));
-	else if (cd_info->cd_type == e_relative)
-		return (init_tdir(cd_info->pwd, cmd));
-	else if (cd_info->cdpath != NULL)
-	{
-		cdpaths = ft_split(*(cd_info->cdpath), ':');
-		while (*cdpaths != NULL)
-		{
-			tdir = init_tdir(*cdpaths, cmd);
-			if (check_dir_exist(tdir, cmd) == SUCCESS)
-				return (tdir);
-			cdpaths++;
-		}
-	}
-	return (init_tdir(cd_info->pwd, cmd));
-}
 
 static void	print_err_message(void)
 {
@@ -84,7 +33,7 @@ static t_cd_info	*init_cd_info(t_info *info, char *cmd)
 	cd_info->pwd = getcwd(NULL, 0);
 	if (cd_info->pwd == NULL)
 	{
-		if (check_dir_exist("./", cmd) == EACCES)
+		if (check_dir_exist("./", cmd, 1) == EACCES)
 			cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
 		else
 			print_err_message();

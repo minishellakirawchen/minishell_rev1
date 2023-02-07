@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:16:07 by takira            #+#    #+#             */
-/*   Updated: 2023/02/07 12:55:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/07 23:19:15 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,10 @@ t_key_type						judge_info_key(t_export_info *e_info);
 t_key_type						judge_value(t_export_info *e_info);
 int								judge_opt(char *cmd);
 int								judge_cmd(char *cmd);
-int								check_dir_exist(char *tdir, char *cmd);
+int								check_dir_exist(char *tdir, char *cmd, int print_flag);
 void							ft_lst_ascsort(t_list **headRef);
 int								chdir_setpath(t_info *info, t_cd_info *cd_info,
 									char **cmds);
+char							*define_new_path(t_cd_info *cd_info, char *cmd);
 
 #endif //FT_BUILTIN_H
