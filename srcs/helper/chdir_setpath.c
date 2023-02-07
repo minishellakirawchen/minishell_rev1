@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 19:12:14 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 19:28:27 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	chdir_setpath(t_info *info, t_cd_info *cd_info, char **cmds)
 {
 	int	exit_dir;
 
-	exit_dir = check_dir_exist(cd_info->newpwd, *cmds);
+	exit_dir = check_dir_exist(cd_info->newpwd, *cmds, 1);
 	if (exit_dir == SUCCESS)
 	{
 		chdir(cd_info->newpwd);

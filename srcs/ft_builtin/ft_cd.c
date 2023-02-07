@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 18:32:21 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 19:31:23 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static t_cd_info	*init_cd_info(t_info *info, char *cmd)
 	cd_info->pwd = getcwd(NULL, 0);
 	if (cd_info->pwd == NULL)
 	{
-		if (check_dir_exist("./", cmd) == EACCES)
+		if (check_dir_exist("./", cmd, 1) == EACCES)
 			cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
 		else
 			print_err_message();

@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 18:22:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/07 18:36:34 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/07 19:28:56 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static char	*judge_cdpath(t_cd_info *cd_info, char *cmd)
 	while (*cdpaths != NULL)
 	{
 		tdir = init_tdir(*cdpaths, cmd);
-		if (check_dir_exist(tdir, cmd) == SUCCESS)
+		if (check_dir_exist(tdir, cmd, 0) == SUCCESS)
 		{
 			temp = (char **)free_2d_alloc((void **)temp);
 			return (tdir);
