@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/07 12:57:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 12:32:58 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ t_exec_list **exec_lst_start_with_ope, int exit_status)
 
 	if (!exec_lst_start_with_ope || !*exec_lst_start_with_ope)
 		return ;
-	next_operator_node = *exec_lst_start_with_ope;
+//	next_operator_node = *exec_lst_start_with_ope;
+	/*
 	if ((next_operator_node->node_kind == e_node_semicolon)
 		|| (next_operator_node->node_kind == e_node_and && exit_status == 0)
 		|| (next_operator_node->node_kind == e_node_or && exit_status != 0))
@@ -33,6 +34,19 @@ t_exec_list **exec_lst_start_with_ope, int exit_status)
 		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
 	if (*exec_lst_start_with_ope)
 		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
+	 */
+	while (*exec_lst_start_with_ope)
+	{
+		next_operator_node = *exec_lst_start_with_ope;
+		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
+		if ((next_operator_node->node_kind == e_node_semicolon)
+		|| (next_operator_node->node_kind == e_node_and && exit_status == 0)
+		|| (next_operator_node->node_kind == e_node_or && exit_status != 0))
+			return ;
+		if (*exec_lst_start_with_ope)
+			(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
+	}
+
 }
 
 int	execute_pipeline(t_list_bdi *pipeline_cmds, t_info *info)
