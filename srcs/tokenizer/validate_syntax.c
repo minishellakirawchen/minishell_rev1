@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:20:42 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 19:28:36 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 19:29:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,13 @@ int	validate_syntax_operators(t_list_bdi *tokenlist_head)
 		next_token = get_next_token(node);
 		if (is_exception_empty_double_parenthesis(&node))
 		{
-			is_head &= false;
+			is_head = false;
 			continue ;
 		}
 		if (validate_operator_tokens(token, next_token, is_head) == FAILURE)
 			return (FAILURE);
 		node = node->next;
-		is_head &= false;
+		is_head = false;
 	}
 	return (SUCCESS);
 }
