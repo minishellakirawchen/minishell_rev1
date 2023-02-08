@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 19:38:10 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 20:49:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ t_exec_list **exec_lst_start_with_ope, int exit_status)
 	{
 		next_operator_node = *exec_lst_start_with_ope;
 		(*exec_lst_start_with_ope) = (*exec_lst_start_with_ope)->next;
-		if ((next_operator_node->node_kind == e_node_semicolon)
-		|| (next_operator_node->node_kind == e_node_and && exit_status == 0)
+		if ((next_operator_node->node_kind == e_node_semicolon) \
+		|| (next_operator_node->node_kind == e_node_and && exit_status == 0) \
 		|| (next_operator_node->node_kind == e_node_or && exit_status != 0))
 			return ;
 		if (*exec_lst_start_with_ope)
@@ -96,19 +96,6 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 		if (expand_var_and_create_cmds_from_tokens(\
 		&pipeline_node, info) == FAILURE)
 			return (PROCESS_ERROR);
-			/*
-		printf("---------- after expand, before execute ----------\n");
-		t_list_bdi *pipeline_cmds_node = pipeline_node->pipeline_commands;
-		while (pipeline_cmds_node)
-		{
-			t_command_info *command_info = pipeline_cmds_node->content;
-			debug_print_command_info(command_info);
-			pipeline_cmds_node = pipeline_cmds_node->next;
-			if (pipeline_cmds_node)
-				ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
-		}
-		printf("--------------------------------------------------\n");
-			 */
 		exit_value = execute_pipeline(pipeline_node->pipeline_commands, info);
 		if (exit_value == PROCESS_ERROR)
 			return (PROCESS_ERROR);
