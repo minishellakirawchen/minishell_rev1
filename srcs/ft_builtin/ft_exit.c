@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:31:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/07 21:24:43 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/08 14:34:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ int	ft_exit(t_info *info, char **cmds, bool in_pipe)
 
 	if (!info || !cmds)
 		return (EXIT_FAILURE);
-	if (!in_pipe)
-		ft_dprintf(STDERR_FILENO, "exit\n");
 	cmds_count = count_cmds(&cmds[1]);
 	exit_status = cmd_to_ll(cmds);
 	if (cmds_count > 1 && exit_status != 255)
@@ -66,5 +64,7 @@ int	ft_exit(t_info *info, char **cmds, bool in_pipe)
 	if (cmds_count == 0)
 		exit_status = info->exit_status;
 	exit_status %= 256;
+	if (!in_pipe)
+		ft_dprintf(STDERR_FILENO, "exit\n");
 	exit(exit_status);
 }

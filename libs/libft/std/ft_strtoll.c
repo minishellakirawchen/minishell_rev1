@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 21:11:40 by takira            #+#    #+#             */
-/*   Updated: 2023/01/26 18:25:05 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 14:36:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ static int	get_sign_and_increment_ptr(char *num, size_t *idx)
 	return (sign);
 }
 
+static long long	ret_over_flow(long long sign)
+{
+	if (sign > 0)
+		return (LONG_LONG_MAX);
+	return (LONG_LONG_MIN);
+}
+
 long long	ft_strtoll(char *num, bool *is_success)
 {
 	long long	llnum;
@@ -60,6 +67,8 @@ long long	ft_strtoll(char *num, bool *is_success)
 	while (ft_isspace(num[idx]))
 		idx++;
 	sign = get_sign_and_increment_ptr(num, &idx);
+	if (!num[idx])
+		return (0);
 	while (num[idx] && ft_isdigit(num[idx]))
 	{
 		if (is_less_than_ll(llnum, num[idx] - '0', sign))
@@ -68,9 +77,7 @@ long long	ft_strtoll(char *num, bool *is_success)
 			idx++;
 			continue ;
 		}
-		if (sign > 0)
-			return (LONG_LONG_MAX);
-		return (LONG_LONG_MIN);
+		return (ret_over_flow(sign));
 	}
 	if (!num[idx])
 		*is_success = true;
