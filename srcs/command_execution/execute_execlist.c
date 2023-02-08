@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:45 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 16:20:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 19:17:57 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,19 +61,37 @@ int	execute_pipeline(t_list_bdi *pipeline_cmds, t_info *info)
  * 		pipeline_i : t_list_bdi
  * 		cmd_ij : t_command_info
  */
+
+bool	is_execute_exit(t_list_bdi *pipeline_cmds)
+{
+	t_command_info	*cmd_info;
+
+	while (pipeline_cmds)
+	{
+		cmd_info = pipeline_cmds->content;
+		if (cmd_info \
+		&& cmd_info->commands \
+		&& is_same_str(cmd_info->commands[0], "exit"))
+			return (true);
+	}
+	return (false);
+}
+
 int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 {
 	int			exit_value;
 	t_exec_list	*exec_node;
 	t_exec_list	*pipeline_node;
+	bool		is_exit;
 
 	if (!info || !execlist_head)
 		return (FAILURE);
 	exit_value = execute_heredoc(execlist_head);
 	if (exit_value != SUCCESS)
 		return (exit_value);
+	is_exit = false;
 	exec_node = *execlist_head;
-	while (exec_node)
+	while (exec_node && !is_exit)
 	{
 		pipeline_node = exec_node;
 		if (expand_var_and_create_cmds_from_tokens(\
@@ -90,6 +108,7 @@ int	execute_execlist(t_exec_list **execlist_head, t_info *info)
 				ft_dprintf(STDERR_FILENO, "       v [pipe:|] v\n");
 		}
 		printf("--------------------------------------------------\n");
+		is_exit = is_execute_exit(pipeline_node->pipeline_commands);
 		exit_value = execute_pipeline(pipeline_node->pipeline_commands, info);
 		if (exit_value == PROCESS_ERROR)
 			return (PROCESS_ERROR);
