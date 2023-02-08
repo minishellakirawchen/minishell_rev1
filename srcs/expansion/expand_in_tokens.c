@@ -6,14 +6,32 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:15:59 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 14:17:07 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 15:18:37 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-static int	expand_var_or_delete_token(\
-t_token_elem *token_elem, t_info *info, t_list_bdi **save, t_list_bdi **popped)
+static void	update_prev_connect_flag(t_list_bdi **save, t_list_bdi *popped)
+{
+	t_list_bdi		*prev_node;
+	t_token_elem	*prev_token;
+	t_token_elem	*popped_token;
+
+	if (!save || !popped)
+		return ;
+	popped_token = popped->content;
+	prev_node = ft_lstlast_bdi(*save);
+	if (prev_node)
+	{
+		prev_token = prev_node->content;
+		if (!popped_token->is_connect_to_next && prev_token->is_connect_to_next)
+			prev_token->is_connect_to_next = false;
+	}
+}
+
+static int	expand_or_delete_if_zerosize(\
+t_token_elem *token_elem, t_list_bdi **save, t_info *info, t_list_bdi *popped)
 {
 	if (is_expandable_var(token_elem->word, token_elem->quote_chr))
 	{
@@ -24,7 +42,8 @@ t_token_elem *token_elem, t_info *info, t_list_bdi **save, t_list_bdi **popped)
 		}
 		if (!token_elem->is_quoted && ft_strlen_ns(token_elem->word) == 0)
 		{
-			ft_lstdelone_bdi(popped, free_token_elem);
+			update_prev_connect_flag(save, popped);
+			ft_lstdelone_bdi(&popped, free_token_elem);
 			return (CONTINUE);
 		}
 	}
@@ -33,11 +52,11 @@ t_token_elem *token_elem, t_info *info, t_list_bdi **save, t_list_bdi **popped)
 
 int	expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 {
-	t_token_elem	*token_elem;
 	t_list_bdi		*node;
-	t_list_bdi		*popped;
 	t_list_bdi		*save;
-	int				exit_value;
+	t_list_bdi		*popped;
+	t_token_elem	*token_elem;
+	int				exit_val;
 
 	if (!src_tokens || !info)
 		return (FAILURE);
@@ -47,10 +66,10 @@ int	expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	{
 		popped = ft_lstpop_bdi(&node);
 		token_elem = popped->content;
-		exit_value = expand_var_or_delete_token(token_elem, info, &save, &popped);
-		if (exit_value == FAILURE)
+		exit_val = expand_or_delete_if_zerosize(token_elem, &save, info, popped);
+		if (exit_val == FAILURE)
 			return (FAILURE);
-		if (exit_value == CONTINUE)
+		if (exit_val == CONTINUE)
 			continue ;
 		ft_lstadd_back_bdi(&save, popped);
 	}
