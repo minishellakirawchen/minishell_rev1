@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 13:19:54 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 13:23:48 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 19:23:30 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_redirect_info **redirect_info, char *ambiguous_word, t_info *info)
 	if (!ambiguous_word)
 		return (FAILURE);
 	if (get_arr_size(expand_or_re_tokenized_chars) != 1 \
- || ft_strlen_ns(expand_or_re_tokenized_chars[0]) == 0)
+	|| ft_strlen_ns(expand_or_re_tokenized_chars[0]) == 0)
 	{
 		(*redirect_info)->is_ambiguous = true;
 		(*redirect_info)->filename = ft_strdup(ambiguous_word);

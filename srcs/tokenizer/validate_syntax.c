@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 21:20:42 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 16:14:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 19:28:36 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ bool	is_exception_empty_double_parenthesis(t_list_bdi **node)
 {
 	t_token_elem	*token;
 
-
 	if (!node || ft_lstsize_bdi(*node) < 4)
 		return (false);
 	token = (*node)->content;
@@ -70,11 +69,15 @@ bool	is_exception_empty_double_parenthesis(t_list_bdi **node)
 	return (true);
 }
 
-/*
- check now and next token type
- OK echo hello; < infile
- OK echo hello; > outfile
-*/
+static t_token_elem	*get_next_token(t_list_bdi *node)
+{
+	if (!node)
+		return (NULL);
+	if (node->next)
+		return (node->next->content);
+	return (NULL);
+}
+
 int	validate_syntax_operators(t_list_bdi *tokenlist_head)
 {
 	t_list_bdi		*node;
@@ -88,20 +91,16 @@ int	validate_syntax_operators(t_list_bdi *tokenlist_head)
 	while (node)
 	{
 		token = node->content;
-		if (node->next)
-			next_token = node->next->content;
-		else
-			next_token = NULL;
+		next_token = get_next_token(node);
 		if (is_exception_empty_double_parenthesis(&node))
 		{
-			is_head = false;
+			is_head &= false;
 			continue ;
 		}
 		if (validate_operator_tokens(token, next_token, is_head) == FAILURE)
 			return (FAILURE);
 		node = node->next;
-		if (is_head)
-			is_head = false;
+		is_head &= false;
 	}
 	return (SUCCESS);
 }
