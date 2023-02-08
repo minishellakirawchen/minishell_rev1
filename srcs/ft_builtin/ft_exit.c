@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 20:31:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 14:34:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 18:45:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	cmd_to_ll(char **cmds)
 	int		exit_status;
 	char	*input_exit_num_chr;
 
-	input_exit_num_chr = ft_strtrim(cmds[1], " ");
+	input_exit_num_chr = ft_strtrim(*cmds, " ");
 	if (!input_exit_num_chr)
 		return (EXIT_FAILURE);
 	exit_status = (int)(ft_strtoll(input_exit_num_chr,
@@ -41,23 +41,28 @@ static int	cmd_to_ll(char **cmds)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: exit: %s: numeric argument required\n",
-			(char *)cmds[1]);
+			(char *)*cmds);
 		return (255);
 	}
 	return (exit_status);
 }
 
+/* '--' is end of option */
 int	ft_exit(t_info *info, char **cmds, bool in_pipe)
 {
-	int	exit_status;
-	int	cmds_count;
+	int		exit_status;
+	int		cmds_count;
+	size_t	idx;
 
 	if (!info || !cmds)
 		return (EXIT_FAILURE);
 	if (!in_pipe)
 		ft_dprintf(STDERR_FILENO, "exit\n");
-	cmds_count = count_cmds(&cmds[1]);
-	exit_status = cmd_to_ll(cmds);
+	idx = 1;
+	if (is_same_str(cmds[idx], "--"))
+		idx++;
+	cmds_count = count_cmds(&cmds[idx]);
+	exit_status = cmd_to_ll(&cmds[idx]);
 	if (cmds_count > 1 && exit_status != 255)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments\n");
