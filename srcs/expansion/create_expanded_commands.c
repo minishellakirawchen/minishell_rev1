@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 14:22:41 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 13:29:18 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 15:52:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,35 +107,16 @@ t_list_bdi **token_list, t_info *info, char **concat_str)
 		if (!*concat_str)
 			return (NULL);
 	}
-
-	debug_print_tokens(*token_list, "remove quote");
-
 	if (expand_var_in_token_word(&*token_list, info) == FAILURE)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "expand var");
-
 	if (re_tokenize_tokens(&*token_list) == FAILURE)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "re tokenize");
-
 	if (concat_tokens_and_create_wildcard_valid_list(&*token_list) == FAILURE)
 		return (NULL);
-
-	debug_print_tokens(*token_list, "concat");
-
-
 	if (expanded_wildcard_to_token_list(&*token_list) == FAILURE)
 		return (NULL);
-	debug_print_tokens(*token_list, "expand wild");
-
-
 	commands = create_commands_from_token_list(&*token_list);
 	if (!commands)
 		return (NULL);
-
-	debug_print_2d_arr(commands, "commands");
-
 	return (commands);
 }
