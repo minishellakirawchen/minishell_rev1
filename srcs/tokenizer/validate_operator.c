@@ -6,11 +6,37 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:00 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 18:41:15 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 15:40:52 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokenizer.h"
+
+static void	print_operator_error_msg(char *word)
+{
+	const size_t	len = ft_strlen_ns(word);
+	size_t			minsize;
+
+	if (!word)
+		return ;
+	minsize = 4;
+	if (word[0] == '<')
+	{
+		if (len == 3)
+		{
+			ft_dprintf(STDERR_FILENO, \
+			"minishell: syntax error near unexpected token `newline'\n");
+			return ;
+		}
+		minsize--;
+	}
+	if (0 < len && len <= minsize)
+		ft_dprintf(STDERR_FILENO, \
+	"minishell: syntax error near unexpected token `%s'\n", &word[len - 1]);
+	else
+		ft_dprintf(STDERR_FILENO, \
+	"minishell: syntax error near unexpected token `%s'\n", &word[len - 2]);
+}
 
 static int	validate_operator_sign(t_token_elem *now_token)
 {
@@ -31,8 +57,9 @@ static int	validate_operator_sign(t_token_elem *now_token)
 			return (SUCCESS);
 		idx++;
 	}
-	ft_dprintf(STDERR_FILENO, \
-	"minishell: syntax error near unexpected token `%s'\n", now_token->word);
+	print_operator_error_msg(now_token->word);
+//	ft_dprintf(STDERR_FILENO, \
+//	"minishell: syntax error near unexpected token `%s'\n", now_token->word);
 	return (FAILURE);
 }
 
