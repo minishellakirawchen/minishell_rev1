@@ -47,28 +47,6 @@ int	validate_syntax_parenthesis_pairs(t_list_bdi *tokenlist_head)
 	return (FAILURE);
 }
 
-bool	is_exception_empty_double_parenthesis(t_list_bdi **node)
-{
-	t_token_elem	*token;
-
-	if (!node || ft_lstsize_bdi(*node) < 4)
-		return (false);
-	token = (*node)->content;
-	if (!is_same_str(token->word, "("))
-		return (false);
-	token = (*node)->next->content;
-	if (!is_same_str(token->word, "("))
-		return (false);
-	token = (*node)->next->next->content;
-	if (!is_same_str(token->word, ")"))
-		return (false);
-	token = (*node)->next->next->content;
-	if (!is_same_str(token->word, ")"))
-		return (false);
-	(*node) = (*node)->next->next->next->next;
-	return (true);
-}
-
 static t_token_elem	*get_next_token(t_list_bdi *node)
 {
 	if (!node)
@@ -92,11 +70,6 @@ int	validate_syntax_operators(t_list_bdi *tokenlist_head)
 	{
 		token = node->content;
 		next_token = get_next_token(node);
-		if (is_exception_empty_double_parenthesis(&node))
-		{
-			is_head = false;
-			continue ;
-		}
 		if (validate_operator_tokens(token, next_token, is_head) == FAILURE)
 			return (FAILURE);
 		node = node->next;
