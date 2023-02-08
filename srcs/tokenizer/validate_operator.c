@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:00 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 15:41:53 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 19:58:46 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	print_operator_error_msg(char *word)
 
 	if (!word)
 		return ;
-	minsize = 4;
+	minsize = 1;
 	if (word[0] == '<')
 	{
 		if (len == 3)
@@ -28,8 +28,10 @@ static void	print_operator_error_msg(char *word)
 			"minishell: syntax error near unexpected token `newline'\n");
 			return ;
 		}
-		minsize--;
+		minsize = 4;
 	}
+	if (word[0] == '>')
+		minsize = 3;
 	if (0 < len && len <= minsize)
 		ft_dprintf(STDERR_FILENO, \
 	"minishell: syntax error near unexpected token `%s'\n", &word[len - 1]);
