@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 17:07:00 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 15:40:52 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 15:41:53 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ static int	validate_operator_sign(t_token_elem *now_token)
 		idx++;
 	}
 	print_operator_error_msg(now_token->word);
-//	ft_dprintf(STDERR_FILENO, \
-//	"minishell: syntax error near unexpected token `%s'\n", now_token->word);
 	return (FAILURE);
 }
 

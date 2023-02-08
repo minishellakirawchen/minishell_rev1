@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 23:15:59 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 15:18:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 15:42:42 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	t_list_bdi		*node;
 	t_list_bdi		*save;
 	t_list_bdi		*popped;
-	t_token_elem	*token_elem;
+	t_token_elem	*token;
 	int				exit_val;
 
 	if (!src_tokens || !info)
@@ -65,8 +65,8 @@ int	expand_var_in_token_word(t_list_bdi **src_tokens, t_info *info)
 	while (node)
 	{
 		popped = ft_lstpop_bdi(&node);
-		token_elem = popped->content;
-		exit_val = expand_or_delete_if_zerosize(token_elem, &save, info, popped);
+		token = popped->content;
+		exit_val = expand_or_delete_if_zerosize(token, &save, info, popped);
 		if (exit_val == FAILURE)
 			return (FAILURE);
 		if (exit_val == CONTINUE)
