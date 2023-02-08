@@ -33,8 +33,8 @@ t_redirect_info **redirect_info, char *ambiguous_word, t_info *info)
 	}
 	if (!ambiguous_word)
 		return (FAILURE);
-	if (get_2d_array_size(expand_or_re_tokenized_chars) != 1 \
-	|| ft_strlen_ns(expand_or_re_tokenized_chars[0]) == 0)
+	if (get_arr_size(expand_or_re_tokenized_chars) != 1 \
+ || ft_strlen_ns(expand_or_re_tokenized_chars[0]) == 0)
 	{
 		(*redirect_info)->is_ambiguous = true;
 		(*redirect_info)->filename = ft_strdup(ambiguous_word);

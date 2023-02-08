@@ -234,7 +234,7 @@ void							**free_2d_alloc(void **alloc);
 void							*free_info(t_info **info);
 void							*free_allocs_ret_nullptr(void *alloc1,
 									void *alloc2);
-size_t							get_2d_array_size(char **array);
+size_t							get_arr_size(char **array);
 
 /* free_alloc_struct.c */
 void							free_env_elem(void *content);

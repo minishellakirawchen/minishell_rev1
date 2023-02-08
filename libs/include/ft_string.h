@@ -47,7 +47,7 @@ size_t		ft_strlen_ns(const char *s);
 size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t		ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t		ft_strlcat_ns(char *dst, const char *src, size_t dstsize);
-size_t		get_2d_array_size(char **array);
+size_t		get_arr_size(char **array);
 
 char		*ft_strchr(const char *s, int c);
 char		*ft_strrchr(const char *s, int c);

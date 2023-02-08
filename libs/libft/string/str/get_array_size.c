@@ -12,7 +12,7 @@
 
 #include "../../../include/ft_string.h"
 
-size_t	get_2d_array_size(char **array)
+size_t	get_arr_size(char **array)
 {
 	size_t	size;
 
