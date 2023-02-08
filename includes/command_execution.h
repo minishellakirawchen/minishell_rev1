@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 13:26:26 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 14:22:58 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@
 
 /* message */
 # define ERRMSG_CMD_NOT_FOUND	"minishell: %s: command not found\n"
+# define ERRMSG_NO_FILE		"minishell: %s: No such file or directory\n"
+# define ERRMSG_NOT_DIR		"minishell: %s: Not a directory\n"
+
 
 /* ************************** */
 /*          typedef           */

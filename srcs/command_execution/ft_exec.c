@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 13:24:28 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 14:28:41 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 		return (perror_ret_int("malloc", PROCESS_ERROR));
 	exit_val = do_execve(splitted_paths, minishell_envp, commands);
 	free_2d_alloc((void **)splitted_paths);
+	ft_dprintf(STDERR_FILENO, ERRMSG_CMD_NOT_FOUND, commands[0]);
 	return (exit_val);
 }
 
@@ -98,11 +99,14 @@ int	ft_execve(t_command_info *cmd_info, char **minishell_envp, t_info *info)
 	if (cmd_info->subshell_token_list)
 		exit (execute_subshell(&cmd_info->subshell_token_list, info));
 	if (is_path(cmd_info->commands[0]))
+	{
 		execve(cmd_info->commands[0], cmd_info->commands, minishell_envp);
-	else
-		if (ft_execvp(cmd_info->commands, minishell_envp, \
-		info->envlist_head) == PROCESS_ERROR)
-			exit (PROCESS_ERROR);
-	ft_dprintf(STDERR_FILENO, ERRMSG_CMD_NOT_FOUND, cmd_info->commands[0]);
-	exit (CMD_NOT_FOUND);
+		if (cmd_info->commands[0][0] == '.')
+			ft_dprintf(STDERR_FILENO, ERRMSG_NO_FILE, cmd_info->commands[0]);
+		else
+			ft_dprintf(STDERR_FILENO, ERRMSG_NOT_DIR, cmd_info->commands[0]);
+		exit (CMD_NOT_FOUND);
+	}
+	exit (ft_execvp(cmd_info->commands, minishell_envp, \
+	info->envlist_head));
 }
