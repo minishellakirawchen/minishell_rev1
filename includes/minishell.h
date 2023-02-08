@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 18:27:09 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 13:30:45 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,7 @@ void							**free_2d_alloc(void **alloc);
 void							*free_info(t_info **info);
 void							*free_allocs_ret_nullptr(void *alloc1,
 									void *alloc2);
+size_t							get_2d_array_size(char **array);
 
 /* free_alloc_struct.c */
 void							free_env_elem(void *content);

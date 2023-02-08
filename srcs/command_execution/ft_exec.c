@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/07 22:59:51 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 13:24:28 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	ft_execve(t_command_info *cmd_info, char **minishell_envp, t_info *info)
 		exit (PROCESS_ERROR);
 	if (execute_redirect(cmd_info, info) == FAILURE)
 		exit (FILE_OPEN_ERROR);
+	if (get_2d_array_size(cmd_info->commands) == 0)
+		exit (EXIT_SUCCESS);
 	if (is_builtin(cmd_info->commands))
 		exit (execute_builtin(info, cmd_info->commands, true));
 	if (cmd_info->subshell_token_list)

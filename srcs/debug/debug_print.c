@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 09:21:33 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 11:20:27 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 13:46:35 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,12 +182,13 @@ void	debug_print_tokens(t_list_bdi *head, char *str)
 	if (str)
 		ft_dprintf(STDERR_FILENO, "#%-15s:", str);
 	node = head;
+
 	while (node)
 	{
 //		printf("\nnode:%p, next:%p\n", node, node->next);
 		token = node->content;
-
 		ft_dprintf(STDERR_FILENO, "[%s]", token->word);
+
 		ft_dprintf(STDERR_FILENO, "%s", type[token->type]);
 		if (token->quote_chr == CHR_DOUBLE_QUOTE)
 			ft_dprintf(STDERR_FILENO, "\"");

@@ -6,21 +6,11 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 13:19:54 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 10:39:00 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/08 13:23:48 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-
-static size_t	get_2darray_size(char **array)
-{
-	size_t	idx;
-
-	idx = 0;
-	while (array && array[idx])
-		idx++;
-	return (idx);
-}
 
 static int	is_iotype_redirect(t_token_type type)
 {
@@ -43,7 +33,7 @@ t_redirect_info **redirect_info, char *ambiguous_word, t_info *info)
 	}
 	if (!ambiguous_word)
 		return (FAILURE);
-	if (get_2darray_size(expand_or_re_tokenized_chars) != 1 \
+	if (get_2d_array_size(expand_or_re_tokenized_chars) != 1 \
 	|| ft_strlen_ns(expand_or_re_tokenized_chars[0]) == 0)
 	{
 		(*redirect_info)->is_ambiguous = true;
