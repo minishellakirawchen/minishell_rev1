@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 19:42:40 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 11:41:39 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,53 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 
 static bool	is_path(const char *commands_head)
 {
-	if (commands_head && (commands_head[0] == '/' || commands_head[0] == '.'))
+	if (commands_head \
+	&& (commands_head[0] == '/' \
+	|| (commands_head[0] == '.' && commands_head[1] == '/')))
 		return (true);
 	return (false);
+}
+
+static void	check_is_a_dir_exit_if_dir(const char *commands_head)
+{
+	const size_t	len = ft_strlen_ns(commands_head);
+	size_t			slash_cnt;
+	size_t			dot_cnt;
+
+	slash_cnt = cnt_chr_in_str('/', commands_head);
+	dot_cnt = cnt_chr_in_str('.', commands_head);
+	if (len == 1 && dot_cnt == 1)
+	{
+		ft_dprintf(STDERR_FILENO, \
+		"minishell: %s: filename argument required\n", commands_head);
+		exit (FILENAME_REQUIRED);
+	}
+	if (len == slash_cnt + dot_cnt)
+	{
+		ft_dprintf(STDERR_FILENO, \
+		"minishell: %s: is a directory\n", commands_head);
+		exit (IS_A_DIR);
+	}
+}
+
+static	int	exec_execve(t_command_info *cmd_info, char **minishell_envp)
+{
+	int	access_ret;
+	int	save_errno;
+
+	errno = 0;
+	access_ret = access(cmd_info->commands[0], X_OK);
+	if (access_ret < 0)
+	{
+		save_errno = errno;
+		ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", cmd_info->commands[0],
+				   strerror(save_errno));
+		if (save_errno == EACCES)
+			return (PERMISSION_DENIED);
+		return (CMD_NOT_FOUND);
+	}
+	execve(cmd_info->commands[0], cmd_info->commands, minishell_envp);
+	return (CMD_NOT_FOUND);
 }
 
 int	ft_execve(t_command_info *cmd_info, char **minishell_envp, t_info *info)
@@ -98,15 +142,10 @@ int	ft_execve(t_command_info *cmd_info, char **minishell_envp, t_info *info)
 		exit (execute_builtin(info, cmd_info->commands, true));
 	if (cmd_info->subshell_token_list)
 		exit (execute_subshell(&cmd_info->subshell_token_list, info));
+	check_is_a_dir_exit_if_dir(cmd_info->commands[0]);
 	if (is_path(cmd_info->commands[0]))
-	{
-		execve(cmd_info->commands[0], cmd_info->commands, minishell_envp);
-		if (cmd_info->commands[0][0] == '.')
-			ft_dprintf(STDERR_FILENO, ERRMSG_NO_FILE, cmd_info->commands[0]);
-		else
-			ft_dprintf(STDERR_FILENO, ERRMSG_NOT_DIR, cmd_info->commands[0]);
-		exit (CMD_NOT_FOUND);
-	}
+		exit (exec_execve(cmd_info, minishell_envp));
 	exit (ft_execvp(cmd_info->commands, minishell_envp, \
 	info->envlist_head));
 }
+

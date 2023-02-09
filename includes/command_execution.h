@@ -26,9 +26,12 @@
 # define CHDIR_FAILURE				1
 # define EXIT_TOO_MANY_ARGS			1
 # define FILE_OPEN_ERROR			1
+# define FILENAME_REQUIRED			2
 # define CMD_NOT_FOUND				127
 # define EXIT_SIGQUIT				131
 # define EXIT_NUMERIC_ARGS_REQUIRED	255
+# define PERMISSION_DENIED			126
+# define IS_A_DIR					126
 # define SYNTAX_ERROR				258
 
 /* string */

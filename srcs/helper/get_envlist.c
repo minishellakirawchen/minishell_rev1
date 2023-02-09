@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   get_envlist.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:13:19 by takira            #+#    #+#             */
 /*   Updated: 2023/02/05 15:09:30 by takira           ###   ########.fr       */
