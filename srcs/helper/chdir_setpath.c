@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/09 00:06:21 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/09 20:41:56 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,15 @@ int	chdir_setpath(t_info *info, t_cd_info *cd_info, char **cmds)
 	if (exit_dir == EACCES)
 	{
 		if (check_chdir(cd_info) == SUCCESS)
+		{
 			set_path(info, cd_info);
+			return (EXIT_SUCCESS);
+		}
 		else
 		{
 			ft_printf("minishell: cd: %s: Permission denied\n", *cmds);
 			return (EXIT_FAILURE);
 		}
 	}
-	return (exit_dir);
+	return (EXIT_FAILURE);
 }
