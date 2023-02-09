@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 12:39:43 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/09 20:41:56 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/09 22:33:10 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,22 @@
 
 static int	set_append_path(t_info *info, t_cd_info *cd_info, char *env_pwd)
 {
-	int	exit_status;
+	int		exit_status;
+	char	*pwd;
 
 	exit_status = 0;
-	exit_status += append_env(info, ft_strdup("PWD+"), ft_strjoin("/",
-				cd_info->newpwd));
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+	{
+		if (env_pwd[ft_strlen(env_pwd) - 1] != '/')
+			exit_status += append_env(info, ft_strdup("PWD+"), ft_strjoin("/",
+						cd_info->newpwd));
+		else
+			exit_status += append_env(info, ft_strdup("PWD+"),
+					ft_strdup(cd_info->newpwd));
+		print_err_message();
+	}
+	exit_status += add_env(info, ft_strdup("PWD"), pwd);
 	exit_status += add_env(info, ft_strdup("OLDPWD"), env_pwd);
 	return (exit_status);
 }
@@ -109,25 +120,23 @@ int	chdir_setpath(t_info *info, t_cd_info *cd_info, char **cmds)
 {
 	int	exit_dir;
 
+	errno = 0;
 	exit_dir = check_dir_exist(cd_info->newpwd, *cmds, 1);
 	if (exit_dir == EXIT_SUCCESS)
 	{
-		chdir(cd_info->newpwd);
-		set_path(info, cd_info);
-		return (EXIT_SUCCESS);
-	}
-	if (exit_dir == EACCES)
-	{
-		if (check_chdir(cd_info) == SUCCESS)
-		{
-			set_path(info, cd_info);
-			return (EXIT_SUCCESS);
-		}
-		else
+		if (chdir(cd_info->newpwd) < 0 && errno == EACCES)
 		{
 			ft_printf("minishell: cd: %s: Permission denied\n", *cmds);
 			return (EXIT_FAILURE);
 		}
+		set_path(info, cd_info);
+		return (EXIT_SUCCESS);
 	}
+	if (exit_dir == EACCES && check_chdir(cd_info) == SUCCESS)
+	{
+		set_path(info, cd_info);
+		return (EXIT_SUCCESS);
+	}
+	ft_printf("minishell: cd: %s: Permission denied\n", *cmds);
 	return (EXIT_FAILURE);
 }

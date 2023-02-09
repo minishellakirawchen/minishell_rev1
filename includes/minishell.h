@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:24 by takira            #+#    #+#             */
-/*   Updated: 2023/02/09 10:49:25 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:12:37 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,7 @@ void							*free_info(t_info **info);
 void							*free_allocs_ret_nullptr(void *alloc1,
 									void *alloc2);
 size_t							get_arr_size(char **array);
+void							print_err_message(void);
 
 /* free_alloc_struct.c */
 void							free_env_elem(void *content);

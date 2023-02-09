@@ -6,18 +6,11 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 22:26:21 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/08 00:20:55 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/09 22:37:08 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	print_err_message(void)
-{
-	ft_dprintf(STDERR_FILENO, "cd: error retrieving current directory: ");
-	ft_dprintf(STDERR_FILENO, "getcwd: cannot access parent directories: ");
-	ft_dprintf(STDERR_FILENO, "directories: No such file or directory \n");
-}
 
 static t_cd_info	*init_cd_info(t_info *info, char *cmd)
 {
@@ -31,13 +24,8 @@ static t_cd_info	*init_cd_info(t_info *info, char *cmd)
 	cd_info->cdpath = get_elem(info, "CDPATH");
 	cd_info->env_pwd = get_elem(info, "PWD");
 	cd_info->pwd = getcwd(NULL, 0);
-	if (cd_info->pwd == NULL)
-	{
-		if (check_dir_exist("./", cmd, 1) == EACCES)
-			cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
-		else
-			print_err_message();
-	}
+	if (cd_info->pwd == NULL && check_dir_exist("./", cmd, 1) == EACCES)
+		cd_info->pwd = ft_strdup(*get_elem(info, "PWD"));
 	cd_info->oldpwd = get_elem(info, "OLDPWD");
 	cd_info->newpwd = NULL;
 	cd_info->cur_pwd = NULL;
@@ -52,7 +40,7 @@ int	ft_cd(t_info *info, char **cmds)
 	exit_status = EXIT_SUCCESS;
 	if (!info || !cmds)
 		return (EXIT_FAILURE);
-	cd_info = init_cd_info(info, *cmds);
+	cd_info = init_cd_info(info, cmds[1]);
 	if (!cd_info)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	cd_info->cd_type = judge_cmd(*(++cmds));
