@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:15:10 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 20:50:34 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 11:48:35 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@
 # define ERRMSG_CMD_NOT_FOUND	"minishell: %s: command not found\n"
 # define ERRMSG_NO_FILE		"minishell: %s: No such file or directory\n"
 # define ERRMSG_NOT_DIR		"minishell: %s: Not a directory\n"
+# define ERRMSG_FILENAMEARG	"minishell: %s: filename argument required\n"
+# define ERRMSG_IS_A_DIR	"minishell: %s: is a directory\n"
 
 /* ************************** */
 /*          typedef           */
@@ -120,5 +122,9 @@ t_fopen	get_fopen_type(t_token_type io_type);
 int		execute_builtin(t_info *info, char **cmds, bool in_pipe);
 bool	is_builtin(char **cmds);
 bool	is_single_builtin(t_list_bdi *pipeline_cmds_head);
+
+/* check_exec_path_and-dir.c */
+bool	is_path(const char *commands_head);
+void	check_is_a_dir_exit_if_dir(const char *commands_head);
 
 #endif //COMMAND_EXECUTION_H

@@ -68,6 +68,7 @@ SRC		= main.c \
 		  command_execution/ft_exec.c \
 		  command_execution/open_file.c \
 		  command_execution/execute_builtin.c \
+		  command_execution/check_exec_path_and_dir.c \
 		  signal_handler/signal_handler.c \
 		  signal_handler/init_signal_execute.c \
 		  signal_handler/init_signal_heredoc.c \

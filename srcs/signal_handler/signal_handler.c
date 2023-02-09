@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:39 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 22:02:25 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/09 12:06:09 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,6 @@ static int	print_int_error(int exit_status, t_list_bdi *node,
 		ft_dprintf(STDERR_FILENO, "\n");
 		return (130);
 	}
-	if (last_node == node)
-		ft_dprintf(STDERR_FILENO, "Interrupt by signal : %d\n",
-			WTERMSIG(exit_status));
 	return (WEXITSTATUS(exit_status));
 }
 

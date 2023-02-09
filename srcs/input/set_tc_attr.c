@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 12:26:22 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/06 20:46:15 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/09 12:23:25 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	set_tc_attr_in_execute(void)
 	fd = open(ttyname(STDIN_FILENO), O_RDWR);
 	if (fd < 0)
 	{
-		perror("open");
 		return (EXIT_FAILURE);
 	}
 	if (tcgetattr(fd, &tty) < 0)

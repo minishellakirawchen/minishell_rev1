@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 19:34:52 by takira            #+#    #+#             */
-/*   Updated: 2023/02/09 11:41:39 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 11:49:32 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,37 +79,6 @@ static int	ft_execvp(char **commands, char **minishell_envp, t_list *envlist)
 	return (exit_val);
 }
 
-static bool	is_path(const char *commands_head)
-{
-	if (commands_head \
-	&& (commands_head[0] == '/' \
-	|| (commands_head[0] == '.' && commands_head[1] == '/')))
-		return (true);
-	return (false);
-}
-
-static void	check_is_a_dir_exit_if_dir(const char *commands_head)
-{
-	const size_t	len = ft_strlen_ns(commands_head);
-	size_t			slash_cnt;
-	size_t			dot_cnt;
-
-	slash_cnt = cnt_chr_in_str('/', commands_head);
-	dot_cnt = cnt_chr_in_str('.', commands_head);
-	if (len == 1 && dot_cnt == 1)
-	{
-		ft_dprintf(STDERR_FILENO, \
-		"minishell: %s: filename argument required\n", commands_head);
-		exit (FILENAME_REQUIRED);
-	}
-	if (len == slash_cnt + dot_cnt)
-	{
-		ft_dprintf(STDERR_FILENO, \
-		"minishell: %s: is a directory\n", commands_head);
-		exit (IS_A_DIR);
-	}
-}
-
 static	int	exec_execve(t_command_info *cmd_info, char **minishell_envp)
 {
 	int	access_ret;
@@ -120,8 +89,8 @@ static	int	exec_execve(t_command_info *cmd_info, char **minishell_envp)
 	if (access_ret < 0)
 	{
 		save_errno = errno;
-		ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", cmd_info->commands[0],
-				   strerror(save_errno));
+		ft_dprintf(STDERR_FILENO, \
+		"minishell: %s: %s\n", cmd_info->commands[0], strerror(save_errno));
 		if (save_errno == EACCES)
 			return (PERMISSION_DENIED);
 		return (CMD_NOT_FOUND);
@@ -148,4 +117,3 @@ int	ft_execve(t_command_info *cmd_info, char **minishell_envp, t_info *info)
 	exit (ft_execvp(cmd_info->commands, minishell_envp, \
 	info->envlist_head));
 }
-
