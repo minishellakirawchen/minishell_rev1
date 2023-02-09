@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/09 14:18:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 20:15:29 by wchen            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,7 @@
 static void	execute_int_handler(int sig_num)
 {
 	if (sig_num == SIGINT)
-	{
-		write (STDERR_FILENO, "sig_handler", 1);
 		exit(130);
-	}
 }
 
 static void	execute_quit_handler(int sig_num)
