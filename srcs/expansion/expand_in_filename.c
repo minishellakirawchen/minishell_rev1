@@ -28,7 +28,7 @@ t_redirect_info **redirect_info, char *ambiguous_word, t_info *info)
 	&(*redirect_info)->token_list, info, &ambiguous_word);
 	if (!expand_or_re_tokenized_chars)
 	{
-		ambiguous_word = free_1d_alloc(ambiguous_word);
+		ambiguous_word = free_ret_nullprt(ambiguous_word);
 		return (FAILURE);
 	}
 	if (!ambiguous_word)
@@ -41,7 +41,7 @@ t_redirect_info **redirect_info, char *ambiguous_word, t_info *info)
 	}
 	else
 		(*redirect_info)->filename = ft_strdup(expand_or_re_tokenized_chars[0]);
-	ambiguous_word = free_1d_alloc(ambiguous_word);
+	ambiguous_word = free_ret_nullprt(ambiguous_word);
 	free_2d_alloc((void **)expand_or_re_tokenized_chars);
 	if (!(*redirect_info)->filename)
 		return (perror_ret_int("malloc", FAILURE));

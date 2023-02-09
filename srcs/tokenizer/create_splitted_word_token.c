@@ -44,7 +44,7 @@ t_token_elem	*create_splitted_word_token_from_src(t_split_info *s_info)
 	s_info->is_quoted, '\0');
 	if (!new_token)
 	{
-		free_1d_alloc(word);
+		free_ret_nullprt(word);
 		free_token_elem(new_token);
 		return (perror_ret_nullptr("malloc"));
 	}

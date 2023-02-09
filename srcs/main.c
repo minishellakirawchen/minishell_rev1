@@ -22,7 +22,7 @@ static t_info	*init_info(void)
 	info->envlist_head = get_envlist();
 	if (!info->envlist_head)
 	{
-		info = free_1d_alloc(info);
+		info = free_ret_nullprt(info);
 		return (FAILURE);
 	}
 	info->tokenlist_head = NULL;

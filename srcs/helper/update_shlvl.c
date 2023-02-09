@@ -80,7 +80,7 @@ int	update_shlvl(char **current_shlvl_str)
 	if (!current_shlvl_str)
 		return (FAILURE);
 	current_shlvl_num = ft_atoi(*current_shlvl_str, &is_atoi_success);
-	free_1d_alloc(*current_shlvl_str);
+	free_ret_nullprt(*current_shlvl_str);
 	*current_shlvl_str = get_new_shlvl(current_shlvl_num, is_atoi_success);
 	if (!*current_shlvl_str)
 		return (FAILURE);

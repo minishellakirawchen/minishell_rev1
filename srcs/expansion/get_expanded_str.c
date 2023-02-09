@@ -53,7 +53,7 @@ static int	skip_to_expandable_str(char **src, size_t *idx, char **expanded_str)
 		*expanded_str = concat_dst_to_src(expanded_str, skip_str);
 		if (!*expanded_str)
 			return (FAILURE);
-		free_1d_alloc(skip_str);
+		free_ret_nullprt(skip_str);
 		*idx += skip;
 	}
 	return (SUCCESS);
@@ -99,7 +99,7 @@ char **src, t_info *info, size_t *idx, char **expanded_str)
 		if (!*expanded_str)
 			return (FAILURE);
 		*idx += ft_strlen_ns(key) + 1;
-		key = free_1d_alloc(key);
+		key = free_ret_nullprt(key);
 	}
 	return (SUCCESS);
 }

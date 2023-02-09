@@ -45,7 +45,7 @@ static int	do_execve(char **splitted_paths, char **envp, char **commands)
 	{
 		if (ft_strlen_ns(splitted_paths[idx]) == 0)
 		{
-			splitted_paths[idx] = free_1d_alloc(splitted_paths[idx]);
+			splitted_paths[idx] = free_ret_nullprt(splitted_paths[idx]);
 			splitted_paths[idx] = ft_strdup(PATH_CURRENT);
 			if (!splitted_paths[idx])
 				return (PROCESS_ERROR);
@@ -54,7 +54,7 @@ static int	do_execve(char **splitted_paths, char **envp, char **commands)
 		if (!path)
 			return (PROCESS_ERROR);
 		execve(path, commands, envp);
-		free_1d_alloc(path);
+		free_ret_nullprt(path);
 		idx++;
 	}
 	return (CMD_NOT_FOUND);

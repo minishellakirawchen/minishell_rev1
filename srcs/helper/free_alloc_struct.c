@@ -39,7 +39,7 @@ void	free_command_info(void *content)
 	ft_lstclear_bdi(&(elem->redirect_list), free_redirect_info);
 	ft_lstclear_bdi(&(elem->pipeline_token_list), free_token_elem);
 	ft_lstclear_bdi(&(elem->subshell_token_list), free_token_elem);
-	free_1d_alloc(elem);
+	free_ret_nullprt(elem);
 }
 
 void	free_redirect_info(void *content)
@@ -53,10 +53,10 @@ void	free_redirect_info(void *content)
 	if (redirect_info->io_type == e_heredoc)
 		if (redirect_info->filename && unlink(redirect_info->filename) < 0)
 			perror("unlink");
-	free_1d_alloc(redirect_info->filename);
-	free_1d_alloc(redirect_info->heredoc_eof);
+	free_ret_nullprt(redirect_info->filename);
+	free_ret_nullprt(redirect_info->heredoc_eof);
 	ft_lstclear_bdi(&redirect_info->token_list, free_token_elem);
-	free_1d_alloc(redirect_info);
+	free_ret_nullprt(redirect_info);
 }
 
 void	free_token_elem(void *content)
@@ -66,9 +66,10 @@ void	free_token_elem(void *content)
 	if (!content)
 		return ;
 	elem = content;
-	elem->word = free_1d_alloc(elem->word);
-	elem->wildcard_valid_flag = free_1d_alloc(elem->wildcard_valid_flag);
-	free_1d_alloc(elem);
+	elem->word = free_ret_nullprt(elem->word);
+	elem->wildcard_valid_flag = free_ret_nullprt(
+			elem->wildcard_valid_flag);
+	free_ret_nullprt(elem);
 }
 
 void	free_env_elem(void *content)
@@ -78,7 +79,7 @@ void	free_env_elem(void *content)
 	if (!content)
 		return ;
 	elem = content;
-	elem->key = free_1d_alloc(elem->key);
-	elem->value = free_1d_alloc(elem->value);
-	free_1d_alloc(elem);
+	elem->key = free_ret_nullprt(elem->key);
+	elem->value = free_ret_nullprt(elem->value);
+	free_ret_nullprt(elem);
 }

@@ -40,12 +40,12 @@ int	tokenize_input_line(t_info *info, const char *readline_input)
 		return (perror_ret_int("malloc", PROCESS_ERROR));
 	if (ft_strlen_ns(space_trimmed_input) == 0)
 	{
-		free_1d_alloc(space_trimmed_input);
+		free_ret_nullprt(space_trimmed_input);
 		return (CONTINUE);
 	}
 	info->tokenlist_head = get_delim_splitted_tokenlist(\
 	space_trimmed_input, STR_SPACE, STR_QUOTE);
-	free_1d_alloc(space_trimmed_input);
+	free_ret_nullprt(space_trimmed_input);
 	if (!info->tokenlist_head)
 		return (PROCESS_ERROR);
 	if (split_by_operators(&info->tokenlist_head) == PROCESS_ERROR)

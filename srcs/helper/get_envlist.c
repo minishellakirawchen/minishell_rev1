@@ -49,7 +49,7 @@ const char *environ_elem, char **key, char **value)
 	*value = ft_substr(environ_elem, idx + 1, len - idx - 1);
 	if (!*value)
 	{
-		*key = free_1d_alloc(*key);
+		*key = free_ret_nullprt(*key);
 		return (perror_and_return_int("malloc", FAILURE));
 	}
 	return (SUCCESS);

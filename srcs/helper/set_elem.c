@@ -39,12 +39,12 @@ static void	append_elem(char **elem_value, char *elem_key, char *value)
 	if (*elem_value != NULL)
 	{
 		*elem_value = ft_strjoin(*elem_value, value);
-		value = free_1d_alloc(value);
+		value = free_ret_nullprt(value);
 	}
 	else
 		*elem_value = value;
-	elem_key = free_1d_alloc(elem_key);
-	temp_ptr = free_1d_alloc(temp_ptr);
+	elem_key = free_ret_nullprt(elem_key);
+	temp_ptr = free_ret_nullprt(temp_ptr);
 }
 
 int	append_env(t_info *info, char *key, char *value)
@@ -58,7 +58,7 @@ int	append_env(t_info *info, char *key, char *value)
 	if (!elem_key)
 		return (perror_and_return_int("malloc", EXIT_FAILURE));
 	elem_key = ft_memmove(elem_key, key, key_len - 1);
-	key = free_1d_alloc(key);
+	key = free_ret_nullprt(key);
 	elem_value = get_elem(info, elem_key);
 	if (elem_value == NULL)
 		set_elem(info, elem_key, value);
@@ -79,13 +79,13 @@ int	add_env(t_info *info, char *key, char *value)
 	{
 		temp_ptr = *elem_value;
 		*elem_value = ft_strdup_ns(value);
-		temp_ptr = free_1d_alloc(temp_ptr);
-		value = free_1d_alloc(value);
-		key = free_1d_alloc(key);
+		temp_ptr = free_ret_nullprt(temp_ptr);
+		value = free_ret_nullprt(value);
+		key = free_ret_nullprt(key);
 	}
 	else if (elem_value == NULL)
 		exit_status = set_elem(info, key, value);
 	else if (value == NULL)
-		key = free_1d_alloc(key);
+		key = free_ret_nullprt(key);
 	return (exit_status);
 }

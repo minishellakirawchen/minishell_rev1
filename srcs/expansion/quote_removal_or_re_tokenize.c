@@ -25,7 +25,7 @@ static int	remove_quotes_in_word(char **token_word)
 	quote_removal_word = ft_substr(*token_word, 1, wordlen - 2);
 	if (!quote_removal_word)
 		return (perror_ret_int("malloc", FAILURE));
-	free_1d_alloc(*token_word);
+	free_ret_nullprt(*token_word);
 	*token_word = quote_removal_word;
 	return (SUCCESS);
 }

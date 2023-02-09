@@ -32,7 +32,7 @@ static char	*init_tdir(char *ref, char *cmd)
 	ft_strlcat(tdir, ref, ref_len + 1);
 	ft_strlcat(tdir, "/", ref_len + 2);
 	ft_strlcat(tdir, trimed_cmd, ref_len + cmd_len + 2);
-	free_1d_alloc(trimed_cmd);
+	free_ret_nullprt(trimed_cmd);
 	return (tdir);
 }
 
@@ -52,7 +52,7 @@ static char	*judge_cdpath(t_cd_info *cd_info, char *cmd)
 			temp = (char **)free_2d_alloc((void **)temp);
 			return (tdir);
 		}
-		tdir = free_1d_alloc(tdir);
+		tdir = free_ret_nullprt(tdir);
 		cdpaths++;
 	}
 	temp = (char **)free_2d_alloc((void **)temp);

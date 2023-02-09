@@ -21,14 +21,14 @@ void	**free_2d_alloc(void **alloc)
 	i = 0;
 	while (alloc[i])
 	{
-		alloc[i] = free_1d_alloc(alloc[i]);
+		alloc[i] = free_ret_nullprt(alloc[i]);
 		i++;
 	}
 	free(alloc);
 	return (NULL);
 }
 
-void	*free_1d_alloc(void *alloc)
+void	*free_ret_nullprt(void *alloc)
 {
 	free(alloc);
 	return (NULL);
@@ -36,8 +36,8 @@ void	*free_1d_alloc(void *alloc)
 
 void	*free_allocs_ret_nullptr(void *alloc1, void *alloc2)
 {
-	free_1d_alloc(alloc1);
-	free_1d_alloc(alloc2);
+	free_ret_nullprt(alloc1);
+	free_ret_nullprt(alloc2);
 	return (NULL);
 }
 
@@ -59,5 +59,5 @@ void	clear_input_info(t_info **info)
 		return ;
 	ft_lstclear_bdi(&(*info)->tokenlist_head, free_token_elem);
 	clear_exec_list(&(*info)->execlist_head);
-	(*info)->readline_input = free_1d_alloc((*info)->readline_input);
+	(*info)->readline_input = free_ret_nullprt((*info)->readline_input);
 }

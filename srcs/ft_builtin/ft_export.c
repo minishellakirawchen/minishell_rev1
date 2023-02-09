@@ -79,8 +79,8 @@ static int	export_cmd(t_info *info, t_export_info *e_info, char **cmds)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: export: `%s': not a valid identifier\n", *cmds);
-		e_info->key = free_1d_alloc(e_info->key);
-		e_info->value = free_1d_alloc(e_info->value);
+		e_info->key = free_ret_nullprt(e_info->key);
+		e_info->value = free_ret_nullprt(e_info->value);
 		return (EXIT_FAILURE);
 	}
 	if (is_same_str(e_info->key, "PWD") || is_same_str(e_info->key,
@@ -113,7 +113,7 @@ int	ft_export(t_info *info, char **cmds)
 		init_key_value(e_info);
 		cmds++;
 	}
-	e_info = free_1d_alloc(e_info);
+	e_info = free_ret_nullprt(e_info);
 	if (exit_status > 0)
 		return (EXIT_FAILURE);
 	return (exit_status);

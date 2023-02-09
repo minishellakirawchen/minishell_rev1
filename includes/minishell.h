@@ -229,7 +229,7 @@ t_env_elem						*create_new_envelem(char *key, char *value,
 									int not_print);
 void							print_key_value(void *content);
 
-void							*free_1d_alloc(void *alloc);
+void							*free_ret_nullprt(void *alloc);
 void							**free_2d_alloc(void **alloc);
 void							*free_info(t_info **info);
 void							*free_allocs_ret_nullptr(void *alloc1,

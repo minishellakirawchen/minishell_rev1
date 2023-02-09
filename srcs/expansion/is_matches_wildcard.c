@@ -78,7 +78,7 @@ static void	free_dp_array(int **dp, size_t row_size)
 	i = 0;
 	while (i < row_size)
 	{
-		free_1d_alloc(dp[i]);
+		free_ret_nullprt(dp[i]);
 		i++;
 	}
 	free(dp);

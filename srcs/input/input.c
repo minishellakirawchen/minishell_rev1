@@ -26,30 +26,6 @@ void	prompt_int_handler(int sig_num)
 	}
 }
 
-static int	preprocess_for_execute(t_info *info)
-{
-	int	process_exit_val;
-
-	if (!info->readline_input)
-		return (BREAK);
-	if (is_same_str(info->readline_input, ""))
-	{
-		info->readline_input = free_1d_alloc(info->readline_input);
-		return (CONTINUE);
-	}
-	add_history(info->readline_input);
-	process_exit_val = tokenize_input_line(info, info->readline_input);
-	if (process_exit_val == CONTINUE)
-		return (CONTINUE);
-	if (process_exit_val == EXIT_SUCCESS)
-		process_exit_val = arrange_and_validate_token_list(\
-		&info->tokenlist_head);
-	if (process_exit_val == EXIT_SUCCESS)
-		process_exit_val = parsing_token_list(\
-				&info->tokenlist_head, &info->execlist_head, info);
-	return (process_exit_val);
-}
-
 static void	prompt_init(int *process_exit_value, t_info *info)
 {
 	if (*process_exit_value == EXIT_BY_SIG) //-4->1
@@ -79,6 +55,30 @@ static void	prompt_init(int *process_exit_value, t_info *info)
 
 }
 
+static int	preprocess_for_execute(t_info *info)
+{
+	int	process_exit_val;
+
+	if (!info->readline_input)
+		return (BREAK);
+	if (is_same_str(info->readline_input, ""))
+	{
+		info->readline_input = free_ret_nullprt(info->readline_input);
+		return (CONTINUE);
+	}
+	add_history(info->readline_input);
+	process_exit_val = tokenize_input_line(info, info->readline_input);
+	if (process_exit_val == CONTINUE)
+		return (CONTINUE);
+	if (process_exit_val == EXIT_SUCCESS)
+		process_exit_val = arrange_and_validate_token_list(\
+		&info->tokenlist_head);
+	if (process_exit_val == EXIT_SUCCESS)
+		process_exit_val = parsing_token_list(\
+				&info->tokenlist_head, &info->execlist_head, info);
+	return (process_exit_val);
+}
+
 static void	update_exit_status(t_info *info)
 {
 	if (g_status.exit_status == EXIT_FAILURE)
@@ -91,7 +91,6 @@ int	prompt_loop(t_info *info)
 
 	if (!info)
 		return (FAILURE);
-//	init_signal_prompt();
 	process_exit_value = EXIT_SUCCESS;
 	while (true)
 	{

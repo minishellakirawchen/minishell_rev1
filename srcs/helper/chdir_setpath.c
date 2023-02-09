@@ -46,7 +46,7 @@ static int	set_path(t_info *info, t_cd_info *cd_info)
 	if (cd_info->cd_type == e_home || cd_info->cd_type == e_oldpwd
 		|| cd_info->cd_type == e_cdpath)
 		ft_printf("%s\n", cd_info->cur_pwd);
-	cd_info->cur_pwd = free_1d_alloc(cd_info->cur_pwd);
+	cd_info->cur_pwd = free_ret_nullprt(cd_info->cur_pwd);
 	return (EXIT_SUCCESS);
 }
 
