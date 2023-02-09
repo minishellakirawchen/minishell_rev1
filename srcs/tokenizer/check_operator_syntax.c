@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 08:44:39 by takira            #+#    #+#             */
-/*   Updated: 2023/02/09 12:03:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 13:54:40 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ t_token_elem *now_token, t_token_elem *next_token, bool is_head)
 		"minishell: syntax error near unexpected token `newline'\n");
 	else
 		ft_dprintf(STDERR_FILENO, \
-		"minishell: syntax error near unexpected token `%s'\n", next_token->word);
+		"minishell: syntax error near unexpected token `%s'\n", \
+		next_token->word);
 	return (FAILURE);
 }

@@ -80,16 +80,16 @@ void	debug_print_env(t_list *envlist)
 
 	if (!envlist)
 	{
-		printf("(null)\n");
+		ft_printf("(null)\n");
 		return ;
 	}
 	while (envlist)
 	{
 		env_elem = envlist->content;
 		if (!env_elem)
-			printf("content: (null)\n");
+			ft_printf("content: (null)\n");
 		else
-			printf("key: %s, value:%s\n", env_elem->key, env_elem->value);
+			ft_printf("key: %s, value:%s\n", env_elem->key, env_elem->value);
 		envlist = envlist->next;
 	}
 }

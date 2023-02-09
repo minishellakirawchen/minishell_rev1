@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 13:31:13 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 11:46:31 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 14:24:19 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static t_info	*init_info(void)
 	return (info);
 }
 
-/*
 static void	display_ascii_art(void)
 {
 	ft_printf("           _       _      _          _ _ \n" \
@@ -41,7 +40,6 @@ static void	display_ascii_art(void)
 	"|_| |_| |_|_|_| |_|_|___/|_| |_|\\___|_|_|\n" \
 	"                        By: takira, wchen\n");
 }
-*/
 
 int	main(int argc, char **argv)
 {
@@ -51,16 +49,15 @@ int	main(int argc, char **argv)
 	if (argc != 1 || !argv)
 	{
 		ft_dprintf(STDERR_FILENO, \
-		"[Error]Too many argument." \
-		"       Input following:$> ./minishell");
+		"[Error]Too many argument.\n" \
+		"       Execute minishell:$> ./minishell\n");
 		return (EXIT_FAILURE);
 	}
 	info = init_info();
 	if (!info)
 		return (FAILURE);
-//	display_ascii_art();
+	display_ascii_art();
 	exit_status = prompt_loop(info);
 	free_info(&info);
-//	system("leaks -q minishell");
 	return (exit_status);
 }

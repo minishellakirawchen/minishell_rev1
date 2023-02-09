@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:55 by takira            #+#    #+#             */
-/*   Updated: 2023/02/09 12:15:13 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 14:04:04 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ void	prompt_int_handler(int sig_num)
 
 static void	prompt_init(int *process_exit_value, t_info *info)
 {
-	if (*process_exit_value == EXIT_BY_SIG) //-4->1
+	char	*prompt;
+
+	if (*process_exit_value == EXIT_BY_SIG)
 		info->exit_status = EXIT_FAILURE;
 	else if (*process_exit_value != CONTINUE)
 		info->exit_status = *process_exit_value;
@@ -36,23 +38,14 @@ static void	prompt_init(int *process_exit_value, t_info *info)
 	g_status.exit_status = EXIT_SUCCESS;
 	set_tc_attr_out_execute();
 	init_signal_prompt();
-//	set_tc_attr_in_execute();
-//	info->readline_input = readline(PROMPT);
-
-////////////////////////////////////////////////////////////////////
-	char	*prompt;
-	char	*tmp;
-	char	*exit_status_string;
-	exit_status_string = ft_itoa(info->exit_status);
-	tmp = ft_strjoin("minishell ", exit_status_string);
-	prompt = ft_strjoin(tmp, " $> ");
-	free(tmp);
-	free(exit_status_string);
-
+	prompt = get_prompt(info->exit_status);
+	if (!prompt)
+	{
+		*process_exit_value = PROCESS_ERROR;
+		return ;
+	}
 	info->readline_input = readline(prompt);
 	free(prompt);
-////////////////////////////////////////////////////////////////////
-
 }
 
 static int	preprocess_for_execute(t_info *info)
@@ -95,6 +88,8 @@ int	prompt_loop(t_info *info)
 	while (true)
 	{
 		prompt_init(&process_exit_value, info);
+		if (is_minishell_abort(process_exit_value))
+			break ;
 		process_exit_value = preprocess_for_execute(info);
 		if (is_eof_exit(process_exit_value))
 			break ;

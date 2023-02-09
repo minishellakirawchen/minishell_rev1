@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:02:48 by takira            #+#    #+#             */
-/*   Updated: 2023/02/05 22:03:37 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 14:16:18 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,3 @@ int	parsing_token_list(
 		return (PROCESS_ERROR);
 	return (EXIT_SUCCESS);
 }
-//	debug_print_exec_list(*execlist_head, "parsing fin");
-//	debug_print_exec_list(*execlist_head, "operator_list");
-//	delete_last_semicolon_node(execlist_head);
-//	debug_print_exec_list(info->execlist_head, "delete last ;");

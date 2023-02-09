@@ -15,6 +15,7 @@ SRC		= main.c \
 		  input/input.c \
 		  input/judge_continue_loop.c \
 		  input/set_tc_attr.c \
+		  input/get_prompt.c \
 		  tokenizer/tokenizer.c \
 		  tokenizer/space_split.c \
 		  tokenizer/operator_split.c \

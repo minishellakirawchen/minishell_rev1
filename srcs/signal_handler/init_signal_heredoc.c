@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 01:16:00 by wchen             #+#    #+#             */
-/*   Updated: 2023/02/09 10:48:16 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 13:53:39 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	do_heredoc(int fd, t_redirect_info *r_info)
 		line = readline("> ");
 		if (is_same_str(line, "") && g_status.heredoc_status == EXIT_BY_SIG)
 			break ;
-		if (!line || is_same_str(line, r_info->heredoc_eof))
+		if (is_eof(line) || is_same_str(line, r_info->heredoc_eof))
 			break ;
 		ft_dprintf(fd, line);
 		ft_dprintf(fd, "\n");

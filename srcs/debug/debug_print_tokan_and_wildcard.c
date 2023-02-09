@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 20:35:59 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 20:41:02 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/09 14:11:29 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	debug_print_wildcard_valid_list(int *list, size_t len)
 	size_t	idx;
 
 	idx = 0;
-	printf("(");
+	ft_printf("(");
 	while (idx < len)
 	{
-		printf("%d", list[idx]);
+		ft_printf("%d", list[idx]);
 		idx++;
 		if (idx < len)
-			printf(",");
+			ft_printf(",");
 	}
-	printf(")\n");
+	ft_printf(")\n");
 }
 
 void	print_wildcard_valid_list(t_token_elem *token)

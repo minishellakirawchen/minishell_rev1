@@ -31,7 +31,7 @@ void	print_export_key_value(void *content)
 	if (!elem)
 		return ;
 	if (elem->value != NULL && elem->not_print == 0)
-		printf("declare -x %s=\"%s\"\n", elem->key, elem->value);
+		ft_printf("declare -x %s=\"%s\"\n", elem->key, elem->value);
 	else if (elem->not_print == 0)
-		printf("declare -x %s\n", elem->key);
+		ft_printf("declare -x %s\n", elem->key);
 }
