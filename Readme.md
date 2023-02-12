@@ -19,7 +19,7 @@ make
 * Display a prompt when waiting for a new command.
 * Have a working history.
 * Search and launch the right executable (based on the `PATH` variable or using a relative or an absolute path).
-* Not interpret unclosed quotes or special characters which are not required by the subject such as `"\"` (backslash).
+* Not interpret unclosed quotes or special characters which are not required by the subject such as `\` (backslash).
 * Handle `’` (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
 * Handle `"` (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for `$` (dollar sign).
 * Implement redirections:
