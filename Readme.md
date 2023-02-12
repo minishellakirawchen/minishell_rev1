@@ -1,6 +1,8 @@
 # Overview
 Implement some function of GNU bash(v3.2).
 
+<br>
+
 # How to use
 ### Install GNL readline
 ```shell
@@ -13,6 +15,8 @@ cd minishell_rev1
 make
 ./minishell
 ```
+
+<br>
 
 # Specification
 ### Mandatory Part
@@ -55,6 +59,7 @@ make
 * Implement operators.
     - semicolon `;`
     
-    
+<br>
+
 # Release
 * Feb/12th
