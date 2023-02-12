@@ -54,3 +54,7 @@ make
 ### Plus alpha
 * Implement operators.
     - semicolon `;`
+    
+    
+# Release
+* Feb/12th
