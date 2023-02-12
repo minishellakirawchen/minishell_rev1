@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 20:31:18 by takira            #+#    #+#             */
-/*   Updated: 2023/02/08 20:34:38 by takira           ###   ########.fr       */
+/*   Updated: 2023/02/12 14:11:02 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	print_commands(t_command_info *command_info, bool *is_first_print)
 	}
 }
 
-static void	print_redirect(t_command_info *command_info, bool **is_first_print)
+static void	print_redirect(t_command_info *command_info, bool *is_first_print)
 {
 	if (command_info && command_info->redirect_list)
 	{

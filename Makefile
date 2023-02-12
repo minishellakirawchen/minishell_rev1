@@ -97,6 +97,11 @@ SRC		= main.c \
 		  helper/define_new_path.c \
 		  helper/print_err_message.c \
 		  debug/debug_print.c \
+		  debug/debug_print_command_info.c \
+		  debug/debug_print_dp.c \
+		  debug/debug_print_execlist.c \
+		  debug/debug_print_tokan_and_wildcard.c \
+		  debug/debug_print_tree.c \
 
 SRCS	= $(addprefix $(SRC_DIR)/ ,$(SRC))
 

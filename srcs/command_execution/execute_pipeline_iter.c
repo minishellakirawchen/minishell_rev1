@@ -6,7 +6,7 @@
 /*   By: takira <takira@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 20:18:47 by takira            #+#    #+#             */
-/*   Updated: 2023/02/06 22:06:15 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/12 14:09:34 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,15 @@ static int	handle_fd_for_parent(int prev_pipefd[2], int next_pipefd[2])
 	return (SUCCESS);
 }
 
+// Main             ↓ stdin
+//   |-- fork --> cmd0
+//   |             ||pipe
+//   |-- fork --> cmd1
+//   |             ||pipe
+//   |-- fork --> cmd2
+//   |             ||pipe
+//   |-- fork --> cmd3
+//                  ↓ stdout
 int	execute_pipe_iter(t_list_bdi *pipeline, char **envp, t_info *info)
 {
 	int				next_pipefd[2];
