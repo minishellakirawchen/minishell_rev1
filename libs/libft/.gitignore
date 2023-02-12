@@ -1,4 +1,5 @@
 !Makefile
+!Readme.md
 !*.c
 !../include/libft.h
 main.c
