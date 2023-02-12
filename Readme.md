@@ -61,5 +61,11 @@ make
     
 <br>
 
+# Author
+* [ak0327](https://github.com/ak0327)
+* [weijuan82113](https://github.com/weijuan82113)
+
+<br>
+
 # Release
 * Feb/12th
