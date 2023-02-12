@@ -2,11 +2,11 @@
 Implement some function of GNU bash(v3.2).
 
 # How to use
-### installation of GNL readline
+### Install GNL readline
 ```shell
 brew install readline
 ```
-### installation of minishell
+### Install minishell
 ```shell
 git clone https://github.com/minishellakirawchen/minishell_rev1.git
 cd minishell_rev1
