@@ -6,7 +6,7 @@
 /*   By: wchen <wchen@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:03:04 by takira            #+#    #+#             */
-/*   Updated: 2023/01/28 22:43:26 by wchen            ###   ########.fr       */
+/*   Updated: 2023/02/13 15:06:20 by takira           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	judge_n_option(char *cmd)
 	if (*cmd != '-')
 		return (FAILURE);
 	cmd++;
+	if (!*cmd)
+		return (FAILURE);
 	while (*cmd != '\0')
 	{
 		if (*cmd != 'n')
