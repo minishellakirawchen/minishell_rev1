@@ -13,6 +13,9 @@ brew install readline
 git clone https://github.com/minishellakirawchen/minishell_rev1.git
 cd minishell_rev1
 make
+```
+### Execute minishell
+```shell
 ./minishell
 ```
 
