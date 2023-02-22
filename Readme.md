@@ -8,7 +8,7 @@ Implement some function of GNU bash(v3.2).
 ```shell
 brew install readline
 ```
-### Compile minishell
+### Clone and compile minishell
 ```shell
 git clone https://github.com/minishellakirawchen/minishell_rev1.git
 cd minishell_rev1
