@@ -3,6 +3,11 @@ Implement some function of GNU bash(v3.2).
 
 <br>
 
+# Demo
+Will add demo GIF
+
+<br>
+
 # How to use
 ### Install GNL readline
 ```shell
