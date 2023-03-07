@@ -64,7 +64,7 @@ make
 * Wildcards `*` should work for the current working directory.
 
 ### Plus alpha
-* Implement operators.
+* Implement operator.
     - semicolon `;`
     
 <br>
